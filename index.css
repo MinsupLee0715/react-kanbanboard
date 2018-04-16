@@ -1,0 +1,80 @@
+html, body, #root {
+  height: 100%;
+}
+
+/* .logo {
+  width: 156px;
+  height: 64px;
+  background: rgba(255,255,255,.2);
+  float: left;
+} */
+
+/* body */
+.ant-layout {
+  background-position: center;
+
+}
+
+/* left sidebar */
+.logo {
+  height: 120px;
+  background-image: url("./logo.PNG");
+  background-position: center;
+  background-size: 110%;
+}
+
+.ant-layout-sider {
+  margin-top: 0px;
+}
+
+/* profile in left sidebar */
+.profile {
+  background: none;
+}
+.sideMenu {
+  background: none;
+}
+.ant-menu-item>a {
+  color: #aaa;
+}
+.ant-menu-item-selected>a {
+  color: #fff;
+}
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  background-color: rgb(142,142,142,0.4);
+}
+.ant-menu-item-selected>a:hover, .ant-menu-item>a:hover {
+  color: #fff;
+}
+
+.new {
+  background: #fff;
+}
+.old {
+  background: rgba(230,230,230, 0.8);
+}
+
+/* footer */
+.ant-layout-footer {
+  padding: 16px 50px 8px;
+}
+
+/* about login page */
+h1 {
+  color: #014280;
+}
+.login-form {
+  max-width: 450px;
+}
+.login-form-button {
+  width: 100%;
+}
+.professor-btn {
+  background: #1DA57A;
+  border-color: #1DA57A;
+}
+.professor-btn:focus, .professor-btn:hover {
+  background: #1DBE7A;
+  border-color: #1DBE7A;
+}
+

@@ -1,0 +1,50 @@
+{
+  "private": true,
+  "entry": {
+    "index": "./index.js"
+  },
+  "scripts": {
+    "lint": "eslint --ext .js,.jsx src/",
+    "test": "atool-test-mocha ./**/__tests__/*-test.js",
+    "build": "babel server --out-dir build --presets=es2015 && atool-build",
+    "start": "dora --plugins webpack",
+    "server": "nodemon ./build/main.js"
+  },
+  "dependencies": {
+    "antd": "^3.0.0",
+    "axios": "^0.18.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "moment": "^2.19.3",
+    "mongoose": "^5.0.14",
+    "nodemon": "^1.17.3",
+    "path": "^0.12.7",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-router-dom": "^4.2.2"
+  },
+  "devDependencies": {
+    "atool-build": "^0.9.0",
+    "atool-test-mocha": "^0.1.4",
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^7.0.0",
+    "babel-plugin-import": "^1.0.1",
+    "babel-plugin-transform-runtime": "^6.8.0",
+    "babel-runtime": "^6.9.2",
+    "dora": "0.4.x",
+    "dora-plugin-webpack": "^0.8.1",
+    "eslint": "^3.8.1",
+    "eslint-config-airbnb": "^12.0.0",
+    "eslint-plugin-import": "^2.0.1",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-react": "^6.4.1",
+    "expect": "^1.20.1",
+    "pre-commit": "1.x",
+    "redbox-react": "^1.2.6"
+  },
+  "pre-commit": [
+    "lint"
+  ]
+}
