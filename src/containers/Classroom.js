@@ -23,7 +23,7 @@ class Classroom extends React.Component {
         <Sidebar data={ { type: 'professor' } } />
 
         {/* Right Side Content Body */ }
-        <Layout style={ { padding: '64px 0 16px', marginLeft: 256 } }>
+        <Layout style={ { padding: '0 0 16px', marginLeft: 256 } }>
 
           <Searchbar />
 

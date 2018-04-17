@@ -1,20 +1,23 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
+
+import NoticeList from '../components/NoticeList';
+import Notices from '../components/Notices';
+import NoticeUpload from '../components/NoticeUpload';
 
 class Notice extends React.Component {
 
   render() {
+    console.log(this.props.match.params);
     return (
       <div>
         <h1>{ "과목 명" } / { "공지사항" }</h1>
 
-        <div style={ { height: '100%', padding: 24, background: '#fff', textAlign: 'center' } }>
-          Classroom
-
-          <p><Link to="/mypage">mypage</Link></p>
-          <p><Link to="/classroom/student">mypage/std</Link></p>
-          <p><Link to="/classroom/professor">mypage/prof</Link></p>
-        </div>
+        <Switch>
+          <Route exact path={ `/classroom/${ this.props.match.params.id }/notice` } component={ NoticeList } />
+          <Route path={ `/classroom/${ this.props.match.params.id }/notice/upload` } component={ NoticeUpload } />
+          <Route path={ `/classroom/${ this.props.match.params.id }/notice/:number` } component={ Notices } />
+        </Switch>
       </div>
     );
   }

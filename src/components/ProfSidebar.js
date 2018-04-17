@@ -8,6 +8,7 @@ const { Item } = Menu;
 
 class ProfSidebar extends React.Component {
   render() {
+    
     return (
       <Menu
         className="sideMenu"

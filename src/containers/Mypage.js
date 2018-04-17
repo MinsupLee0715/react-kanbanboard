@@ -52,7 +52,6 @@ class Mypage extends React.Component {
     const rowClick = (record) => {
       return {
         onClick: () => {
-          console.log(record);
           this.props.history.push(`/classroom/${ record.key }`);
         }
       };
@@ -64,7 +63,7 @@ class Mypage extends React.Component {
         <Sidebar data={ { user: 'student' } } />
 
         {/* Right Side Content Body */ }
-        <Layout style={ { padding: '64px 0 16px', marginLeft: 256 } }>
+        <Layout style={ { padding: '0 0 16px', marginLeft: 256 } }>
 
           <Searchbar />
 

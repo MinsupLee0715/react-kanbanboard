@@ -10,7 +10,7 @@ html, body, #root {
 
 /* header */
 .searchInput>input.ant-input {
-  width: 300px;
+  width: 360px;
   outline: none;
   border: none;
 }
@@ -86,3 +86,11 @@ h1 {
   border-color: #1DBE7A;
 }
 
+/* classroom */
+/* project list */
+.project-card {
+  padding: 8px;
+}
+.ant-card-head {
+  border-top:5px solid #40a9ff;
+}

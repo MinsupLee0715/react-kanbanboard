@@ -27,10 +27,10 @@ class Nav extends React.Component {
 
       <Header
         className="header"
-        style={ { position: 'fixed', width: '100%', padding: "0 20px", top: 0, background: 'rgb(255,255,255)' } }>
+        style={ { width: '100%', padding: "0 20px", background: 'rgb(255,255,255)' } }>
         <Input
           className="searchInput"
-          placeholder="Search..."
+          placeholder="수업명/프로젝트명/참여학생으로 검색..."
           prefix={ <Icon type="search" style={ { color: 'rgba(0,0,0,.25)' } } /> }
           suffix={ suffix }
           value={ inputdata }

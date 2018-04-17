@@ -1,6 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import Project from '../components/Project';
+
+import { Row, Col } from 'antd';
+
 class ProjectList extends React.Component {
 
   render() {
@@ -8,12 +12,28 @@ class ProjectList extends React.Component {
       <div>
         <h1>{ "과목 명" } / { "프로젝트 목록" }</h1>
 
-        <div style={ { height: '100%', padding: 24, background: '#fff', textAlign: 'center' } }>
-          ProjectList
+        <div style={ { height: '100%', padding: 24, textAlign: 'center' } }>
 
-          <p><Link to="/mypage">mypage</Link></p>
-          <p><Link to="/classroom/student">mypage/std</Link></p>
-          <p><Link to="/classroom/professor">mypage/prof</Link></p>
+          <Row gutter={ 16 }>
+            <Col md={ 12 } lg={ 6 } className="project-card" >
+              <Project />
+            </Col>
+            <Col md={ 12 } lg={ 6 } className="project-card" >
+              <Project />
+            </Col>
+            <Col md={ 12 } lg={ 6 } className="project-card" >
+              <Project />
+            </Col>
+            <Col md={ 12 } lg={ 6 } className="project-card" >
+              <Project />
+            </Col>
+            <Col md={ 12 } lg={ 6 } className="project-card" >
+              <Project />
+            </Col>
+            <Col md={ 12 } lg={ 6 } className="project-card" >
+              <Project />
+            </Col>
+          </Row>
         </div>
       </div>
     );
