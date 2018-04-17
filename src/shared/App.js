@@ -7,7 +7,6 @@ import Mypage from '../containers/Mypage';
 import Classroom from '../containers/Classroom';
 import NotFound from '../containers/NotFound';
 
-import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 
 import { Layout } from 'antd';
@@ -17,7 +16,6 @@ class App extends React.Component {
   render() {
     return (
       <Layout style={ { height: '100%' } }>
-        {/* Top Navbar */ }
 
         <Content>
           <Switch>

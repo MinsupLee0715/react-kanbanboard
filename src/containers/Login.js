@@ -1,8 +1,7 @@
 import React from 'react';
-import Nav from './../components/Nav';
 
 import { Layout, Form, Input, Icon, Button } from 'antd';
-const { Content } = Layout;
+const { Content, Header } = Layout;
 const FormItem = Form.Item;
 
 class Login extends React.Component {
@@ -11,13 +10,16 @@ class Login extends React.Component {
     return (
       <Layout>
 
-        <Nav />
+        <Header
+          className="header"
+          style={ { position: 'fixed', width: '100%', top: 0, background: 'rgb(54,54,54)' } }>
+        </Header>
 
         <Layout style={ { padding: '0 0 16px' } }>
           <Content style={ { margin: '200px 16px 0', overflow: 'initial' } }>
 
-            <div className="login-form" 
-            style={ { height: "100%", width: '100%', margin: 'auto', background: "rgb(60,60,60)", color: "#fff" } }>
+            <div className="login-form"
+              style={ { height: "100%", width: '100%', margin: 'auto', background: "rgba(80,80,80,0.9)", color: "#fff" } }>
               <div className="login-logo" style={ { height: 90, width: '100%', textAlign: 'center' } }>
                 <p style={ { fontSize: 30, padding: "30px 0" } }>MEMBER LOGIN</p>
               </div>

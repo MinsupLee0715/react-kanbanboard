@@ -2,17 +2,23 @@ html, body, #root {
   height: 100%;
 }
 
-/* .logo {
-  width: 156px;
-  height: 64px;
-  background: rgba(255,255,255,.2);
-  float: left;
-} */
-
 /* body */
 .ant-layout {
   background-position: center;
 
+}
+
+/* header */
+.searchInput>input.ant-input {
+  width: 300px;
+  outline: none;
+  border: none;
+}
+.searchInput>input.ant-input:focus,
+.searchInput>input.ant-input:hover {
+  outline:none;
+  border: none;
+  box-shadow: 0 0 black;
 }
 
 /* left sidebar */
@@ -55,9 +61,11 @@ html, body, #root {
 }
 
 /* footer */
+
 .ant-layout-footer {
   padding: 16px 50px 8px;
 }
+
 
 /* about login page */
 h1 {

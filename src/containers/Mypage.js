@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import Nav from './../components/Nav';
+import Searchbar from './../components/Searchbar';
 import Sidebar from '../components/Sidebar';
 
-import { Layout, Menu, Dropdown, Button, Icon, Table } from 'antd';
+import { Layout, Menu, Dropdown, Button, Icon, Table, Card } from 'antd';
 const { Content } = Layout;
 
 class Mypage extends React.Component {
@@ -53,7 +53,7 @@ class Mypage extends React.Component {
       return {
         onClick: () => {
           console.log(record);
-          this.props.history.push(`/classroom/${record.key}`);
+          this.props.history.push(`/classroom/${ record.key }`);
         }
       };
     };
@@ -64,15 +64,14 @@ class Mypage extends React.Component {
         <Sidebar data={ { user: 'student' } } />
 
         {/* Right Side Content Body */ }
-        <Layout style={ { padding: '32px 0 16px', marginLeft: 256 } }>
+        <Layout style={ { padding: '64px 0 16px', marginLeft: 256 } }>
 
-          {/* <Nav /> 이거 쓸꺼면 위에 패딩 64px */ }
+          <Searchbar />
 
           <Content style={ { minHeight: 768, margin: '12px 16px 0', overflow: 'initial' } }>
             <h1>내 강의실</h1>
 
-            <div style={ { height: '100%', padding: 24, background: '#fff' } }>
-
+            <Card>
               <Dropdown overlay={ menu } trigger={ ['click'] }>
                 <Button style={ { marginLeft: 8, marginBottom: 10 } }>
                   { "2018년도 1학기" }
@@ -87,8 +86,8 @@ class Mypage extends React.Component {
                 pagination={ { position: 'none' } }
                 onRow={ rowClick }
               />
+            </Card>
 
-            </div>
           </Content>
 
         </Layout>
