@@ -10,10 +10,12 @@ class Nav extends React.Component {
       inputdata: '',
     };
   }
+
   emitEmpty = () => {
     this.userNameInput.focus();
     this.setState({ inputdata: '' });
   }
+  
   onChange = (e) => {
     this.setState({ inputdata: e.target.value });
   }

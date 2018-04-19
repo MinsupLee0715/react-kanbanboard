@@ -86,11 +86,34 @@ h1 {
   border-color: #1DBE7A;
 }
 
+
 /* classroom */
+
 /* project list */
 .project-card {
   padding: 8px;
 }
 .ant-card-head {
   border-top:5px solid #40a9ff;
+}
+
+
+
+/* notice */
+pre {
+  line-height: 1.5;
+  font-family: "Roboto", sans-serif;
+  font-weight: normal;
+  white-space: pre-wrap;
+}
+
+.noticeInput.ant-input {
+  outline: none;
+  border: none;
+}
+.noticeInput.ant-input:focus,
+.noticeInput.ant-input:hover {
+  outline:none;
+  border: none;
+  box-shadow: 0 0 black;
 }

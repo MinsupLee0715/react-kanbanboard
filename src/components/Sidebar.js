@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+
 import StdSidebar from './StdSidebar';
 import ProfSidebar from './ProfSidebar';
 import Profile from './Profile';
@@ -22,7 +24,7 @@ class Sidebar extends React.Component {
       <Sider
         width={ 256 }
         style={ { background: "linear-gradient(to bottom, rgb(40,40,40), #859398)", overflow: 'hidden', height: '100%', position: 'fixed', left: 0 } }>
-        <div className="logo" />
+        <Link to="/mypage"><div className="logo" /></Link>
         <Profile />
         { sidebar() }
       </Sider>
