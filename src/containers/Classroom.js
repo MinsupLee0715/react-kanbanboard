@@ -34,7 +34,7 @@ class Classroom extends React.Component {
               <Route path="/classroom/:id/projectList" component={ ProjectList } />
               <Route path="/classroom/:id/approve" component={ Approve } />
               <Route path="/classroom/:id/status" component={ Status } />
-              <Route path="/classroom/:id/kanbanboard" component={ KanbanBoard } />
+              <Route path="/classroom/:id/kanbanboard/:project" component={ KanbanBoard } />
               <Route path="*" component={ NotFound } />
             </Switch>
           </Content>

@@ -45,7 +45,7 @@ class NoticeList extends React.Component {
 
 
     return (
-      <div style={ { height: '100%', padding: 24, background: '#fff' } }>
+      <div style={ { margin: "auto" } }>
         <Link to={ `/classroom/${ this.props.match.params.id }/notice/upload` }>
           <Button style={ { margin: "0 0 10px" } }>Upload</Button>
         </Link>

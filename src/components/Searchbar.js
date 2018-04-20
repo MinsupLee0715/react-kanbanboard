@@ -29,7 +29,7 @@ class Nav extends React.Component {
 
       <Header
         className="header"
-        style={ { width: '100%', padding: "0 20px", background: 'rgb(255,255,255)' } }>
+        style={ { width: '100%', padding: "0 20px", background: 'rgb(255,255,255)', borderBottom: '1px solid #ddd' } }>
         <Input
           className="searchInput"
           placeholder="수업명/프로젝트명/참여학생으로 검색..."

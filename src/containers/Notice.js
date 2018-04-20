@@ -13,11 +13,13 @@ class Notice extends React.Component {
       <div>
         <h1>{ "과목 명" } / { "공지사항" }</h1>
 
-        <Switch>
-          <Route exact path={ `/classroom/${ this.props.match.params.id }/notice` } component={ NoticeList } />
-          <Route path={ `/classroom/${ this.props.match.params.id }/notice/upload` } component={ NoticeUpload } />
-          <Route path={ `/classroom/${ this.props.match.params.id }/notice/:number` } component={ Notices } />
-        </Switch>
+        <div style={ { height: '100%', padding: 24, margin: 24, border: "1px solid #ddd" } }>
+          <Switch>
+            <Route exact path={ `/classroom/${ this.props.match.params.id }/notice` } component={ NoticeList } />
+            <Route path={ `/classroom/${ this.props.match.params.id }/notice/upload` } component={ NoticeUpload } />
+            <Route path={ `/classroom/${ this.props.match.params.id }/notice/:number` } component={ Notices } />
+          </Switch>
+        </div>
       </div>
     );
   }

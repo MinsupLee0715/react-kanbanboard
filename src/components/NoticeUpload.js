@@ -13,7 +13,7 @@ class NoticeUpload extends React.Component {
       title: '',
       content: ''
     };
-    
+
     this.onTitleChange = this.onTitleChange.bind(this);
     this.onContentChange = this.onContentChange.bind(this);
   }
@@ -29,35 +29,33 @@ class NoticeUpload extends React.Component {
   render() {
 
     return (
-      <div style={ { height: '100%', padding: 24, background: '#fff' } }>
-        <div style={ { maxWidth: 1024, margin: "auto" } }>
-          <Divider style={ { margin: "12px 0" } } />
-          <Row>
-            <Col span={ 24 }>
-              <Input
-                className="noticeInput"
-                placeholder="제목을 입력하세요"
-                value={ this.state.title }
-                onChange={ this.onTitleChange }
-                size="large"
-              />
-            </Col>
-          </Row>
+      <div style={ { maxWidth: 1024, margin: "auto" } }>
+        <Divider style={ { margin: "12px 0" } } />
+        <Row>
+          <Col span={ 24 }>
+            <Input
+              className="noticeInput"
+              placeholder="제목을 입력하세요"
+              value={ this.state.title }
+              onChange={ this.onTitleChange }
+              size="large"
+            />
+          </Col>
+        </Row>
 
-          <Divider style={ { margin: "12px 0" } } />
+        <Divider style={ { margin: "12px 0" } } />
 
-          <div style={ { minHeight: 150 } }>
+        <div style={ { minHeight: 150 } }>
           <TextArea
-                className="noticeInput"
-          placeholder="내용을 입력하세요"
-          autosize={{ minRows: 5, maxRows: 10 }}
-          value={ this.state.content }
-          onChange={ this.onContentChange }
+            className="noticeInput"
+            placeholder="내용을 입력하세요"
+            autosize={ { minRows: 5, maxRows: 10 } }
+            value={ this.state.content }
+            onChange={ this.onContentChange }
           />
-          </div>
-          <Divider style={ { margin: "12px 0" } } />
-          <Button style={ { margin: "0 0 10px" } }>Upload</Button>
         </div>
+        <Divider style={ { margin: "12px 0" } } />
+        <Button style={ { margin: "0 0 10px" } }>Upload</Button>
       </div>
     );
   }
