@@ -13,7 +13,7 @@ class ProfSidebar extends React.Component {
       <Menu
         className="sideMenu"
         mode="inline"
-        defaultSelectedKeys={ ['2'] }
+        defaultSelectedKeys={ ['4'] }
         style={ { borderRight: 0, background: "none" } }
       >
 
@@ -24,25 +24,25 @@ class ProfSidebar extends React.Component {
           </Link>
         </Menu.Item>
         <Menu.Item key="2">
-          <Link to={`/classroom/${":id"}/projectList`}>
+          <Link to={`/classroom/${":classid"}/projectList`}>
             <Icon type="bars" />
             <span>프로젝트 목록</span>
           </Link>
         </Menu.Item>
         <Menu.Item key="3">
-          <Link to={`/classroom/${":id"}/approve`}>
+          <Link to={`/classroom/${":classid"}/approve`}>
             <Icon type="usergroup-add" />
             <span>프로젝트 승인</span>
           </Link>
         </Menu.Item>
         <Menu.Item key="4">
-          <Link to={`/classroom/${":id"}/notice`}>
+          <Link to={`/classroom/${":classid"}/notice`}>
             <Icon type="notification" />
             <span>공지사항</span>
           </Link>
         </Menu.Item>
         <Menu.Item key="5">
-          <Link to={`/classroom/${":id"}/status`}>
+          <Link to={`/classroom/${":classid"}/status`}>
             <Icon type="bar-chart" />
             <span>프로젝트 통계</span>
           </Link>

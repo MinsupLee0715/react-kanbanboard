@@ -29,7 +29,7 @@ class Classroom extends React.Component {
 
           <Content style={ { minHeight: 768, margin: '12px 16px 0', overflow: 'initial' } }>
             <Switch>
-              <Route exact path="/classroom/:id" component={ ProjectList } />
+              <Route exact path="/classroom/:id" component={ Notice } />
               <Route path="/classroom/:id/notice" component={ Notice } />
               <Route path="/classroom/:id/projectList" component={ ProjectList } />
               <Route path="/classroom/:id/approve" component={ Approve } />

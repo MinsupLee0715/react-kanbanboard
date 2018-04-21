@@ -1,6 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import User from '../medels/user';
+import User from '../models/user';
 
 const router = express.Router();
 
@@ -8,14 +8,15 @@ const router = express.Router();
 
 
 /* 로그인 */
-router.post('/signin', (req, res) => {
+router.post('/login', (req, res) => {
   let userInfo = new User({
     userid: req.body.userid,
-    password: req.body.password
+    password: req.body.password,
+    type: req.body.type
   });
 
   // 로그인 시도
-  User.findOne({ userid: userInfo.userid }, (err, result) => {
+  User.findOne({ type: userInfo.type, userid: userInfo.userid }, (err, result) => {
     if (err) throw err;
 
     if (!result) {
@@ -43,13 +44,13 @@ router.post('/signin', (req, res) => {
     console.log("user login: ");
     console.log(session);
 
-    return res.json({ result: true });
+    return res.json({ result: session });
   });
 
 });
 
 /* 로그아웃 */
-router.post('/signout', (req, res) => {
+router.get('/logout', (req, res) => {
   console.log("user logout: " + req.session.loginInfo.userid + "/" + req.session.loginInfo.name);
   req.session.destroy();
   return res.json({ result: true });

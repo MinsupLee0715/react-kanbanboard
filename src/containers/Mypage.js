@@ -60,7 +60,7 @@ class Mypage extends React.Component {
     return (
       <Layout>
         {/* Left Sidebar - Width: 256 */ }
-        <Sidebar data={ { user: 'student' } } />
+        <Sidebar />
 
         {/* Right Side Content Body */ }
         <Layout style={ { padding: '0 0 16px', marginLeft: 256 } }>

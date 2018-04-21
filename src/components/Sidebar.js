@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import StdSidebar from './StdSidebar';
 import ProfSidebar from './ProfSidebar';
@@ -13,10 +14,15 @@ class Sidebar extends React.Component {
   render() {
 
     const sidebar = () => {
-      if (this.props.data.type == 'student') {
-        return <StdSidebar />;
-      } else if (this.props.data.type == 'professor') {
-        return <ProfSidebar />;
+      let pathname = this.props.history.location.pathname;
+      let pathSplit = pathname.split('/');
+
+      if (pathSplit[1] == 'classroom') {
+        if (this.props.currentUser.type == 'student') {
+          return <StdSidebar data={ this.props.currentUser } />;
+        } else if (this.props.currentUser.type == 'professor') {
+          return <ProfSidebar data={ this.props.currentUser } />;
+        }
       }
     };
 
@@ -32,4 +38,11 @@ class Sidebar extends React.Component {
   }
 }
 
-export default Sidebar;
+const mapStateToProps = (state) => {
+  return {
+    currentUser: state.auth.status.currentUser
+  };
+}
+
+
+export default withRouter(connect(mapStateToProps)(Sidebar));

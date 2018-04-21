@@ -1,9 +1,31 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-import { Menu, Dropdown, Button, Tag, Badge, Icon } from 'antd';
+import { logoutRequest } from '../actions/auth';
+
+import { Menu, Dropdown, Button, Tag, Badge, Icon, message } from 'antd';
 
 class Profile extends React.Component {
+
+  constructor(props) {
+    super(props);
+
+    this.handleLogout = this.handleLogout.bind(this);
+  }
+
+  handleLogout() {
+    this.props.logoutRequest()
+      .then(() => {
+        let loginData = {
+          isLogin: false,
+          userid: ""
+        }
+        document.cookie = "key=" + btoa(JSON.stringify(loginData));
+        message.success('로그아웃 되었습니다.');
+        this.props.history.push('/login');
+      });
+  }
 
   render() {
 
@@ -76,8 +98,8 @@ class Profile extends React.Component {
       <div className="profile"
         style={ { padding: "0 0 25px", textAlign: "center" } }>
         <h3>
-          <Tag>교수</Tag>
-          <span style={ { color: "#ccc" } }>{ "조대수" } 님  </span>
+          <Tag>{ this.props.currentUser.type }</Tag>
+          <span style={ { color: "#ccc" } }>{ this.props.currentUser.name } 님  </span>
           <Dropdown overlay={ menu } trigger={ ['click'] }>
             <Badge count={ 3 } dot>
               <a style={ { color: "#ccc" } }><Icon type="mail" /></a>
@@ -85,10 +107,27 @@ class Profile extends React.Component {
           </Dropdown>
         </h3>
         <br />
-        <Button icon="logout" style={ { width: 130 } }>Logout</Button>
+        <Button
+          icon="logout"
+          style={ { width: 130 } }
+          onClick={ this.handleLogout }>Logout</Button>
       </div>
     );
   }
 }
 
-export default Profile;
+const mapStateToProps = (state) => {
+  return {
+    currentUser: state.auth.status.currentUser
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    logoutRequest: () => {
+      return dispatch(logoutRequest());
+    }
+  };
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Profile));

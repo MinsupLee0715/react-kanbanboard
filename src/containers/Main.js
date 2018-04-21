@@ -1,28 +1,47 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import { getStatusRequest } from '../actions/auth';
 import Login from '../containers/Login';
 
 class Main extends React.Component {
 
   constructor(props) {
     super(props);
-    this.handleGOGO = this.handleGOGO.bind(this);
   }
 
-  handleGOGO() {
-    this.props.history.push('/mypage');
+  componentDidMount() {
+    this.props.getStatusRequest()
+      .then(() => {
+        if (this.props.status === "SUCCESS") {
+          this.props.history.push('/mypage');
+        }
+        else {
+          console.log("you need to login");
+        }
+      });
   }
 
   render() {
     return (
-      <div>
-        { this.props.isLoggedIn ? this.handleGOGO() : <Login /> }
-      </div>
+      <Login />
     );
   }
 }
 
-Main.defaultProps = {
-  isLoggedIn: true
+const mapStateToProps = (state) => {
+  return {
+    status: state.auth.login.status
+  };
 };
 
-export default Main;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getStatusRequest: () => {
+      return dispatch(getStatusRequest());
+    }
+  };
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
