@@ -5,6 +5,6 @@ import classroom from './classroom';
 const router = express.Router();
 // /api/*
 router.use('/account', account);
-router.use('/class', classroom);
+router.use('/classroom', classroom);
 
 export default router;

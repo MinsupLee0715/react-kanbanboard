@@ -1,7 +1,9 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+
 import { loginRequest } from '../actions/auth';
+import { getClassroomRequest } from '../actions/classroom';
 
 import { Layout, Form, Input, Icon, Button, message } from 'antd';
 const { Content, Header } = Layout;
@@ -36,20 +38,26 @@ class Login extends React.Component {
     this.props.loginRequest(id, pw, type)
       .then(() => {
         if (this.props.status === "SUCCESS") {
-          let loginData = {
-            isLogin: true,
-            userid: id,
-            type: type
-          };
-          document.cookie = 'key=' + btoa(JSON.stringify(loginData));
-          message.success('로그인 되었습니다.');
-          this.props.history.push('/mypage');
-          return true;
+          this.props.getClassroomRequest()
+            .then(() => {
+              if (this.props.getClasses.status === "SUCCESS") {
+                let loginData = {
+                  isLogin: true,
+                  userid: id,
+                  type: type
+                };
+                document.cookie = 'key=' + btoa(JSON.stringify(loginData));
+                message.success('로그인 되었습니다.');
+                this.props.history.push('/mypage');
+              } else {
+                message.error('Failed Data Load');
+              }
+            });
+
         } else {
           message.error('id 또는 pw 를 확인하세요.');
-          return false;
         }
-      })
+      });
   }
 
   handleProfLogin() {
@@ -60,21 +68,28 @@ class Login extends React.Component {
     this.props.loginRequest(id, pw, type)
       .then(() => {
         if (this.props.status === "SUCCESS") {
-          let loginData = {
-            isLogin: true,
-            userid: id,
-            type: type
-          };
-          document.cookie = 'key=' + btoa(JSON.stringify(loginData));
-          message.success('로그인 되었습니다.');
-          this.props.history.push('/mypage');
-          return true;
+          this.props.getClassroomRequest()
+            .then(() => {
+              if (this.props.getClasses.status === "SUCCESS") {
+                let loginData = {
+                  isLogin: true,
+                  userid: id,
+                  type: type
+                };
+                document.cookie = 'key=' + btoa(JSON.stringify(loginData));
+                message.success('로그인 되었습니다.');
+                this.props.history.push('/mypage');
+              } else {
+                message.error('Failed Data Load');
+              }
+            });
+
         } else {
           message.error('id 또는 pw 를 확인하세요.');
-          return false;
         }
       })
   }
+
 
   render() {
     return (
@@ -154,7 +169,8 @@ class Login extends React.Component {
 const mapStateToProps = (state) => {
   return {
     status: state.auth.login.status,
-    currentUser: state.auth.status.currentUser
+    currentUser: state.auth.status.currentUser,
+    getClasses: state.classroom.getClasses
   };
 };
 
@@ -162,6 +178,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     loginRequest: (id, pw, type) => {
       return dispatch(loginRequest(id, pw, type));
+    },
+    getClassroomRequest: () => {
+      return dispatch(getClassroomRequest());
     }
   };
 };

@@ -1,53 +1,83 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import Searchbar from './../components/Searchbar';
 import Sidebar from '../components/Sidebar';
 
-import { Layout, Menu, Dropdown, Button, Icon, Table, Card } from 'antd';
+import { getClassroomRequest } from '../actions/classroom';
+
+import { Layout, Select, Button, Icon, Table, Card } from 'antd';
 const { Content } = Layout;
+const Option = Select.Option;
 
 class Mypage extends React.Component {
 
-  render() {
+  constructor(props) {
+    super(props);
 
-    const menuData = ["2018년도 1학기", "2017년도 2학기", "2017년도 1학기"];
+    this.state = {
+      period: "학기 선택"
+    };
+
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  menuData = [];
+  classes = this.props.getClasses;
+
+  componentDidMount() {
+    this.props.getClassroomRequest()
+      .then(() => {
+        for (let i in this.classes) {
+          if (this.menuData.indexOf(this.classes[i].period) == -1)
+            this.menuData.push(this.classes[i].period);
+        };
+        this.menuData.sort((a, b) => {
+          return b - a;
+        });
+        this.setState = {
+          period: this.menuData[0]
+        };
+      });
+  }
+
+  handleChange = (value) => {
+    this.setState = {
+      period: value
+    };
+    console.log(this.state.period);
+  }
+
+  render() {
 
     const columns = [{
       title: '수업명',
       dataIndex: 'classname'
     }, {
+      title: '분반',
+      dataIndex: 'divide'
+    }, {
       title: '프로젝트',
       dataIndex: 'project'
-    }, {
-      title: '피드백',
-      dataIndex: 'feedback'
     }];
 
-    const data = [{
-      key: '1',
-      classname: '데이터베이스 설계',
-      project: 8,
-      feedback: 3
-    }, {
-      key: '2',
-      classname: '운영체제',
-      project: 18,
-      feedback: 7
-    }, {
-      key: '3',
-      classname: '캡스톤 디자인1',
-      project: 14,
-      feedback: 4
-    }];
+    let classList = [];
+    for (let i in this.classes) {
+      if (this.classes[i].period == this.state.period)
+        classList.push(classes[i]);
+    }
 
-    const menu = (
-      <Menu>
-        { menuData.map((data, i) => {
-          return <Menu.Item key={ i }>{ data }</Menu.Item>
-        }) }
-      </Menu>
-    );
+    let classData = [];
+    classList.map((data, i) => {
+      classData.push({
+        key: i,
+        classname: data.title,
+        divide: data.divide,
+        project: data.student.length
+      })
+    });
+    console.log(classData);
 
     const rowClick = (record) => {
       return {
@@ -71,28 +101,47 @@ class Mypage extends React.Component {
             <h1>내 강의실</h1>
 
             <Card>
-              <Dropdown overlay={ menu } trigger={ ['click'] }>
-                <Button style={ { marginLeft: 8, marginBottom: 10 } }>
-                  { "2018년도 1학기" }
-                  <Icon type="down" />
-                </Button>
-              </Dropdown>
+
+              <Select
+                defaultValue={ this.state.period }
+                style={ { width: 120, marginBottom: 10 } }
+                onChange={ this.handleChange }>
+                { this.menuData.map((data, i) => {
+                  return <Option value={ data }>{ data }</Option>
+                }) }
+              </Select>
 
               <Table
                 columns={ columns }
-                dataSource={ data }
+                dataSource={ this.classData }
                 size="middle"
                 pagination={ { position: 'none' } }
                 onRow={ rowClick }
               />
+
             </Card>
 
           </Content>
 
         </Layout>
-      </Layout>
+      </Layout >
     );
   }
 }
 
-export default Mypage;
+const mapStateToProps = (state) => {
+  return {
+    getClasses: state.classroom.getClasses.classroom
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getClassroomRequest: () => {
+      return dispatch(getClassroomRequest());
+    }
+  };
+};
+
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Mypage));

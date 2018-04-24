@@ -13,7 +13,7 @@ import NotFound from '../containers/NotFound';
 /* component */
 import Footer from '../components/Footer';
 
-import { Layout } from 'antd';
+import { Layout, message } from 'antd';
 const { Content } = Layout;
 
 class App extends React.Component {
@@ -23,6 +23,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+
     this.props.getStatusRequest()
       .then(() => {
         if (!this.props.status.valid) {
@@ -33,6 +34,7 @@ class App extends React.Component {
           document.cookie = "key=" + btoa(JSON.stringify(loginData));
         }
         if (this.props.status.isLogin) {
+          this.handleGetClasses();
           this.props.history.push('/mypage');
         }
         else {

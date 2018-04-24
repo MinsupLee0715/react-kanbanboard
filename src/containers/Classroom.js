@@ -1,5 +1,8 @@
 import React from 'react';
 import { Switch, Route, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+/* import { getClassroomRequest } from '../actions/classroom'; */
 
 import Notice from '../containers/Notice';
 import ProjectList from '../containers/ProjectList';
@@ -11,10 +14,14 @@ import NotFound from '../containers/NotFound';
 import Searchbar from './../components/Searchbar';
 import Sidebar from '../components/Sidebar';
 
-import { Layout } from 'antd';
+import { Layout, message } from 'antd';
 const { Content, Sider } = Layout;
 
 class Classroom extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
 
   render() {
     return (
