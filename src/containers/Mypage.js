@@ -11,43 +11,68 @@ import { Layout, Select, Button, Icon, Table, Card } from 'antd';
 const { Content } = Layout;
 const Option = Select.Option;
 
+/* About Select */
+let menuData = [];
+let menuChlidren = [];
+/* About Class List */
+let classList = [];
+
+
 class Mypage extends React.Component {
 
   constructor(props) {
     super(props);
 
     this.state = {
-      period: "학기 선택"
+      period: "학기 선택",
+      classData: []
     };
 
     this.handleChange = this.handleChange.bind(this);
   }
 
-  menuData = [];
-  classes = this.props.getClasses;
 
   componentDidMount() {
     this.props.getClassroomRequest()
       .then(() => {
-        for (let i in this.classes) {
-          if (this.menuData.indexOf(this.classes[i].period) == -1)
-            this.menuData.push(this.classes[i].period);
+        /* Select Child Setting */
+        menuData = [];
+        menuChlidren = [];
+        for (let i in this.props.getClasses) {
+          if (menuData.indexOf(this.props.getClasses[i].period) == -1) {
+            menuData.push(this.props.getClasses[i].period);
+          }
         };
-        this.menuData.sort((a, b) => {
-          return b - a;
+        menuData.sort();
+        menuData.reverse();
+
+        for (let i in menuData) {
+          menuChlidren.push(<Option value={ menuData[i] }>{ menuData[i] }</Option>);
+        }
+
+        this.setState({ period: menuData[0] }, () => {
+          this.handleChange(this.state.period);
         });
-        this.setState = {
-          period: this.menuData[0]
-        };
       });
   }
 
-  handleChange = (value) => {
-    this.setState = {
-      period: value
-    };
-    console.log(this.state.period);
+  handleChange(value) {
+    this.setState({ period: value }, () => {
+      console.log(this.state.period);
+      classList = [];
+      for (let i in this.props.getClasses) {
+        if (this.props.getClasses[i].period == this.state.period)
+          classList.push({
+            key: this.props.getClasses[i]._id,
+            classname: this.props.getClasses[i].title,
+            divide: this.props.getClasses[i].divide,
+            project: "number"
+          });
+      }
+      this.setState({ classData: classList });
+    });
   }
+
 
   render() {
 
@@ -61,23 +86,6 @@ class Mypage extends React.Component {
       title: '프로젝트',
       dataIndex: 'project'
     }];
-
-    let classList = [];
-    for (let i in this.classes) {
-      if (this.classes[i].period == this.state.period)
-        classList.push(classes[i]);
-    }
-
-    let classData = [];
-    classList.map((data, i) => {
-      classData.push({
-        key: i,
-        classname: data.title,
-        divide: data.divide,
-        project: data.student.length
-      })
-    });
-    console.log(classData);
 
     const rowClick = (record) => {
       return {
@@ -105,15 +113,14 @@ class Mypage extends React.Component {
               <Select
                 defaultValue={ this.state.period }
                 style={ { width: 120, marginBottom: 10 } }
-                onChange={ this.handleChange }>
-                { this.menuData.map((data, i) => {
-                  return <Option value={ data }>{ data }</Option>
-                }) }
+                onChange={ this.handleChange }
+              >
+                { menuChlidren }
               </Select>
 
               <Table
                 columns={ columns }
-                dataSource={ this.classData }
+                dataSource={ this.state.classData }
                 size="middle"
                 pagination={ { position: 'none' } }
                 onRow={ rowClick }

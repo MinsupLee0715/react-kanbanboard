@@ -34,7 +34,6 @@ class App extends React.Component {
           document.cookie = "key=" + btoa(JSON.stringify(loginData));
         }
         if (this.props.status.isLogin) {
-          this.handleGetClasses();
           this.props.history.push('/mypage');
         }
         else {

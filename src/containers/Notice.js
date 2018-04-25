@@ -8,14 +8,15 @@ import NoticeUpload from '../components/NoticeUpload';
 class Notice extends React.Component {
 
   render() {
-    console.log(this.props.match.params);
+    
     return (
       <div>
         <h1>{ "과목 명" } / { "공지사항" }</h1>
 
         <div style={ { height: '100%', padding: 24, margin: 24, border: "1px solid #ddd" } }>
           <Switch>
-            <Route exact path={ `/classroom/${ this.props.match.params.id }/notice` } component={ NoticeList } />
+            <Route exact path={ `/classroom/${ this.props.match.params.id }` } component={ NoticeList } />
+            <Route path={ `/classroom/${ this.props.match.params.id }/notice` } component={ NoticeList } />
             <Route path={ `/classroom/${ this.props.match.params.id }/notice/upload` } component={ NoticeUpload } />
             <Route path={ `/classroom/${ this.props.match.params.id }/notice/:number` } component={ Notices } />
           </Switch>
