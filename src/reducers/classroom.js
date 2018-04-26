@@ -40,6 +40,12 @@ export default function classroom(state, action) {
       });
 
     /* Select Class */
+    case types.SELECT_CLASS:
+      return update(state, {
+        selectedClass: {
+          classInfo: { $set: action.selected }
+        }
+      })
 
     default: return state;
   }

@@ -24,19 +24,19 @@ class StdSidebar extends React.Component {
           </Link>
         </Menu.Item>
         <Menu.Item key="2">
-          <Link to={`/classroom/${":classid"}/kanbanboard/${":kanbanboardid"}`}>
+          <Link to={ `/classroom/${ this.props.data._id }/kanbanboard/${ ":kanbanboardid" }` }>
             <Icon type="layout" />
             <span>칸반보드</span>
           </Link>
         </Menu.Item>
         <Menu.Item key="3">
-          <Link to={`/classroom/${":classid"}/notice`}>
+          <Link to={ `/classroom/${ this.props.data._id }/notice` }>
             <Icon type="notification" />
             <span>공지사항</span>
           </Link>
         </Menu.Item>
         <Menu.Item key="4">
-          <Link to={`/classroom/${":classid"}/status`}>
+          <Link to={ `/classroom/${ this.props.data._id }/status` }>
             <Icon type="bar-chart" />
             <span>프로젝트 통계</span>
           </Link>

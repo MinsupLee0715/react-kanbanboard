@@ -11,6 +11,8 @@ import Status from '../containers/Status';
 import KanbanBoard from '../containers/KanbanBoard';
 import NotFound from '../containers/NotFound';
 
+import { selectClassRequest } from '../actions/classroom';
+
 import Searchbar from './../components/Searchbar';
 import Sidebar from '../components/Sidebar';
 
@@ -23,11 +25,27 @@ class Classroom extends React.Component {
     super(props);
   }
 
+  componentWillMount() {
+    console.log(this.props.match.params[0]);
+    let classData = {};
+    for (let i in this.props.getClasses) {
+      if (this.props.getClasses[i]._id == this.props.match.params[0]) {
+        classData = this.props.getClasses[i];
+        break;
+      }
+    }
+    console.log(classData);
+    this.props.selectClassRequest(classData, () => {
+      console.log("selectClassRequst 가 실행됨");
+    });
+  }
+
+
   render() {
     return (
       <Layout>
         {/* Left Sidebar - Width: 256 */ }
-        <Sidebar data={ { type: 'professor' } } />
+        <Sidebar data={ this.props.selectedClass } />
 
         {/* Right Side Content Body */ }
         <Layout style={ { padding: '0 0 16px', marginLeft: 256 } }>
@@ -52,4 +70,19 @@ class Classroom extends React.Component {
   }
 }
 
-export default Classroom;
+const mapStateToProps = (state) => {
+  return {
+    selectedClass: state.classroom.selectedClass.classInfo,
+    getClasses: state.classroom.getClasses.classroom
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    selectClassRequest: (selected) => {
+      return dispatch(selectClassRequest(selected));
+    }
+  };
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Classroom));

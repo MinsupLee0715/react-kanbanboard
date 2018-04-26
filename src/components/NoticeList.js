@@ -1,13 +1,38 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import { Table, Button } from 'antd';
 
 class NoticeList extends React.Component {
 
-  render() {
+  constructor(props) {
+    super(props);
 
-    console.log(this.props.match.params);
+    this.state = {
+      noticeList: []
+    };
+  }
+
+  componentDidMount() {
+    console.log("////");
+    console.log(this.props.selectedClass);
+    console.log("////");
+    let list = [];
+    let noticeList = this.props.selectedClass.notice;
+    for (let i in noticeList) {
+      list.push({
+        key: noticeList[i]._id,
+        number: parseInt(i) + parseInt(1),
+        title: noticeList[i].title,
+        date: noticeList[i].date
+      });
+    }
+    this.setState({ noticeList: list });
+  }
+
+
+  render() {
 
     const columns = [{
       title: 'No.',
@@ -20,27 +45,10 @@ class NoticeList extends React.Component {
       dataIndex: 'date'
     }];
 
-    const data = [{
-      key: '1',
-      number: 1,
-      title: '데이터베이스 설계',
-      date: '2018-04-05'
-    }, {
-      key: '2',
-      number: 2,
-      title: '운영체제',
-      date: '2018-04-05'
-    }, {
-      key: '3',
-      number: 3,
-      title: '캡스톤 디자인1',
-      date: '2018-04-05'
-    }];
-
     const rowClick = (record) => {
       return {
         onClick: () => {
-          this.props.history.push(`/classroom/${ this.props.match.params.id }/notice/${ record.key }`);
+          this.props.history.push(`/classroom/${ this.props.selectedClass._id }/notice/${ record.key }`);
         }
       };
     };
@@ -48,12 +56,17 @@ class NoticeList extends React.Component {
 
     return (
       <div style={ { margin: "auto" } }>
-        <Link to={ `/classroom/${ this.props.match.params.id }/notice/upload` }>
-          <Button style={ { margin: "0 0 10px" } }>Upload</Button>
-        </Link>
+        {
+          this.props.currentUser.type == 'professor' ?
+            <Link to={ `/classroom/${ this.props.selectedClass._id }/notice/upload` }>
+              <Button style={ { margin: "0 0 10px" } }>Upload</Button>
+            </Link>
+            : false
+        }
+
         <Table
           columns={ columns }
-          dataSource={ data }
+          dataSource={ this.state.noticeList }
           size="middle"
           pagination={ { position: 'none' } }
           onRow={ rowClick }
@@ -64,4 +77,11 @@ class NoticeList extends React.Component {
 
 }
 
-export default NoticeList;
+const mapStateToProps = (state) => {
+  return {
+    selectedClass: state.classroom.selectedClass.classInfo,
+    currentUser: state.auth.status.currentUser
+  };
+};
+
+export default withRouter(connect(mapStateToProps)(NoticeList));

@@ -1,7 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Switch, Route, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-import { Row, Col, Divider, Input, Button } from 'antd';
+import { postNoticeRequest } from '../actions/notice';
+
+import { Row, Col, Divider, Input, Button, message } from 'antd';
 const { TextArea } = Input;
 
 class NoticeUpload extends React.Component {
@@ -16,6 +19,7 @@ class NoticeUpload extends React.Component {
 
     this.onTitleChange = this.onTitleChange.bind(this);
     this.onContentChange = this.onContentChange.bind(this);
+    this.handlePost = this.handlePost.bind(this);
   }
 
   onTitleChange(e) {
@@ -24,6 +28,23 @@ class NoticeUpload extends React.Component {
 
   onContentChange(e) {
     this.setState({ content: e.target.value });
+  }
+
+  handlePost() {
+    let _id = this.props.selectedClass._id;
+    let title = this.state.title;
+    let content = this.state.content;
+    console.log(_id);
+
+    this.props.postNoticeRequest(_id, title, content)
+      .then(() => {
+        if (this.props.status === 'SUCCESS') {
+          message.success('등록되었습니다.');
+          this.props.history.push(`/classrooms/${ this.props.selectedClass._id }/notice`);
+        } else {
+          message.error('등록 실패');
+        }
+      });
   }
 
   render() {
@@ -55,11 +76,27 @@ class NoticeUpload extends React.Component {
           />
         </div>
         <Divider style={ { margin: "12px 0" } } />
-        <Button style={ { margin: "0 0 10px" } }>Upload</Button>
+        <Button style={ { margin: "0 0 10px" } } onClick={ this.handlePost }>Upload</Button>
       </div>
     );
   }
 
 }
 
-export default NoticeUpload;
+
+const mapStateToProps = (state) => {
+  return {
+    status: state.notice.post.status,
+    selectedClass: state.classroom.selectedClass.classInfo
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    postNoticeRequest: (_id, title, content) => {
+      return dispatch(postNoticeRequest(_id, title, content));
+    }
+  };
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(NoticeUpload));

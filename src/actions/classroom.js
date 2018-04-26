@@ -28,3 +28,14 @@ export function getClassroomRequest() {
       });
   };
 }
+
+/* select class */
+export function selectClass(selected) {
+  return { type: types.SELECT_CLASS, selected };
+}
+
+export function selectClassRequest(selected) {
+  return (dispatch) => {
+    dispatch(selectClass(selected));
+  }
+}
