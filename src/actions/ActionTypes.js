@@ -17,6 +17,8 @@ export const GET_CLASSROOM_FAILURE = "GET_CLASSROOM_FAILURE";
 
 /* Select Class */
 export const SELECT_CLASS = "SELECT_CLASS";
+export const SELECT_CLASS_SUCCESS = "SELECT_CLASS_SUCCESS";
+export const SELECT_CLASS_FAILURE = "SELECT_CLASS_FAILURE";
 
 /* Notice */
 export const POST_NOTICE = "POST_NOTICE";

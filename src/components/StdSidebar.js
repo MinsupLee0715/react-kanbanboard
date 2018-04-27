@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import Profile from './Profile';
 
@@ -24,19 +25,19 @@ class StdSidebar extends React.Component {
           </Link>
         </Menu.Item>
         <Menu.Item key="2">
-          <Link to={ `/classroom/${ this.props.data._id }/kanbanboard/${ ":kanbanboardid" }` }>
+          <Link to={ `/classroom/${ this.props.selectedClass._id }/kanbanboard/${ ":kanbanboardid" }` }>
             <Icon type="layout" />
             <span>칸반보드</span>
           </Link>
         </Menu.Item>
         <Menu.Item key="3">
-          <Link to={ `/classroom/${ this.props.data._id }/notice` }>
+          <Link to={ `/classroom/${ this.props.selectedClass._id }/notice` }>
             <Icon type="notification" />
             <span>공지사항</span>
           </Link>
         </Menu.Item>
         <Menu.Item key="4">
-          <Link to={ `/classroom/${ this.props.data._id }/status` }>
+          <Link to={ `/classroom/${ this.props.selectedClass._id }/status` }>
             <Icon type="bar-chart" />
             <span>프로젝트 통계</span>
           </Link>
@@ -46,4 +47,10 @@ class StdSidebar extends React.Component {
   }
 }
 
-export default StdSidebar;
+const mapStateToProps = (state) => {
+  return {
+    selectedClass: state.classroom.selectedClass.classInfo
+  };
+}
+
+export default withRouter(connect(mapStateToProps)(StdSidebar));

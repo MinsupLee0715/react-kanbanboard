@@ -7,6 +7,7 @@ const initialState = {
     classroom: {}
   },
   selectedClass: {
+    status: "INIT",
     classInfo: {}
   }
 };
@@ -43,9 +44,22 @@ export default function classroom(state, action) {
     case types.SELECT_CLASS:
       return update(state, {
         selectedClass: {
+          status: { $set: "WAIT" }
+        }
+      });
+    case types.SELECT_CLASS_SUCCESS:
+      return update(state, {
+        selectedClass: {
+          status: { $set: "SUCCESS" },
           classInfo: { $set: action.selected }
         }
-      })
+      });
+    case types.SELECT_CLASS_FAILURE:
+      return update(state, {
+        selectedClass: {
+          status: { $set: "FAILURE" }
+        }
+      });
 
     default: return state;
   }

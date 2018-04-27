@@ -1,9 +1,34 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import { Row, Col, Divider } from 'antd';
 
 class Notices extends React.Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      title: "",
+      content: "",
+      date: ""
+    };
+  }
+
+  componentWillMount() {
+    let notices = this.props.selectedClass.notice;
+    for (let i in notices) {
+      if (notices[i]._id == this.props.match.params.number) {
+        this.setState({
+          title: notices[i].title,
+          content: notices[i].content,
+          date: notices[i].date.slice(0, 10)
+        });
+        break;
+      }
+    }
+  }
 
   render() {
 
@@ -12,17 +37,17 @@ class Notices extends React.Component {
         <Divider style={ { margin: "12px 0" } } />
         <Row>
           <Col span={ 18 }>
-            <h2>공지사항 확인해라</h2>
+            <h2>{ this.state.title }</h2>
           </Col>
           <Col span={ 6 } style={ { textAlign: "right" } }>
-            <span>2018-05-05</span>
+            <span>{ this.state.date }</span>
           </Col>
         </Row>
 
         <Divider style={ { margin: "12px 0" } } />
 
         <div style={ { minHeight: 150 } }>
-          <pre>{ "난난나나다다나다다나다" }</pre>
+          <pre>{ this.state.content }</pre>
         </div>
         <Divider style={ { margin: "12px 0" } } />
       </div>
@@ -31,4 +56,10 @@ class Notices extends React.Component {
 
 }
 
-export default Notices;
+const mapStateToProps = (state) => {
+  return {
+    selectedClass: state.classroom.selectedClass.classInfo
+  };
+};
+
+export default withRouter(connect(mapStateToProps)(Notices));

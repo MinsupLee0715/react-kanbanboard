@@ -1,6 +1,5 @@
 import React from 'react';
-import { Switch, Route, withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { Switch, Route } from 'react-router-dom';
 
 import NoticeList from '../components/NoticeList';
 import Notices from '../components/Notices';
@@ -19,7 +18,7 @@ class Notice extends React.Component {
             <Route exact path="/classroom/:id" component={ NoticeList } />
             <Route exact path="/classroom/:id/notice" component={ NoticeList } />
             <Route path="/classroom/:id/notice/upload" component={ NoticeUpload } />
-            <Route path="/classroom/:id/notice/:number@" component={ Notices } />
+            <Route path="/classroom/:id/notice/:number" component={ Notices } />
           </Switch>
         </div>
       </div>

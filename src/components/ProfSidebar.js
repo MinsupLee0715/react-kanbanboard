@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import Profile from './Profile';
 
@@ -7,8 +8,9 @@ import { Menu, Icon } from 'antd';
 const { Item } = Menu;
 
 class ProfSidebar extends React.Component {
+
   render() {
-    
+
     return (
       <Menu
         className="sideMenu"
@@ -24,25 +26,25 @@ class ProfSidebar extends React.Component {
           </Link>
         </Menu.Item>
         <Menu.Item key="2">
-          <Link to={`/classroom/${":classid"}/projectList`}>
+          <Link to={ `/classroom/${ this.props.selectedClass._id }/projectList` }>
             <Icon type="bars" />
             <span>프로젝트 목록</span>
           </Link>
         </Menu.Item>
         <Menu.Item key="3">
-          <Link to={`/classroom/${":classid"}/approve`}>
+          <Link to={ `/classroom/${ this.props.selectedClass._id }/approve` }>
             <Icon type="usergroup-add" />
             <span>프로젝트 승인</span>
           </Link>
         </Menu.Item>
         <Menu.Item key="4">
-          <Link to={`/classroom/${":classid"}/notice`}>
+          <Link to={ `/classroom/${ this.props.selectedClass._id }/notice` }>
             <Icon type="notification" />
             <span>공지사항</span>
           </Link>
         </Menu.Item>
         <Menu.Item key="5">
-          <Link to={`/classroom/${":classid"}/status`}>
+          <Link to={ `/classroom/${ this.props.selectedClass._id }/status` }>
             <Icon type="bar-chart" />
             <span>프로젝트 통계</span>
           </Link>
@@ -52,4 +54,10 @@ class ProfSidebar extends React.Component {
   }
 }
 
-export default ProfSidebar;
+const mapStateToProps = (state) => {
+  return {
+    selectedClass: state.classroom.selectedClass.classInfo
+  };
+}
+
+export default withRouter(connect(mapStateToProps)(ProfSidebar));

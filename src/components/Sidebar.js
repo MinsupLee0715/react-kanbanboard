@@ -19,9 +19,9 @@ class Sidebar extends React.Component {
 
       if (pathSplit[1] == 'classroom') {
         if (this.props.currentUser.type == 'student') {
-          return <StdSidebar data={ this.props.data } />;
+          return <StdSidebar />;
         } else if (this.props.currentUser.type == 'professor') {
-          return <ProfSidebar data={ this.props.data } />;
+          return <ProfSidebar />;
         }
       }
     };

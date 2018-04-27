@@ -33,10 +33,7 @@ class App extends React.Component {
           };
           document.cookie = "key=" + btoa(JSON.stringify(loginData));
         }
-        if (this.props.status.isLogin) {
-          this.props.history.push('/mypage');
-        }
-        else {
+        if (!this.props.status.isLogin) {
           this.props.history.push('/login');
         }
       });

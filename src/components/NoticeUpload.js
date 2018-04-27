@@ -3,6 +3,7 @@ import { Link, Switch, Route, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { postNoticeRequest } from '../actions/notice';
+import { selectClassRequest } from '../actions/classroom';
 
 import { Row, Col, Divider, Input, Button, message } from 'antd';
 const { TextArea } = Input;
@@ -31,7 +32,7 @@ class NoticeUpload extends React.Component {
   }
 
   handlePost() {
-    let _id = this.props.selectedClass._id;
+    let _id = this.props.selectedClass.classInfo._id;
     let title = this.state.title;
     let content = this.state.content;
     console.log(_id);
@@ -40,7 +41,12 @@ class NoticeUpload extends React.Component {
       .then(() => {
         if (this.props.status === 'SUCCESS') {
           message.success('등록되었습니다.');
-          this.props.history.push(`/classrooms/${ this.props.selectedClass._id }/notice`);
+          this.props.selectClassRequest(this.props.selectedClass.classInfo._id)
+            .then(() => {
+              if (this.props.selectedClass.status === "SUCCESS") {
+                this.props.history.push(`/classroom/${ this.props.selectedClass.classInfo._id }/notice`);
+              }
+            });
         } else {
           message.error('등록 실패');
         }
@@ -87,7 +93,7 @@ class NoticeUpload extends React.Component {
 const mapStateToProps = (state) => {
   return {
     status: state.notice.post.status,
-    selectedClass: state.classroom.selectedClass.classInfo
+    selectedClass: state.classroom.selectedClass
   };
 };
 
@@ -95,6 +101,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     postNoticeRequest: (_id, title, content) => {
       return dispatch(postNoticeRequest(_id, title, content));
+    },
+    selectClassRequest: (selected) => {
+      return dispatch(selectClassRequest(selected));
     }
   };
 };

@@ -6,6 +6,7 @@ import Searchbar from './../components/Searchbar';
 import Sidebar from '../components/Sidebar';
 
 import { getClassroomRequest } from '../actions/classroom';
+import { selectClassRequest } from '../actions/classroom';
 
 import { Layout, Select, Button, Icon, Table, Card } from 'antd';
 const { Content } = Layout;
@@ -33,6 +34,7 @@ class Mypage extends React.Component {
 
 
   componentDidMount() {
+    console.log("/mypage");
     this.props.getClassroomRequest()
       .then(() => {
         /* Select Child Setting */
@@ -90,7 +92,12 @@ class Mypage extends React.Component {
     const rowClick = (record) => {
       return {
         onClick: () => {
-          this.props.history.push(`/classroom/${ record.key }`);
+          this.props.selectClassRequest(record.key)
+            .then(() => {
+              if (this.props.selectedClass.status === "SUCCESS") {
+                this.props.history.push(`/classroom/${ record.key }`);
+              }
+            });
         }
       };
     };
@@ -138,7 +145,8 @@ class Mypage extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    getClasses: state.classroom.getClasses.classroom
+    getClasses: state.classroom.getClasses.classroom,
+    selectedClass: state.classroom.selectedClass
   };
 };
 
@@ -146,6 +154,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getClassroomRequest: () => {
       return dispatch(getClassroomRequest());
+    },
+    selectClassRequest: (selected) => {
+      return dispatch(selectClassRequest(selected));
     }
   };
 };

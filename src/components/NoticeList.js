@@ -15,19 +15,20 @@ class NoticeList extends React.Component {
   }
 
   componentDidMount() {
-    console.log("////");
-    console.log(this.props.selectedClass);
-    console.log("////");
     let list = [];
     let noticeList = this.props.selectedClass.notice;
-    for (let i in noticeList) {
-      list.push({
-        key: noticeList[i]._id,
-        number: parseInt(i) + parseInt(1),
-        title: noticeList[i].title,
-        date: noticeList[i].date
-      });
+
+    if (typeof noticeList !== "undefined") {
+      for (let i in noticeList) {
+        list.push({
+          key: noticeList[i]._id,
+          number: parseInt(i) + parseInt(1),
+          title: noticeList[i].title,
+          date: noticeList[i].date.slice(0, 10)
+        });
+      }
     }
+
     this.setState({ noticeList: list });
   }
 
