@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { Row, Col } from 'antd';
 
-class KanbanBoard extends React.Component {
+class ProjectApply extends React.Component {
 
   render() {
     return (
@@ -37,4 +37,4 @@ class KanbanBoard extends React.Component {
 
 }
 
-export default KanbanBoard;
+export default ProjectApply;

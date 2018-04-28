@@ -6,7 +6,7 @@ import Notice from '../containers/Notice';
 import ProjectList from '../containers/ProjectList';
 import Approve from '../containers/Approve';
 import Status from '../containers/Status';
-import KanbanBoard from '../containers/KanbanBoard';
+import Project from '../containers/Project';
 import NotFound from '../containers/NotFound';
 
 import Searchbar from './../components/Searchbar';
@@ -39,7 +39,7 @@ class Classroom extends React.Component {
               <Route path="/classroom/:id/projectList" component={ ProjectList } />
               <Route path="/classroom/:id/approve" component={ Approve } />
               <Route path="/classroom/:id/status" component={ Status } />
-              <Route path="/classroom/:id/kanbanboard/:project" component={ KanbanBoard } />
+              <Route path="/classroom/:id/kanbanboard/:project" component={ Project } />
               <Route path="*" component={ NotFound } />
             </Switch>
           </Content>

@@ -7,7 +7,7 @@ const Project = new Schema({
   _classid: Schema.Types.ObjectId, // 수업 ObjectId
   title: String, // 프로젝트 명
   students: [{ userid: String, name: String }], // 팀원 정보
-  status: String, // 승인 여부
+  status: String, // 승인 여부 standby, start, cancel
 
   kanban: [{ // 칸반 리스트
     _id: Schema.Types.ObjectId, // 칸반 ObjectId
