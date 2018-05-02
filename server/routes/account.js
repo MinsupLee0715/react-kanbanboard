@@ -41,8 +41,8 @@ router.post('/login', (req, res) => {
       type: result.type
     };
 
-    console.log("user login: ");
-    console.log(session);
+    console.log("user login: " + req.session.loginInfo.userid + "/" + req.session.loginInfo.name);
+
 
     return res.json({ result: session });
   });

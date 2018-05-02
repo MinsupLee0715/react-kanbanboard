@@ -1,5 +1,6 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import NoticeList from '../components/NoticeList';
 import Notices from '../components/Notices';
@@ -11,7 +12,7 @@ class Notice extends React.Component {
 
     return (
       <div>
-        <h1>{ "과목 명" } / { "공지사항" }</h1>
+        <h1>{ this.props.selectedClass.title }&#40;{this.props.selectedClass.divide}&#41; / 공지사항</h1>
 
         <div style={ { height: '100%', padding: 24, margin: 24, border: "1px solid #ddd" } }>
           <Switch>
@@ -27,4 +28,10 @@ class Notice extends React.Component {
 
 }
 
-export default Notice;
+const mapStateToProps = (state) => {
+  return {
+    selectedClass: state.classroom.selectedClass.classInfo
+  };
+};
+
+export default withRouter(connect(mapStateToProps)(Notice));

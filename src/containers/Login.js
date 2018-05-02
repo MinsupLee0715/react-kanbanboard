@@ -31,8 +31,10 @@ class Login extends React.Component {
   }
 
   handleStdLogin() {
-    let id = this.state.userid;
-    let pw = this.state.password;
+    /* let id = this.state.userid;
+    let pw = this.state.password; */
+    let id = "20131810";
+    let pw = "1234";
     let type = "student";
 
     this.props.loginRequest(id, pw, type)
@@ -61,8 +63,10 @@ class Login extends React.Component {
   }
 
   handleProfLogin() {
-    let id = this.state.userid;
-    let pw = this.state.password;
+    /* let id = this.state.userid;
+    let pw = this.state.password; */
+    let id = "1111";
+    let pw = "1234";
     let type = "professor";
 
     this.props.loginRequest(id, pw, type)
@@ -87,7 +91,7 @@ class Login extends React.Component {
         } else {
           message.error('id 또는 pw 를 확인하세요.');
         }
-      })
+      });
   }
 
 

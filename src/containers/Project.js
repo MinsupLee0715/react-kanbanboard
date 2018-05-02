@@ -2,6 +2,8 @@ import React from 'react';
 import { Switch, Route, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import ProjectApply from './ProjectApply';
+
 class Project extends React.Component {
 
   render() {
@@ -9,12 +11,14 @@ class Project extends React.Component {
     const hasProject = () => {
 
       return (
-        <p>{ this.props.currentUser.userid }</p>
+        <ProjectApply />
       );
     };
 
     return (
-      <p>{ this.props.currentUser.userid }</p>
+      <React.Fragment>
+        { hasProject() }
+      </React.Fragment>
     );
   }
 

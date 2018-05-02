@@ -4,11 +4,10 @@
     "index": "./index.js"
   },
   "scripts": {
-    "lint": "eslint --ext .js,.jsx src/",
-    "test": "atool-test-mocha ./**/__tests__/*-test.js",
     "build": "babel server --out-dir build --presets=es2015 && atool-build",
     "start": "dora --plugins webpack",
-    "server": "nodemon ./build/main.js"
+    "dev": "atool-build -w",
+    "server": "nodemon --watch ./build --watch ./dist ./build/main.js"
   },
   "dependencies": {
     "antd": "^3.0.0",
@@ -48,8 +47,5 @@
     "expect": "^1.20.1",
     "pre-commit": "1.x",
     "redbox-react": "^1.2.6"
-  },
-  "pre-commit": [
-    "lint"
-  ]
+  }
 }

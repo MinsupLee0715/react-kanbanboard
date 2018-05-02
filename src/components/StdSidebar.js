@@ -25,7 +25,7 @@ class StdSidebar extends React.Component {
           </Link>
         </Menu.Item>
         <Menu.Item key="2">
-          <Link to={ `/classroom/${ this.props.selectedClass._id }/kanbanboard/${ ":kanbanboardid" }` }>
+          <Link to={ `/classroom/${ this.props.selectedClass._id }/kanbanboard` }>
             <Icon type="layout" />
             <span>칸반보드</span>
           </Link>
