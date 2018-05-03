@@ -1,5 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import mysql from 'mysql';
+import db from '../models/mysqlDatabase';
 import User from '../models/user';
 
 const router = express.Router();
@@ -9,44 +11,42 @@ const router = express.Router();
 
 /* 로그인 */
 router.post('/login', (req, res) => {
-  let userInfo = new User({
-    userid: req.body.userid,
-    password: req.body.password,
-    type: req.body.type
-  });
+  let loginInfo = [req.body.userid, req.body.password];
 
-  // 로그인 시도
-  User.findOne({ type: userInfo.type, userid: userInfo.userid }, (err, result) => {
+  /* 로그인 시도 */
+  let query = "";
+  if (req.body.type == "student") {
+    query = "select * from student where userid=? and password=?";
+  } else {
+    query = "select * from professor where userid=? and password=?";
+  }
+  db.query(query, loginInfo, (err, result, fields) => {
     if (err) throw err;
 
-    if (!result) {
+    if (result == '') {
       return res.status(401).json({
         error: "Login Failed",
         code: 1
       });
     }
 
-    if (!result.validateHash(userInfo.password)) {
+    /* if (!result.validateHash(userInfo.password)) {
       return res.status(401).json({
         error: "Login Failed",
         code: 1
       });
-    }
+    } */
 
     // 세션 등록
     let session = req.session.loginInfo = {
-      _id: result._id,
-      userid: result.userid,
-      name: result.name,
-      type: result.type
+      userid: result[0].userid,
+      name: result[0].name,
+      type: "student"
     };
-
     console.log("user login: " + req.session.loginInfo.userid + "/" + req.session.loginInfo.name);
-
 
     return res.json({ result: session });
   });
-
 });
 
 /* 로그아웃 */
