@@ -99,10 +99,10 @@ class Profile extends React.Component {
         style={ { padding: "0 0 25px", textAlign: "center" } }>
         <h3>
           <Tag>{ this.props.currentUser.type }</Tag>
-          <span style={ { color: "#ccc" } }>{ this.props.currentUser.name } 님  </span>
+          <strong style={ { color: "#072561" } }>{ this.props.currentUser.name } 님  </strong>
           <Dropdown overlay={ menu } trigger={ ['click'] }>
             <Badge count={ 3 } dot>
-              <a style={ { color: "#ccc" } }><Icon type="mail" /></a>
+              <a style={ { color: "#072561" } }><Icon type="mail" /></a>
             </Badge>
           </Dropdown>
         </h3>

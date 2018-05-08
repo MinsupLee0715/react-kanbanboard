@@ -24,13 +24,15 @@ html, body, #root {
 /* left sidebar */
 .logo {
   height: 120px;
-  background-image: url("./logo.PNG");
+  background-image: url("./logo.png");
   background-position: center;
-  background-size: 110%;
+  background-size: 90%;
+  background-repeat: no-repeat;
 }
 
 .ant-layout-sider {
   margin-top: 0px;
+  background-image: url("./sidebar.png");
 }
 
 /* profile in left sidebar */
@@ -41,16 +43,19 @@ html, body, #root {
   background: none;
 }
 .ant-menu-item>a {
-  color: #aaa;
+  color: #072561;
 }
 .ant-menu-item-selected>a {
   color: #fff;
 }
 .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
-  background-color: rgb(142,142,142,0.4);
+  background-color: rgba(0,0,0,.25);
+}
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item:active {
+  background-color: rgba(0,0,0,.15);
 }
 .ant-menu-item-selected>a:hover, .ant-menu-item>a:hover {
-  color: #fff;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .new {

@@ -4,7 +4,13 @@ import mysql from 'mysql';
 import db from '../models/mysqlDatabase';
 import User from '../models/user';
 
+import bcrypt from 'bcryptjs';
+
 const router = express.Router();
+
+const validateHash = function (inputPW, password) {
+  return bcrypt.compareSync(inputPW, password);
+};
 
 // /api/account/*
 
@@ -16,9 +22,9 @@ router.post('/login', (req, res) => {
   /* 로그인 시도 */
   let query = "";
   if (req.body.type == "student") {
-    query = "select * from student where userid=? and password=?";
+    query = "select * from student where studentID=?";
   } else {
-    query = "select * from professor where userid=? and password=?";
+    query = "select * from professor where professorID=?";
   }
   db.query(query, loginInfo, (err, result, fields) => {
     if (err) throw err;
@@ -30,18 +36,18 @@ router.post('/login', (req, res) => {
       });
     }
 
-    /* if (!result.validateHash(userInfo.password)) {
+    if (!validateHash(loginInfo[1], result[0].password)) {
       return res.status(401).json({
-        error: "Login Failed",
-        code: 1
+        error: "Wrong Password",
+        code: 2
       });
-    } */
+    }
 
     // 세션 등록
     let session = req.session.loginInfo = {
-      userid: result[0].userid,
+      userid: result[0].studentID || result[0].professorID,
       name: result[0].name,
-      type: "student"
+      type: req.body.type
     };
     console.log("user login: " + req.session.loginInfo.userid + "/" + req.session.loginInfo.name);
 

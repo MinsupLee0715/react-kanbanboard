@@ -22,31 +22,31 @@ class ProfSidebar extends React.Component {
         <Menu.Item key="1">
           <Link to="/mypage">
             <Icon type="home" />
-            <span>내 강의실</span>
+            <strong>내 강의실</strong>
           </Link>
         </Menu.Item>
         <Menu.Item key="2">
           <Link to={ `/classroom/${ this.props.selectedClass._id }/projectList` }>
             <Icon type="bars" />
-            <span>프로젝트 목록</span>
+            <strong>프로젝트 목록</strong>
           </Link>
         </Menu.Item>
         <Menu.Item key="3">
           <Link to={ `/classroom/${ this.props.selectedClass._id }/approve` }>
             <Icon type="usergroup-add" />
-            <span>프로젝트 승인</span>
+            <strong>프로젝트 승인</strong>
           </Link>
         </Menu.Item>
         <Menu.Item key="4">
           <Link to={ `/classroom/${ this.props.selectedClass._id }/notice` }>
             <Icon type="notification" />
-            <span>공지사항</span>
+            <strong>공지사항</strong>
           </Link>
         </Menu.Item>
         <Menu.Item key="5">
           <Link to={ `/classroom/${ this.props.selectedClass._id }/status` }>
             <Icon type="bar-chart" />
-            <span>프로젝트 통계</span>
+            <strong>프로젝트 통계</strong>
           </Link>
         </Menu.Item>
       </Menu>

@@ -1,4 +1,5 @@
 build
 dist/*.js
 dist/*.css
+dist/*.png
 node_modules

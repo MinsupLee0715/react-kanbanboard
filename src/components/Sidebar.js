@@ -29,7 +29,7 @@ class Sidebar extends React.Component {
     return (
       <Sider
         width={ 256 }
-        style={ { background: "linear-gradient(to bottom, rgb(40,40,40), #859398)", overflow: 'hidden', height: '100%', position: 'fixed', left: 0 } }>
+        style={ { overflow: 'hidden', height: '100%', position: 'fixed', left: 0 } }>
         <Link to="/mypage"><div className="logo" /></Link>
         <Profile />
         { sidebar() }
