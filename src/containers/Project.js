@@ -4,14 +4,26 @@ import { connect } from 'react-redux';
 
 import NotFound from './NotFound';
 import ProjectApply from './ProjectApply';
+import KanbanBoard from './KanbanBoard';
 
 class Project extends React.Component {
+
+  constructor(props) {
+    super(props);
+
+  }
+
 
   render() {
 
     const hasProject = () => {
       if (this.props.currentUser.type == "student") {
-        return (<ProjectApply />);
+        if (true)
+          return (<KanbanBoard />);
+        else
+          return (<ProjectApply />);
+      } else if (this.props.currentUser.type == "professor") {
+        return (<KanbanBoard />);
       } else {
         return (<NotFound />);
       }

@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { Table, Divider, Col } from 'antd';
+import { Table, Divider, Col, message } from 'antd';
 const { Column, ColumnGroup } = Table;
 
 const sampleList = [{
@@ -27,6 +27,17 @@ class Approve extends React.Component {
     this.state = {
       approveList: []
     };
+
+    this.handleApprove = this.handleApprove.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+  }
+
+  handleApprove() {
+    message.success('승인 완료');
+  }
+
+  handleDelete() {
+    message.success('삭제 완료');
   }
 
   componentDidMount() {
@@ -85,7 +96,7 @@ class Approve extends React.Component {
               title='Members'
               key="members"
               render={ (text, record, index) => {
-                const memberList = [];
+                let memberList = [];
                 for (let i in record.members) {
                   memberList.push(record.members[i]);
                   if (i != record.members.length - 1) {
@@ -100,9 +111,9 @@ class Approve extends React.Component {
               key="action"
               render={ (text, record) => (
                 <span>
-                  <a href="javascript:;">승인</a>
+                  <a onClick={ this.handleApprove }>승인</a>
                   <Divider type="vertical" />
-                  <a href="javascript:;">삭제</a>
+                  <a onClick={ this.handleDelete }>삭제</a>
                 </span>
               ) }
             />
