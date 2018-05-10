@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import KanbanInfo from '../components/KanbanInfo';
+
 import { Row, Col } from 'antd';
 
 
@@ -19,13 +21,6 @@ type Item = {|
   id: string,
     content: string,
 |}
-
-type State = {|
-  items1: Item[],
-    items2: Item[],
-      items3: Item[],
-        items4: Item[]
-          |}
 
 // fake data generator(가짜 데이터 제너레이터)
 const getItems = (index: number, count: number): Item[] =>
@@ -91,14 +86,45 @@ class KanbanBoard extends Component<*, State> {
     교수일 때는 주소 :project 값으로 가져오고
     학생이면 수업id로 DB 조회하면됨
     */
+    this.state = {
+      items1: getItems(1, 5),
+      items2: getItems(2, 5),
+      items3: getItems(3, 5),
+      items4: getItems(4, 3),
+
+      kanbanInfo: {
+        id: '',
+        title: '',
+        content: '',
+        status: false
+      }
+    }
+
+    this.handleKanbanClick = this.handleKanbanClick.bind(this);
+    this.handleCancel = this.handleCancel.bind(this);
   }
 
-  state: State = {
-    items1: getItems(1, 5),
-    items2: getItems(2, 5),
-    items3: getItems(3, 5),
-    items4: getItems(4, 3)
+  handleKanbanClick(e) {
+    this.setState({
+      kanbanInfo: {
+        id: e.currentTarget.id,
+        title: 'title is updated',
+        content: 'ㄲㅈ',
+        status: true
+      }
+    });
   }
+
+  handleCancel() {
+    this.setState({
+      kanbanInfo: {
+        id: '',
+        title: '',
+        content: '',
+        status: false
+      }
+    });
+  };
 
 
   /* 드래그 후 드랍 했을 시 */
@@ -209,12 +235,16 @@ class KanbanBoard extends Component<*, State> {
   render() {
     return (
       <div>
-        <h1>{ this.props.selectedClass.title }&#40;{ this.props.selectedClass.divide }&#41; / { this.props.data }</h1>
+        <h1>
+          { this.props.selectedClass.title }&#40;{ this.props.selectedClass.divide }&#41; / { "프로젝트 명" }
+          <h6>MEMBER - { "정화평" }</h6>
+        </h1>
+        <br />
 
         <Row gutter={ 16 }>
           {/* DragDropContext > Droppable > Draggable */ }
           <DragDropContext onDragEnd={ this.onDragEnd }>
-            <div style={ { display: "inline" } }>
+            <div style={ { display: "inline", textAlign: "center" } }>
               <Droppable droppableId='droppable-1'>
                 { (dropProvided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
                   <div
@@ -229,7 +259,7 @@ class KanbanBoard extends Component<*, State> {
                     { this.state.items1.map(item => (
                       <Draggable key={ item.id } draggableId={ item.id }>
                         { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
-                          <div>
+                          <div id={ item.id } onClick={ this.handleKanbanClick }>
                             <div
                               ref={ provided.innerRef }
                               style={ getItemStyle(
@@ -238,7 +268,8 @@ class KanbanBoard extends Component<*, State> {
                               ) }
                               { ...provided.dragHandleProps }
                             >
-                              { item.content }
+                              <h3>{ item.content }</h3>
+                              <h5 style={ { textAlign: 'right' } }>{ "2018-05-05" }</h5>
                             </div>
                             { provided.placeholder }
                           </div>
@@ -262,7 +293,7 @@ class KanbanBoard extends Component<*, State> {
                     { this.state.items2.map(item => (
                       <Draggable key={ item.id } draggableId={ item.id }>
                         { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
-                          <div>
+                          <div id={ item.id } onClick={ this.handleKanbanClick }>
                             <div
                               ref={ provided.innerRef }
                               style={ getItemStyle(
@@ -271,7 +302,8 @@ class KanbanBoard extends Component<*, State> {
                               ) }
                               { ...provided.dragHandleProps }
                             >
-                              { item.content }
+                              <h3>{ item.content }</h3>
+                              <h5 style={ { textAlign: 'right' } }>{ "2018-05-05" }</h5>
                             </div>
                             { provided.placeholder }
                           </div>
@@ -295,7 +327,7 @@ class KanbanBoard extends Component<*, State> {
                     { this.state.items3.map(item => (
                       <Draggable key={ item.id } draggableId={ item.id } isDragDisabled='flase'>
                         { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
-                          <div>
+                          <div id={ item.id } onClick={ this.handleKanbanClick }>
                             <div
                               ref={ provided.innerRef }
                               style={ getItemStyle(
@@ -304,7 +336,8 @@ class KanbanBoard extends Component<*, State> {
                               ) }
                               { ...provided.dragHandleProps }
                             >
-                              { item.content }
+                              <h3>{ item.content }</h3>
+                              <h5 style={ { textAlign: 'right' } }>{ "2018-05-05" }</h5>
                             </div>
                             { provided.placeholder }
                           </div>
@@ -328,7 +361,7 @@ class KanbanBoard extends Component<*, State> {
                     { this.state.items4.map(item => (
                       <Draggable key={ item.id } draggableId={ item.id } isDragDisabled='flase'>
                         { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
-                          <div>
+                          <div id={ item.id } onClick={ this.handleKanbanClick }>
                             <div
                               ref={ provided.innerRef }
                               style={ getItemStyle(
@@ -337,7 +370,8 @@ class KanbanBoard extends Component<*, State> {
                               ) }
                               { ...provided.dragHandleProps }
                             >
-                              { item.content }
+                              <h3>{ item.content }</h3>
+                              <h5 style={ { textAlign: 'right' } }>{ "2018-05-05" }</h5>
                             </div>
                             { provided.placeholder }
                           </div>
@@ -349,6 +383,11 @@ class KanbanBoard extends Component<*, State> {
               </Droppable>
             </div>
           </DragDropContext>
+
+          <KanbanInfo
+            data={ this.state.kanbanInfo }
+            handleCancel={ this.handleCancel }
+          />
         </Row>
       </div>
     );
