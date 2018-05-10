@@ -30,6 +30,14 @@ class ProjectList extends React.Component {
       _id: '3',
       title: '프로젝트3',
       members: ['사람5', '사람6', '사람7']
+    }, {
+      _id: '4',
+      title: '프로젝트3',
+      members: ['사람5', '사람6', '사람7']
+    }, {
+      _id: '5',
+      title: '프로젝트3',
+      members: ['사람5', '사람6', '사람7']
     }];
 
     for (let i in sampleList) { // 받아온 리스트를 반복문으로 돌림
