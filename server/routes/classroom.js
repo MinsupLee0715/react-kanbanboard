@@ -102,35 +102,67 @@ router.post('/notice', (req, res) => {
   });
 });
 
-
-
-/* 프로젝트 확인 */
-router.get('/project/:id', (req, res) => {
+/* 프로젝트 가져오기 */
+router.get('/project', (req, res) => {
   let loginInfo = req.session.loginInfo;
-  let projectid = req.params.id;
+  let classID = req.query.classID;
+  let projectID = req.query.projectID;
 
-  /* 프로젝트 검색 */
-  Project.find({ _id: mongoose.Types.ObjectId(projectid) },
-    (err, result) => {
-      if (err) throw err;
-      if (!result[0]) {
-        return res.status(400).json({
-          error: "Empty data",
-          code: 1
-        });
-      }
+  if (typeof classID === 'undefined') {
+    return res.status(400).json({
+      error: "Undefined classID",
+      code: 1
+    });
+  }
 
-      /* 로그인 유저가 속한 프로젝트인지 확인 */
-      for (let i in result[0].students) {
-        if (result[0].students[i].userid == loginInfo.userid) {
-          return res.send({ result: result });
-        }
-      }
-      return res.status(400).json({
-        error: "Empty data",
-        code: 1
+  let query = '';
+
+  if (loginInfo.type == 'professor') {
+    // 교수일 시
+    if (typeof projectID === 'undefined') {
+
+      // 수업 내 전체 프로젝트 조회
+      let params = [loginInfo.userid, classID];
+      query = `SELECT * FROM project WHERE projectID IN (
+        SELECT Distinct projectID FROM class_student WHERE class_student.classID IN (
+        SELECT classID FROM classroom WHERE professorID = ? AND classID = ?
+        ) AND class_student.projectID != 'NULL')`;
+      db.query(query, params, (err, result) => {
+        if (err) throw err;
+        console.log(loginInfo.name + ' 교수 전체 프로젝트 조회');
+        return res.json({ result: result });
       });
-    })
+    } else {
+
+      // 특정 프로젝트 조회
+      query = 'SELECT * FROM project WHERE projectID = ?'
+      db.query(query, projectID, (err, result) => {
+        if (err) throw err;
+        console.log(loginInfo.name + ' 교수 프로젝트 조회: ');
+        console.log(result[0]);
+        return res.json({ result: result });
+      });
+    }
+  } else if (loginInfo.type == 'student') {
+    // 학생일 시
+    // 수업 내 프로젝트 조회
+    let params = [classID, loginInfo.userid];
+    query = `SELECT * FROM project WHERE projectID = (
+      SELECT projectID FROM class_student WHERE classID = ? AND studentID = ?);`;
+    db.query(query, params, (err, result) => {
+      if (err) throw err;
+      console.log(loginInfo.name + ' 학생 프로젝트 조회: ');
+      console.log(result[0]);
+      return res.json({ result: result });
+    });
+  } else {
+
+    // 로그인을 안했을 시
+    return res.status(401).json({
+      error: "User is undefined",
+      code: 2
+    });
+  }
 });
 
 /* 프로젝트 신청 */
