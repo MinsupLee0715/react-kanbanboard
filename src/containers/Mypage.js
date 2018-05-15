@@ -65,8 +65,8 @@ class Mypage extends React.Component {
       for (let i in this.props.getClasses) {
         if (this.props.getClasses[i].period == this.state.period)
           classList.push({
-            key: this.props.getClasses[i]._id,
-            classname: this.props.getClasses[i].title,
+            key: this.props.getClasses[i].classID,
+            title: this.props.getClasses[i].title,
             divide: this.props.getClasses[i].divide,
             project: "number"
           });
@@ -80,7 +80,7 @@ class Mypage extends React.Component {
 
     const columns = [{
       title: '수업명',
-      dataIndex: 'classname'
+      dataIndex: 'title'
     }, {
       title: '분반',
       dataIndex: 'divide'
@@ -92,12 +92,13 @@ class Mypage extends React.Component {
     const rowClick = (record) => {
       return {
         onClick: () => {
-          this.props.selectClassRequest(record.key)
-            .then(() => {
-              if (this.props.selectedClass.status === "SUCCESS") {
-                this.props.history.push(`/classroom/${ record.key }`);
-              }
-            });
+          for (let i in this.props.getClasses) {
+            if (this.props.getClasses[i].classID == record.key) {
+              this.props.selectClassRequest(this.props.getClasses[i]);
+              this.props.history.push(`/classroom/${ record.key }`);
+              break;
+            }
+          }
         }
       };
     };
@@ -145,8 +146,7 @@ class Mypage extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    getClasses: state.classroom.getClasses.classroom,
-    selectedClass: state.classroom.selectedClass
+    getClasses: state.classroom.getClasses.classroom
   };
 };
 
@@ -155,8 +155,8 @@ const mapDispatchToProps = (dispatch) => {
     getClassroomRequest: () => {
       return dispatch(getClassroomRequest());
     },
-    selectClassRequest: (selected) => {
-      return dispatch(selectClassRequest(selected));
+    selectClassRequest: (classInfo) => {
+      return dispatch(selectClassRequest(classInfo));
     }
   };
 };

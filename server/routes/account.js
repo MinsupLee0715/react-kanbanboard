@@ -1,6 +1,5 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import mysql from 'mysql';
 import db from '../models/mysqlDatabase';
 import User from '../models/user';
 

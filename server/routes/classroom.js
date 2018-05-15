@@ -1,4 +1,5 @@
 import express from 'express';
+import db from '../models/mysqlDatabase';
 import mongoose from 'mongoose';
 import Classroom from '../models/classroom';
 import Project from '../models/project';
@@ -7,50 +8,6 @@ const Schema = mongoose.Schema;
 const router = express.Router();
 
 // /api/classroom/*
-
-
-/* classid 로 검색 */
-router.post('/', (req, res) => {
-  if (typeof req.session.loginInfo === "undefined") {
-    return res.status(401).json({
-      error: "User is undefined",
-      code: 1
-    });
-  };
-
-  let loginInfo = req.session.loginInfo;
-
-  if (loginInfo.type == 'professor') {
-    Classroom.find(
-      {
-        '_id': mongoose.Types.ObjectId(`${ req.body.classid }`),
-        'professor.userid': loginInfo.userid
-      },
-      (err, result) => {
-        if (!result[0]) {
-          return res.status(401).json({
-            error: "Class Not Found",
-            code: 2
-          });
-        }
-        return res.json({ result: result });
-      });
-  } else {
-    Classroom.find(
-      {
-        '_id': mongoose.Types.ObjectId(`${ req.body.classid }`),
-        'students': { '$elemMatch': { 'userid': loginInfo.userid } }
-      }, (err, result) => {
-        if (!result[0]) {
-          return res.status(401).json({
-            error: "Class Not Found",
-            code: 2
-          });
-        }
-        return res.json({ result: result });
-      });
-  }
-});
 
 
 /* 내 강의실 */
@@ -63,36 +20,53 @@ router.post('/myclassrooms', (req, res) => {
   }
 
   let loginInfo = req.session.loginInfo;
+  let query = '';
 
+  // 교수일 경우
   if (loginInfo.type == 'professor') {
-    Classroom.find({ 'professor.userid': loginInfo.userid },
-      (err, result) => {
-        if (!result) {
-          return res.status(401).json({
-            error: "Class Not Found",
-            code: 2
-          });
-        }
+    query = "SELECT * FROM classroom WHERE professorID=?";
+    db.query(query, loginInfo.userid, (err, result) => {
+      if (err) throw err;
+      console.log(result);
+      return res.json({ result: result });
+    });
 
-        return res.json({ result: result });
-      })
-  } else {
-    Classroom.find({ 'students': { '$elemMatch': { 'userid': loginInfo.userid } } },
-      (err, result) => {
-        if (!result) {
-          return res.status(401).json({
-            error: "Class Not Found",
-            code: 2
-          });
-        }
+  } else { // 학생일 경우
+    query = "SELECT * FROM classroom JOIN (SELECT * FROM class_student WHERE studentID=?) AS class_student ON class_student.classID = classroom.classID";
+    db.query(query, loginInfo.userid, (err, result) => {
+      if (err) throw err;
+      console.log(result);
+      return res.json({ result: result });
+    });
 
-        return res.json({ result: result });
-      })
   }
 });
 
 
 /* notice */
+// get notice
+router.get('/notice', (req, res) => {
+  // 로그인 확인
+  if (typeof req.session.loginInfo === "undefined") {
+    return res.status(401).json({
+      error: "User is undefined",
+      code: 1
+    });
+  };
+
+  let classid = req.query.classid;
+  console.log(classid);
+  let query = '';
+
+  query = 'SELECT * FROM notice WHERE classID=?';
+  db.query(query, classid, (err, result) => {
+    if (err) throw err;
+    console.log(result);
+    return res.json({ result: result });
+  });
+});
+
+
 // add notice
 router.post('/notice', (req, res) => {
   let loginInfo = req.session.loginInfo;
@@ -105,32 +79,30 @@ router.post('/notice', (req, res) => {
     });
   }
 
+  // 클라이언트로부터 받은 데이터
   let noticeData = {
-    _id: new mongoose.Types.ObjectId(),
+    classid: req.body.classid,
     title: req.body.title,
     content: req.body.content
   };
   console.log(noticeData);
 
   // 입력 데이터가 없을 시
-  if (noticeData.title === "" || noticeData.content === "") {
+  if (noticeData.classid === "" || noticeData.title === "" || noticeData.content === "") {
     return res.status(400).json({
       error: "Empty data",
       code: 2
     });
   }
 
-  Classroom.update({
-    _id: req.body._id
-  }, {
-      $push: {
-        notice: noticeData
-      }
-    }, (err, result) => {
-      if (err) throw err;
-      res.send({ result: true });
-    });
+  let query = 'INSERT INTO notice SET ?';
+  db.query(query, noticeData, (err, result) => {
+    if (err) throw err;
+    return res.send({ result: true });
+  });
 });
+
+
 
 /* 프로젝트 확인 */
 router.get('/project/:id', (req, res) => {

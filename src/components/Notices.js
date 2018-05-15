@@ -16,10 +16,10 @@ class Notices extends React.Component {
     };
   }
 
-  componentWillMount() {
-    let notices = this.props.selectedClass.notice;
+  componentDidMount() {
+    let notices = this.props.notices;
     for (let i in notices) {
-      if (notices[i]._id == this.props.match.params.number) {
+      if (notices[i].date == this.props.match.params.number) {
         this.setState({
           title: notices[i].title,
           content: notices[i].content,
@@ -58,7 +58,7 @@ class Notices extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    selectedClass: state.classroom.selectedClass.classInfo
+    notices: state.notice.notice
   };
 };
 

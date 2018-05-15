@@ -3,7 +3,6 @@ import { Link, Switch, Route, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { postNoticeRequest } from '../actions/notice';
-import { selectClassRequest } from '../actions/classroom';
 
 import { Row, Col, Divider, Input, Button, message } from 'antd';
 const { TextArea } = Input;
@@ -32,21 +31,16 @@ class NoticeUpload extends React.Component {
   }
 
   handlePost() {
-    let _id = this.props.selectedClass.classInfo._id;
+    console.log(this.props.selectedClass);
+    let classid = this.props.selectedClass.classID;
     let title = this.state.title;
     let content = this.state.content;
-    console.log(_id);
 
-    this.props.postNoticeRequest(_id, title, content)
+    this.props.postNoticeRequest(classid, title, content)
       .then(() => {
         if (this.props.status === 'SUCCESS') {
           message.success('등록되었습니다.');
-          this.props.selectClassRequest(this.props.selectedClass.classInfo._id)
-            .then(() => {
-              if (this.props.selectedClass.status === "SUCCESS") {
-                this.props.history.push(`/classroom/${ this.props.selectedClass.classInfo._id }/notice`);
-              }
-            });
+          this.props.history.push(`/classroom/${ classid }/notice`);
         } else {
           message.error('등록 실패');
         }
@@ -93,17 +87,14 @@ class NoticeUpload extends React.Component {
 const mapStateToProps = (state) => {
   return {
     status: state.notice.post.status,
-    selectedClass: state.classroom.selectedClass
+    selectedClass: state.classroom.selectedClass.classInfo
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    postNoticeRequest: (_id, title, content) => {
-      return dispatch(postNoticeRequest(_id, title, content));
-    },
-    selectClassRequest: (selected) => {
-      return dispatch(selectClassRequest(selected));
+    postNoticeRequest: (classid, title, content) => {
+      return dispatch(postNoticeRequest(classid, title, content));
     }
   };
 };

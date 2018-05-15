@@ -30,29 +30,12 @@ export function getClassroomRequest() {
 }
 
 /* select class */
-export function selectClass() {
-  return { type: types.SELECT_CLASS };
+export function selectClass(classInfo) {
+  return { type: types.SELECT_CLASS, classInfo };
 }
 
-export function selectClassSuccess(selected) {
-  return { type: types.SELECT_CLASS_SUCCESS, selected };
-}
-
-export function selectClassFailure() {
-  return { type: types.SELECT_CLASS_FAILURE };
-}
-
-export function selectClassRequest(classid) {
+export function selectClassRequest(classInfo) {
   return (dispatch) => {
-    dispatch(selectClass());
-
-    return axios
-      .post('/api/classroom', { classid })
-      .then((res) => {
-        dispatch(selectClassSuccess(res.data.result[0]));
-      })
-      .catch((err) => {
-        dispatch(selectClassFailure());
-      });
+    dispatch(selectClass(classInfo));
   };
 }

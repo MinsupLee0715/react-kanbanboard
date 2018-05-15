@@ -19,14 +19,16 @@ import type {
 
 type Item = {|
   id: string,
-    content: string,
+    title: string,
+    date: String
 |}
 
 // fake data generator(가짜 데이터 제너레이터)
 const getItems = (index: number, count: number): Item[] =>
   Array.from({ length: count }, (v, k) => k).map(k => ({
     id: `${ index }-${ k }`,
-    content: `${ index }-${ k }`
+    title: `${ index }-${ k }`,
+    date: ''
   }));
 
 // a little function to help us with reordering the result(결과 재정렬을 돕는 함수)
@@ -52,6 +54,7 @@ const reorder = (startIndex, endIndex, list, list2) => {
 // using some little inline style helpers to make the app look okay(보기좋게 앱을 만드는 인라인 스타일 헬퍼)
 const grid = 8;
 
+// Item -> Kanban
 const getItemStyle = (draggableStyle: ?DraggableStyle, isDragging: boolean): Object => ({
   // some basic styles to make the items look a bit nicer(아이템을 보기 좋게 만드는 몇 가지 기본 스타일)
   userSelect: 'none',
@@ -63,13 +66,14 @@ const getItemStyle = (draggableStyle: ?DraggableStyle, isDragging: boolean): Obj
   // styles we need to apply on draggables(드래그에 필요한 스타일 적용)
   ...draggableStyle,
 
-  margin: draggableStyle && draggableStyle.margin ? draggableStyle.margin : `0 0 ${ grid }px 0`,
+  margin: draggableStyle && draggableStyle.margin ? draggableStyle.margin : `${ grid }px`,
+  boxShadow: 'lightgrey 0px 1px 2px'
 });
 
-// List
+// List -> Swimlane
 const getListStyle = isDraggingOver => ({
   background: isDraggingOver ? 'lightblue' : 'rgba(207,216,220,.2)',
-  padding: grid,
+  padding: `${ grid }px 0`,
   minHeight: 700,
   width: '23%',
   float: 'left',
@@ -244,7 +248,7 @@ class KanbanBoard extends Component<*, State> {
         <Row gutter={ 16 }>
           {/* DragDropContext > Droppable > Draggable */ }
           <DragDropContext onDragEnd={ this.onDragEnd }>
-            <div style={ { display: "inline", textAlign: "center" } }>
+            <div style={ { display: "inline" } }>
               <Droppable droppableId='droppable-1'>
                 { (dropProvided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
                   <div
@@ -252,9 +256,9 @@ class KanbanBoard extends Component<*, State> {
                     style={ getListStyle(snapshot.isDraggingOver) }
                   >
                     <div
-                      style={ { height: 40, textAlign: 'center' } }
+                      style={ { height: 30, paddingLeft: 12 } }
                     >
-                      <h3>To Do</h3>
+                      <h3>할 일 <small>{ this.state.items1.length }</small></h3>
                     </div>
                     { this.state.items1.map(item => (
                       <Draggable key={ item.id } draggableId={ item.id }>
@@ -268,7 +272,8 @@ class KanbanBoard extends Component<*, State> {
                               ) }
                               { ...provided.dragHandleProps }
                             >
-                              <h3>{ item.content }</h3>
+                              <h3>{ item.title }</h3>
+                              <br />
                               <h5 style={ { textAlign: 'right' } }>{ "2018-05-05" }</h5>
                             </div>
                             { provided.placeholder }
@@ -286,9 +291,9 @@ class KanbanBoard extends Component<*, State> {
                     style={ getListStyle(snapshot.isDraggingOver) }
                   >
                     <div
-                      style={ { height: 40, textAlign: 'center' } }
+                      style={ { height: 30, paddingLeft: 12 } }
                     >
-                      <h3>Doing</h3>
+                      <h3>진행 중 <small>{ this.state.items2.length }</small></h3>
                     </div>
                     { this.state.items2.map(item => (
                       <Draggable key={ item.id } draggableId={ item.id }>
@@ -302,7 +307,8 @@ class KanbanBoard extends Component<*, State> {
                               ) }
                               { ...provided.dragHandleProps }
                             >
-                              <h3>{ item.content }</h3>
+                              <h3>{ item.title }</h3>
+                              <br />
                               <h5 style={ { textAlign: 'right' } }>{ "2018-05-05" }</h5>
                             </div>
                             { provided.placeholder }
@@ -320,9 +326,9 @@ class KanbanBoard extends Component<*, State> {
                     style={ getListStyle(snapshot.isDraggingOver) }
                   >
                     <div
-                      style={ { height: 40, textAlign: 'center' } }
+                      style={ { height: 30, paddingLeft: 12 } }
                     >
-                      <h3>Feedback</h3>
+                      <h3>피드백 <small>{ this.state.items3.length }</small></h3>
                     </div>
                     { this.state.items3.map(item => (
                       <Draggable key={ item.id } draggableId={ item.id } isDragDisabled='flase'>
@@ -336,7 +342,8 @@ class KanbanBoard extends Component<*, State> {
                               ) }
                               { ...provided.dragHandleProps }
                             >
-                              <h3>{ item.content }</h3>
+                              <h3>{ item.title }</h3>
+                              <br />
                               <h5 style={ { textAlign: 'right' } }>{ "2018-05-05" }</h5>
                             </div>
                             { provided.placeholder }
@@ -354,9 +361,9 @@ class KanbanBoard extends Component<*, State> {
                     style={ getListStyle(snapshot.isDraggingOver) }
                   >
                     <div
-                      style={ { height: 40, textAlign: 'center' } }
+                      style={ { height: 30, paddingLeft: 12 } }
                     >
-                      <h3>Finish</h3>
+                      <h3>완료 <small>{ this.state.items4.length }</small></h3>
                     </div>
                     { this.state.items4.map(item => (
                       <Draggable key={ item.id } draggableId={ item.id } isDragDisabled='flase'>
@@ -370,7 +377,8 @@ class KanbanBoard extends Component<*, State> {
                               ) }
                               { ...provided.dragHandleProps }
                             >
-                              <h3>{ item.content }</h3>
+                              <h3>{ item.title }</h3>
+                              <br />
                               <h5 style={ { textAlign: 'right' } }>{ "2018-05-05" }</h5>
                             </div>
                             { provided.placeholder }

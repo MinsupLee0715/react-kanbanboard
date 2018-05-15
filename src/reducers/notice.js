@@ -2,7 +2,9 @@ import * as types from '../actions/ActionTypes';
 import update from 'react-addons-update';
 
 const initialState = {
-  post: { status: "INIT" }
+  get: { status: "INIT" },
+  post: { status: "INIT" },
+  notice: []
 };
 
 export default function classroom(state, action) {
@@ -11,6 +13,27 @@ export default function classroom(state, action) {
   }
 
   switch (action.type) {
+
+    /* get notice */
+    case types.GET_NOTICE:
+      return update(state, {
+        get: {
+          status: { $set: "WAIT" }
+        }
+      });
+    case types.GET_NOTICE_SUCCESS:
+      return update(state, {
+        get: {
+          status: { $set: "SUCCESS" }
+        },
+        notice: { $set: action.selected }
+      });
+    case types.GET_NOTICE_FAILURE:
+      return update(state, {
+        get: {
+          status: { $set: "FAILURE" }
+        }
+      });
 
     /* post notice */
     case types.POST_NOTICE:

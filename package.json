@@ -4,10 +4,11 @@
     "index": "./index.js"
   },
   "scripts": {
-    "build": "babel server --out-dir build --presets=es2015 && atool-build",
+    "build": "atool-build",
+    "serverBuild": "babel server --out-dir build --presets=es2015",
     "start": "dora --plugins webpack",
     "dev": "atool-build -w",
-    "server": "nodemon --watch ./build --watch ./dist ./build/main.js"
+    "server": "nodemon --exec babel-node --presets=es2015 ./server/main.js --watch ./dist --watch ./server"
   },
   "dependencies": {
     "antd": "^3.0.0",
