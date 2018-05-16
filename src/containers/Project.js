@@ -13,6 +13,10 @@ class Project extends React.Component {
 
   }
 
+  componentDidMount() {
+    
+  }
+  
 
   render() {
 

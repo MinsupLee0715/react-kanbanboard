@@ -1,14 +1,7 @@
 import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
-import mongoose from 'mongoose';
 import session from 'express-session';
-
-/* mongodb connection */
-const db = mongoose.connection;
-db.on('error', console.error);
-db.once('open', () => { console.log('Connected to mongodb server'); });
-mongoose.connect('mongodb://localhost:27017/kanbanboard');
 
 const app = express();
 const port = 4000;

@@ -1,7 +1,5 @@
 import express from 'express';
-import mongoose from 'mongoose';
 import db from '../models/mysqlDatabase';
-import User from '../models/user';
 
 import bcrypt from 'bcryptjs';
 
