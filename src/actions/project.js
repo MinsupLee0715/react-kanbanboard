@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as types from './ActionTypes';
+import { message } from 'antd';
 
 /* GET project */
 export function getProject() {
@@ -14,16 +15,17 @@ export function getProjectFailure() {
   return { type: types.GET_PROJECT_FAILURE };
 }
 
-export function getProjectRequest(classID, projectID) {
+export function getProjectRequest(classID) {
   return (dispatch) => {
     dispatch(getProject());
 
     return axios
-      .get(`/api/classroom/project?classID=${ classID }&peojectID=${ projectID }`)
+      .get(`/api/classroom/project?classID=${ classID }`)
       .then((res) => {
         dispatch(getProjectSuccess(res.data.result));
       })
       .catch((err) => {
+        message.error('문제가 발생했습니다.');
         dispatch(getProjectFailure());
       });
   };
@@ -42,16 +44,17 @@ export function postProjectFailure() {
   return { type: types.POST_PROJECT_FAILURE };
 }
 
-export function postProjectRequest(classid, title, content) {
+export function postProjectRequest(classID, title, student) {
   return (dispatch) => {
     dispatch(postProject());
 
     return axios
-      .post('/api/classroom/project', { classid, title, content })
+      .post('/api/classroom/project', { classID, title, student })
       .then((res) => {
         dispatch(postProjectSuccess());
       })
       .catch((err) => {
+        message.error('문제가 발생했습니다.');
         dispatch(postProjectFailure());
       });
   };
@@ -108,6 +111,7 @@ export function getStandbyProjectRequest(classID) {
         dispatch(getStandbyProjectSuccess());
       })
       .catch((err) => {
+        message.error('문제가 발생했습니다.');
         dispatch(getStandbyProjectFailure());
       });
   };

@@ -12,6 +12,8 @@ import NotFound from '../containers/NotFound';
 import Searchbar from './../components/Searchbar';
 import Sidebar from '../components/Sidebar';
 
+import { getProjectRequest } from '../actions/project';
+
 import { Layout, message } from 'antd';
 const { Content, Sider } = Layout;
 
@@ -20,6 +22,16 @@ class Classroom extends React.Component {
   constructor(props) {
     super(props);
   }
+
+  componentDidMount() {
+    this.props.getProjectRequest(this.props.selectedClass.classID)
+      .then(() => {
+        if (this.props.getProject.status === "SUCCESS") {
+          message.success('프로젝트를 불러왔습니다.');
+        }
+      });
+  }
+
 
   render() {
     return (
@@ -50,4 +62,19 @@ class Classroom extends React.Component {
   }
 }
 
-export default Classroom;
+const mapStateToProps = (state) => {
+  return {
+    selectedClass: state.classroom.selectedClass.classInfo,
+    getProject: state.project.get
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getProjectRequest: (classID) => {
+      return dispatch(getProjectRequest(classID));
+    }
+  };
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Classroom));

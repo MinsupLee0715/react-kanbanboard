@@ -2,11 +2,22 @@ import React from 'react';
 import { Switch, Route, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import { getProjectRequest } from '../actions/project';
+
 import NoticeList from '../components/NoticeList';
 import Notices from '../components/Notices';
 import NoticeUpload from '../components/NoticeUpload';
 
 class Notice extends React.Component {
+
+  componentDidMount() {
+    this.props.getProjectRequest(this.props.selectedClass.classID)
+      .then(() => {
+        if (this.props.getProject.status === "SUCCESS") {
+          console.log('프로젝트를 불러왔습니다.');
+        }
+      });
+  }
 
   render() {
 
@@ -30,8 +41,17 @@ class Notice extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    selectedClass: state.classroom.selectedClass.classInfo
+    selectedClass: state.classroom.selectedClass.classInfo,
+    getProject: state.project.get
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getProjectRequest: (classID) => {
+      return dispatch(getProjectRequest(classID));
+    }
   };
 };
 
-export default withRouter(connect(mapStateToProps)(Notice));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Notice));

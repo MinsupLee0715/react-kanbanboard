@@ -66,9 +66,10 @@ class Mypage extends React.Component {
         if (this.props.getClasses[i].period == this.state.period)
           classList.push({
             key: this.props.getClasses[i].classID,
+            number: classList.length + 1,
             title: this.props.getClasses[i].title,
             divide: this.props.getClasses[i].divide,
-            project: "number"
+            professor: this.props.getClasses[i].name
           });
       }
       this.setState({ classData: classList });
@@ -78,16 +79,30 @@ class Mypage extends React.Component {
 
   render() {
 
-    const columns = [{
-      title: '수업명',
-      dataIndex: 'title'
-    }, {
-      title: '분반',
-      dataIndex: 'divide'
-    }, {
-      title: '프로젝트',
-      dataIndex: 'project'
-    }];
+    const columns = this.props.currentUser.type == 'professor' ?
+      [{
+        title: 'No.',
+        dataIndex: 'number'
+      }, {
+        title: '수업명',
+        dataIndex: 'title'
+      }, {
+        title: '분반',
+        dataIndex: 'divide'
+      }] :
+      [{
+        title: 'No.',
+        dataIndex: 'number'
+      }, {
+        title: '수업명',
+        dataIndex: 'title'
+      }, {
+        title: '분반',
+        dataIndex: 'divide'
+      }, {
+        title: '지도교수',
+        dataIndex: 'professor'
+      }];
 
     const rowClick = (record) => {
       return {
@@ -146,6 +161,7 @@ class Mypage extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
+    currentUser: state.auth.status.currentUser,
     getClasses: state.classroom.getClasses.classroom
   };
 };

@@ -3,8 +3,9 @@ import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import KanbanInfo from '../components/KanbanInfo';
+import KanbanAdd from '../components/KanbanAdd';
 
-import { Row, Col } from 'antd';
+import { Row, Col, Button } from 'antd';
 
 
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
@@ -20,8 +21,8 @@ import type {
 type Item = {|
   id: string,
     title: string,
-    date: String
-|}
+      date: String
+        |}
 
 // fake data generator(가짜 데이터 제너레이터)
 const getItems = (index: number, count: number): Item[] =>
@@ -80,6 +81,7 @@ const getListStyle = isDraggingOver => ({
   margin: '0 10px'
 });
 
+
 class KanbanBoard extends Component<*, State> {
 
   constructor(props) {
@@ -101,11 +103,21 @@ class KanbanBoard extends Component<*, State> {
         title: '',
         content: '',
         status: false
+      },
+      kanbanAddInfo: {
+        status: false
       }
     }
 
+    this.handleKanbanAddClick = this.handleKanbanAddClick.bind(this);
     this.handleKanbanClick = this.handleKanbanClick.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
+  }
+
+  handleKanbanAddClick() {
+    this.setState({
+      kanbanAddInfo: { status: true }
+    });
   }
 
   handleKanbanClick(e) {
@@ -125,6 +137,9 @@ class KanbanBoard extends Component<*, State> {
         id: '',
         title: '',
         content: '',
+        status: false
+      },
+      kanbanAddInfo: {
         status: false
       }
     });
@@ -258,7 +273,14 @@ class KanbanBoard extends Component<*, State> {
                     <div
                       style={ { height: 30, paddingLeft: 12 } }
                     >
-                      <h3>할 일 <small>{ this.state.items1.length }</small></h3>
+                      <Row>
+                        <Col span={ 20 }>
+                          <h3>할 일 <small>{ this.state.items1.length }</small></h3>
+                        </Col>
+                        <Col span={ 4 }>
+                          <Button type='primary' shape='circle' size='middle' icon='plus' onClick={ this.handleKanbanAddClick } />
+                        </Col>
+                      </Row>
                     </div>
                     { this.state.items1.map(item => (
                       <Draggable key={ item.id } draggableId={ item.id }>
@@ -394,6 +416,10 @@ class KanbanBoard extends Component<*, State> {
 
           <KanbanInfo
             data={ this.state.kanbanInfo }
+            handleCancel={ this.handleCancel }
+          />
+          <KanbanAdd
+            data={ this.state.kanbanAddInfo }
             handleCancel={ this.handleCancel }
           />
         </Row>

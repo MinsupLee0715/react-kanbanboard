@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/', (req, res) => {
   let loginInfo = req.session.loginInfo;
   let classID = req.query.classID;
-  let projectID = req.query.projectID;
+  //let projectID = req.query.projectID;
 
   if (typeof classID === 'undefined') {
     return res.status(400).json({
@@ -21,30 +21,17 @@ router.get('/', (req, res) => {
 
   if (loginInfo.type == 'professor') {
     // 교수일 시
-    if (projectID === 'undefined') {
+    //if (typeof projectID === 'undefined') {
 
-      // 수업 내 전체 프로젝트 조회
-      let params = [loginInfo.userid, classID];
-      query = `SELECT * FROM project WHERE projectID IN (
-        SELECT Distinct projectID FROM class_student WHERE class_student.classID IN (
-        SELECT classID FROM classroom WHERE professorID = ? AND classID = ?
-        ) AND class_student.projectID != 'NULL')`;
-      db.query(query, params, (err, result) => {
-        if (err) throw err;
-        console.log(loginInfo.name + ' 교수 전체 프로젝트 조회');
-        return res.json({ result: result });
-      });
-    } else {
+    // 수업 내 전체 프로젝트 조회
+    let params = [loginInfo.userid, classID];
+    query = `SELECT * FROM project_professor WHERE professorID = ? AND classID = ?`;
+    db.query(query, params, (err, result) => {
+      if (err) throw err;
+      console.log(loginInfo.name + ' 교수 ' + classID + ' 프로젝트 조회');
+      return res.json({ result: result });
+    });
 
-      // 특정 프로젝트 조회
-      query = 'SELECT * FROM project WHERE projectID = ?'
-      db.query(query, projectID, (err, result) => {
-        if (err) throw err;
-        console.log(loginInfo.name + ' 교수 프로젝트 조회: ');
-        console.log(result[0]);
-        return res.json({ result: result });
-      });
-    }
   } else if (loginInfo.type == 'student') {
     // 학생일 시
     // 수업 내 프로젝트 조회
@@ -57,8 +44,8 @@ router.get('/', (req, res) => {
       console.log(result[0]);
       return res.json({ result: result });
     });
-  } else {
 
+  } else {
     // 로그인을 안했을 시
     return res.status(401).json({
       error: "User is undefined",
@@ -72,9 +59,9 @@ router.post('/', (req, res) => {
   let loginInfo = req.session.loginInfo;
 
   let classID = req.body.classID;
+  let title = req.body.title;
   let student = req.body.student;
   let projectID = new Date().toISOString().slice(0, 19) // to Mysql Datetime
-  let title = req.body.title;
   let status = 'standby';
 
   // 데이터 누락 시

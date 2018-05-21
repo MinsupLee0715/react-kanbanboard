@@ -2,22 +2,10 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import { putProjectRequest, getProjectRequest } from '../actions/project';
+
 import { Table, Divider, Col, message } from 'antd';
 const { Column, ColumnGroup } = Table;
-
-const sampleList = [{
-  _id: '1',
-  title: '프로젝트1',
-  members: ['사람1', '사람2']
-}, {
-  _id: '2',
-  title: '프로젝트2',
-  members: ['사람3', '사람4']
-}, {
-  _id: '3',
-  title: '프로젝트3',
-  members: ['사람5', '사람6', '사람7']
-}];
 
 class Approve extends React.Component {
 
@@ -30,31 +18,74 @@ class Approve extends React.Component {
 
     this.handleApprove = this.handleApprove.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.getProjectList = this.getProjectList.bind(this);
+    this.handleApproveDataBuild = this.handleApproveDataBuild.bind(this);
   }
 
-  handleApprove() {
-    message.success('승인 완료');
+  getProjectList() {
+    this.props.getProjectRequest(this.props.selectedClass.classID)
+      .then(() => {
+        if (this.props.getProject.status === "SUCCESS") {
+          this.handleApproveDataBuild();
+        }
+      });
   }
 
-  handleDelete() {
-    message.success('삭제 완료');
+  handleApprove(key) {
+    this.props.putProjectRequest(key, 'start')
+      .then(() => {
+        if (this.props.putProject.status === "SUCCESS") {
+          message.success('승인 완료');
+        }
+        this.getProjectList();
+      });
   }
 
-  componentDidMount() {
+  handleDelete(key) {
+    this.props.putProjectRequest(key, 'reject')
+      .then(() => {
+        if (this.props.putProject.status === "SUCCESS") {
+          message.success('삭제 완료');
+        }
+        this.getProjectList();
+      });
+  }
+
+  handleApproveDataBuild() {
     let list = [];
-    //let approveList = this.props.approveList;
+    let getProject = this.props.getProject.project;
+    let projectList = [];
 
-    //for (let i in approveList) {}
-    for (let i in sampleList) {
+    for (let i in getProject) {
+      if (getProject[i].status == 'standby') {
+        let index = projectList.map(x => x.projectID).indexOf(getProject[i].projectID);
+
+        if (index < 0) {
+          projectList.push({
+            projectID: getProject[i].projectID,
+            title: getProject[i].title,
+            student: [`${ getProject[i].name }(${ getProject[i].studentID })`]
+          });
+        } else {
+          projectList[index].student.push(`${ getProject[i].name }(${ getProject[i].studentID })`);
+        }
+      }
+    }
+
+    for (let i in projectList) {
       list.push({
-        key: sampleList[i]._id,
+        key: projectList[i].projectID,
         number: parseInt(i) + parseInt(1),
-        title: sampleList[i].title,
-        members: sampleList[i].members
+        title: projectList[i].title,
+        members: projectList[i].student
       });
     }
 
     this.setState({ approveList: list });
+  }
+
+  componentDidMount() {
+    this.handleApproveDataBuild();
   }
 
 
@@ -109,11 +140,11 @@ class Approve extends React.Component {
             <Column
               title="Action"
               key="action"
-              render={ (text, record) => (
+              render={ (text, record, index) => (
                 <span>
-                  <a onClick={ this.handleApprove }>승인</a>
+                  <a onClick={ () => this.handleApprove(record.key) }>승인</a>
                   <Divider type="vertical" />
-                  <a onClick={ this.handleDelete }>삭제</a>
+                  <a onClick={ () => this.handleDelete(record.key) }>삭제</a>
                 </span>
               ) }
             />
@@ -128,8 +159,21 @@ class Approve extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    selectedClass: state.classroom.selectedClass.classInfo
+    selectedClass: state.classroom.selectedClass.classInfo,
+    getProject: state.project.get,
+    putProject: state.project.put
   };
 };
 
-export default withRouter(connect(mapStateToProps)(Approve));
+const mapDispatchProps = (dispatch) => {
+  return {
+    putProjectRequest: (projectID, status) => {
+      return dispatch(putProjectRequest(projectID, status));
+    },
+    getProjectRequest: (classID) => {
+      return dispatch(getProjectRequest(classID));
+    }
+  };
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchProps)(Approve));

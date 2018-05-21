@@ -10,6 +10,7 @@ const { Item } = Menu;
 class StdSidebar extends React.Component {
 
   render() {
+
     return (
       <Menu
         className="sideMenu"

@@ -31,10 +31,8 @@ class Login extends React.Component {
   }
 
   handleStdLogin() {
-    /* let id = this.state.userid;
-    let pw = this.state.password; */
-    let id = "20131810";
-    let pw = "1234";
+    let id = this.state.userid;
+    let pw = this.state.password;
     let type = "student";
 
     this.props.loginRequest(id, pw, type)

@@ -18,6 +18,11 @@ export const GET_CLASSROOM_FAILURE = "GET_CLASSROOM_FAILURE";
 /* Select Class */
 export const SELECT_CLASS = "SELECT_CLASS";
 
+/* Get Class.Student */
+export const GET_CLASS_STUDENT = "GET_CLASS_STUDENT";
+export const GET_CLASS_STUDENT_SUCCESS = "GET_CLASS_STUDENT_SUCCESS";
+export const GET_CLASS_STUDENT_FAILURE = "GET_CLASS_STUDENT_FAILURE";
+
 /* Notice */
 export const GET_NOTICE = "GET_NOTICE";
 export const GET_NOTICE_SUCCESS = "GET_NOTICE_SUCCESS";

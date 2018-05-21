@@ -39,3 +39,31 @@ export function selectClassRequest(classInfo) {
     dispatch(selectClass(classInfo));
   };
 }
+
+/* get class student */
+export function getClassStudent() {
+  return { type: types.GET_CLASS_STUDENT };
+}
+
+export function getClassStudentSuccess(classStudent) {
+  return { type: types.GET_CLASS_STUDENT_SUCCESS, classStudent };
+}
+
+export function getClassStudentFailure() {
+  return { type: types.GET_CLASS_STUDENT_FAILURE };
+}
+
+export function getClassStudentRequest(classID) {
+  return (dispatch) => {
+    dispatch(getClassStudent());
+
+    return axios
+      .get(`/api/classroom/getClassStudent?classID=${ classID }`)
+      .then((res) => {
+        dispatch(getClassStudentSuccess(res.data.result));
+      })
+      .catch((err) => {
+        dispatch(getClassStudentFailure());
+      });
+  };
+}

@@ -12,53 +12,55 @@ class ProjectList extends React.Component {
     this.state = {
       project: []
     };
+
+    this.handleKanbanBoardLoad = this.handleKanbanBoardLoad.bind(this);
+  }
+
+  handleKanbanBoardLoad(projectID) {
+    console.log('Loading... ' + projectID);
+    ///classroom/${ this.props.selectedClass.classID }/kanbanboard/${ projectList[i].projectID }
   }
 
   componentDidMount() {
-    /* 서버에서 수업 내 프로젝트 리스트를 가져온다 */
-
+    /* 수업 내 프로젝트 리스트 */
+    let projectAllList = this.props.projectList;
     let projectList = [];
-    const sampleList = [{
-      _id: '1',
-      title: '프로젝트1',
-      members: ['사람1', '사람2']
-    }, {
-      _id: '2',
-      title: '프로젝트2',
-      members: ['사람3', '사람4']
-    }, {
-      _id: '3',
-      title: '프로젝트3',
-      members: ['사람5', '사람6', '사람7']
-    }, {
-      _id: '4',
-      title: '프로젝트3',
-      members: ['사람5', '사람6', '사람7']
-    }, {
-      _id: '5',
-      title: '프로젝트3',
-      members: ['사람5', '사람6', '사람7']
-    }];
+    let list = [];
+    for (let i in projectAllList) {
+      if (projectAllList[i].status == 'start') {
+        let index = projectList.map(x => x.projectID).indexOf(projectAllList[i].projectID);
 
-    for (let i in sampleList) { // 받아온 리스트를 반복문으로 돌림
+        if (index < 0) {
+          projectList.push({
+            projectID: projectAllList[i].projectID,
+            title: projectAllList[i].title,
+            student: [`${ projectAllList[i].name }`]
+          });
+        } else {
+          projectList[index].student.push(`${ projectAllList[i].name }`);
+        }
+      }
+    }
+
+    for (let i in projectList) { // 받아온 리스트를 반복문으로 돌림
       /* 참여자 리스트에 Divider(| 세로줄) 추가 */
       let memberList = [];
-      for (let j in sampleList[i].members) {
-        memberList.push(sampleList[i].members[j]);
-        if (j != sampleList[i].members.length - 1) {
+      for (let j in projectList[i].student) {
+        memberList.push(projectList[i].student[j]);
+        if (j != projectList[i].student.length - 1) {
           memberList.push(<Divider type="vertical" />);
         }
       }
 
-      projectList.push(
+      list.push(
         <Col md={ 12 } lg={ 6 } className="project-card" >
-          <Link to={ `/classroom/${ this.props.selectedClass._id }/kanbanboard/${ sampleList[i]._id }` }>
+          <a onClick={ () => this.handleKanbanBoardLoad(projectList[i].projectID) }>
             <Card
               hoverable
-              title={ sampleList[i].title }
+              title={ projectList[i].title }
             >
               <p>{ memberList }</p>
-              <p>{ "3일 전에 업데이트 함" }</p>
+              <br/>
               <span>할일 { 3 }</span>
               <Divider type="vertical" />
               <span>진행중 { 3 }</span>
@@ -67,12 +69,12 @@ class ProjectList extends React.Component {
               <Divider type="vertical" />
               <span>완료 { 3 }</span>
             </Card>
-          </Link>
+          </a>
         </Col>
       );
     }
 
-    this.setState({ project: projectList });
+    this.setState({ project: list });
   }
 
 
@@ -95,7 +97,8 @@ class ProjectList extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    selectedClass: state.classroom.selectedClass.classInfo
+    selectedClass: state.classroom.selectedClass.classInfo,
+    projectList: state.project.get.project
   };
 };
 
