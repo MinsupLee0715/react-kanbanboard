@@ -76,9 +76,8 @@ const getListStyle = isDraggingOver => ({
   background: isDraggingOver ? 'lightblue' : 'rgba(207,216,220,.2)',
   padding: `${ grid }px 0`,
   minHeight: 700,
-  width: '23%',
-  float: 'left',
-  margin: '0 10px'
+  width: '100%',
+  float: 'left'
 });
 
 
@@ -264,153 +263,158 @@ class KanbanBoard extends Component<*, State> {
           {/* DragDropContext > Droppable > Draggable */ }
           <DragDropContext onDragEnd={ this.onDragEnd }>
             <div style={ { display: "inline" } }>
-              <Droppable droppableId='droppable-1'>
-                { (dropProvided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
-                  <div
-                    ref={ dropProvided.innerRef }
-                    style={ getListStyle(snapshot.isDraggingOver) }
-                  >
+              <Col span={ 6 } style={ { padding: '0 8px' } }>
+                <Droppable droppableId='droppable-1'>
+                  { (dropProvided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
                     <div
-                      style={ { height: 30, paddingLeft: 12 } }
+                      ref={ dropProvided.innerRef }
+                      style={ getListStyle(snapshot.isDraggingOver) }
                     >
-                      <Row>
-                        <Col span={ 20 }>
-                          <h3>할 일 <small>{ this.state.items1.length }</small></h3>
-                        </Col>
-                        <Col span={ 4 }>
+                      <div
+                        style={ { height: 30, padding: '0 12px' } }
+                      >
+                        <div style={ { display: 'flex', justifyContent: 'space-between' } }>
+                          <h3>할 일 { this.state.items1.length }</h3>
                           <Button type='primary' shape='circle' size='middle' icon='plus' onClick={ this.handleKanbanAddClick } />
-                        </Col>
-                      </Row>
-                    </div>
-                    { this.state.items1.map(item => (
-                      <Draggable key={ item.id } draggableId={ item.id }>
-                        { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
-                          <div id={ item.id } onClick={ this.handleKanbanClick }>
-                            <div
-                              ref={ provided.innerRef }
-                              style={ getItemStyle(
-                                provided.draggableStyle,
-                                snapshot.isDragging
-                              ) }
-                              { ...provided.dragHandleProps }
-                            >
-                              <h3>{ item.title }</h3>
-                              <br />
-                              <h5 style={ { textAlign: 'right' } }>{ "2018-05-05" }</h5>
+                        </div>
+
+                      </div>
+                      { this.state.items1.map(item => (
+                        <Draggable key={ item.id } draggableId={ item.id }>
+                          { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+                            <div id={ item.id } onClick={ this.handleKanbanClick }>
+                              <div
+                                ref={ provided.innerRef }
+                                style={ getItemStyle(
+                                  provided.draggableStyle,
+                                  snapshot.isDragging
+                                ) }
+                                { ...provided.dragHandleProps }
+                              >
+                                <h3>{ item.title }</h3>
+                                <br />
+                                <h5 style={ { textAlign: 'right' } }>{ "2018-05-05" }</h5>
+                              </div>
+                              { provided.placeholder }
                             </div>
-                            { provided.placeholder }
-                          </div>
-                        ) }
-                      </Draggable>
-                    )) }
-                  </div>
-                ) }
-              </Droppable>
-              <Droppable droppableId='droppable-2'>
-                { (dropProvided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
-                  <div
-                    ref={ dropProvided.innerRef }
-                    style={ getListStyle(snapshot.isDraggingOver) }
-                  >
+                          ) }
+                        </Draggable>
+                      )) }
+                    </div>
+                  ) }
+                </Droppable>
+              </Col>
+              <Col span={ 6 } style={ { padding: '0 8px' } }>
+                <Droppable droppableId='droppable-2'>
+                  { (dropProvided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
                     <div
-                      style={ { height: 30, paddingLeft: 12 } }
+                      ref={ dropProvided.innerRef }
+                      style={ getListStyle(snapshot.isDraggingOver) }
                     >
-                      <h3>진행 중 <small>{ this.state.items2.length }</small></h3>
-                    </div>
-                    { this.state.items2.map(item => (
-                      <Draggable key={ item.id } draggableId={ item.id }>
-                        { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
-                          <div id={ item.id } onClick={ this.handleKanbanClick }>
-                            <div
-                              ref={ provided.innerRef }
-                              style={ getItemStyle(
-                                provided.draggableStyle,
-                                snapshot.isDragging
-                              ) }
-                              { ...provided.dragHandleProps }
-                            >
-                              <h3>{ item.title }</h3>
-                              <br />
-                              <h5 style={ { textAlign: 'right' } }>{ "2018-05-05" }</h5>
+                      <div
+                        style={ { height: 30, padding: '0 12px' } }
+                      >
+                        <h3>진행 중 { this.state.items2.length }</h3>
+                      </div>
+                      { this.state.items2.map(item => (
+                        <Draggable key={ item.id } draggableId={ item.id }>
+                          { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+                            <div id={ item.id } onClick={ this.handleKanbanClick }>
+                              <div
+                                ref={ provided.innerRef }
+                                style={ getItemStyle(
+                                  provided.draggableStyle,
+                                  snapshot.isDragging
+                                ) }
+                                { ...provided.dragHandleProps }
+                              >
+                                <h3>{ item.title }</h3>
+                                <br />
+                                <h5 style={ { textAlign: 'right' } }>{ "2018-05-05" }</h5>
+                              </div>
+                              { provided.placeholder }
                             </div>
-                            { provided.placeholder }
-                          </div>
-                        ) }
-                      </Draggable>
-                    )) }
-                  </div>
-                ) }
-              </Droppable>
-              <Droppable droppableId='droppable-3'>
-                { (dropProvided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
-                  <div
-                    ref={ dropProvided.innerRef }
-                    style={ getListStyle(snapshot.isDraggingOver) }
-                  >
+                          ) }
+                        </Draggable>
+                      )) }
+                    </div>
+                  ) }
+                </Droppable>
+              </Col>
+              <Col span={ 6 } style={ { padding: '0 8px' } }>
+                <Droppable droppableId='droppable-3'>
+                  { (dropProvided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
                     <div
-                      style={ { height: 30, paddingLeft: 12 } }
+                      ref={ dropProvided.innerRef }
+                      style={ getListStyle(snapshot.isDraggingOver) }
                     >
-                      <h3>피드백 <small>{ this.state.items3.length }</small></h3>
-                    </div>
-                    { this.state.items3.map(item => (
-                      <Draggable key={ item.id } draggableId={ item.id } isDragDisabled='flase'>
-                        { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
-                          <div id={ item.id } onClick={ this.handleKanbanClick }>
-                            <div
-                              ref={ provided.innerRef }
-                              style={ getItemStyle(
-                                provided.draggableStyle,
-                                snapshot.isDragging
-                              ) }
-                              { ...provided.dragHandleProps }
-                            >
-                              <h3>{ item.title }</h3>
-                              <br />
-                              <h5 style={ { textAlign: 'right' } }>{ "2018-05-05" }</h5>
+                      <div
+                        style={ { height: 30, padding: '0 12px' } }
+                      >
+                        <h3>피드백 { this.state.items3.length }</h3>
+                      </div>
+                      { this.state.items3.map(item => (
+                        <Draggable key={ item.id } draggableId={ item.id } isDragDisabled='flase'>
+                          { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+                            <div id={ item.id } onClick={ this.handleKanbanClick }>
+                              <div
+                                ref={ provided.innerRef }
+                                style={ getItemStyle(
+                                  provided.draggableStyle,
+                                  snapshot.isDragging
+                                ) }
+                                { ...provided.dragHandleProps }
+                              >
+                                <h3>{ item.title }</h3>
+                                <br />
+                                <h5 style={ { textAlign: 'right' } }>{ "2018-05-05" }</h5>
+                              </div>
+                              { provided.placeholder }
                             </div>
-                            { provided.placeholder }
-                          </div>
-                        ) }
-                      </Draggable>
-                    )) }
-                  </div>
-                ) }
-              </Droppable>
-              <Droppable droppableId='droppable-4' isDropDisabled='flase'>
-                { (dropProvided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
-                  <div
-                    ref={ dropProvided.innerRef }
-                    style={ getListStyle(snapshot.isDraggingOver) }
-                  >
+                          ) }
+                        </Draggable>
+                      )) }
+                    </div>
+                  ) }
+                </Droppable>
+              </Col>
+              <Col span={ 6 } style={ { padding: '0 8px' } }>
+                <Droppable droppableId='droppable-4' isDropDisabled='flase'>
+                  { (dropProvided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
                     <div
-                      style={ { height: 30, paddingLeft: 12 } }
+                      ref={ dropProvided.innerRef }
+                      style={ getListStyle(snapshot.isDraggingOver) }
                     >
-                      <h3>완료 <small>{ this.state.items4.length }</small></h3>
-                    </div>
-                    { this.state.items4.map(item => (
-                      <Draggable key={ item.id } draggableId={ item.id } isDragDisabled='flase'>
-                        { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
-                          <div id={ item.id } onClick={ this.handleKanbanClick }>
-                            <div
-                              ref={ provided.innerRef }
-                              style={ getItemStyle(
-                                provided.draggableStyle,
-                                snapshot.isDragging
-                              ) }
-                              { ...provided.dragHandleProps }
-                            >
-                              <h3>{ item.title }</h3>
-                              <br />
-                              <h5 style={ { textAlign: 'right' } }>{ "2018-05-05" }</h5>
+                      <div
+                        style={ { height: 30, padding: '0 12px' } }
+                      >
+                        <h3>완료 { this.state.items4.length }</h3>
+                      </div>
+                      { this.state.items4.map(item => (
+                        <Draggable key={ item.id } draggableId={ item.id } isDragDisabled='flase'>
+                          { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+                            <div id={ item.id } onClick={ this.handleKanbanClick }>
+                              <div
+                                ref={ provided.innerRef }
+                                style={ getItemStyle(
+                                  provided.draggableStyle,
+                                  snapshot.isDragging
+                                ) }
+                                { ...provided.dragHandleProps }
+                              >
+                                <h3>{ item.title }</h3>
+                                <br />
+                                <h5 style={ { textAlign: 'right' } }>{ "2018-05-05" }</h5>
+                              </div>
+                              { provided.placeholder }
                             </div>
-                            { provided.placeholder }
-                          </div>
-                        ) }
-                      </Draggable>
-                    )) }
-                  </div>
-                ) }
-              </Droppable>
+                          ) }
+                        </Draggable>
+                      )) }
+                    </div>
+                  ) }
+                </Droppable>
+              </Col>
             </div>
           </DragDropContext>
 

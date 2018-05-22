@@ -148,11 +148,14 @@ pre {
 }
 
 
-/* kanbanboard */
-/* .swimlane {
-  background: rgba(207,216,220,.2);
-  padding: 5px 0;
-  min-height: 768px;
+/* kanban */
+.kanban-upload .kanban-input.ant-input {
+  outline: none;
   border: none;
-  border-radius: 4px;
-} */
+}
+.kanban-upload .kanban-input.ant-input:focus,
+.kanban-upload .kanban-input.ant-input:hover {
+  outline: none;
+  border: none;
+  box-shadow: 0 0 black;
+}
