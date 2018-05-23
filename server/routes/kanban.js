@@ -1,6 +1,5 @@
 import express from 'express';
 import db from '../models/mysqlDatabase';
-import { SSL_OP_NO_QUERY_MTU } from 'constants';
 const router = express.Router();
 
 // /api/classroom/kanban/*
