@@ -113,12 +113,14 @@ class KanbanBoard extends Component<*, State> {
     this.handleCancel = this.handleCancel.bind(this);
   }
 
+  // 칸반 추가 버튼(+) 클릭 시, 팝업
   handleKanbanAddClick() {
     this.setState({
       kanbanAddInfo: { status: true }
     });
   }
 
+  // 칸반 클릭 시, 칸반 불러오기
   handleKanbanClick(e) {
     this.setState({
       kanbanInfo: {
@@ -130,6 +132,7 @@ class KanbanBoard extends Component<*, State> {
     });
   }
 
+  // 칸반 정보 팝업 닫기
   handleCancel() {
     this.setState({
       kanbanInfo: {

@@ -4,15 +4,15 @@ import { message } from 'antd';
 
 /* GET kanbanList */
 export function getKanbanList() {
-  return { type: types.GET_KANBAN };
+  return { type: types.GET_KANBAN_LIST };
 }
 
 export function getKanbanListSuccess(result) {
-  return { type: types.GET_KANBAN_SUCCESS, result };
+  return { type: types.GET_KANBAN_LIST_SUCCESS, result };
 }
 
 export function getKanbanListFailure() {
-  return { type: types.GET_KANBAN_FAILURE };
+  return { type: types.GET_KANBAN_LIST_FAILURE };
 }
 
 export function getKanbanListRequest(projectID) {
@@ -76,6 +76,8 @@ export function postKanbanFailure() {
 export function postKanbanRequest(projectID, title, content) {
   return (dispatch) => {
     dispatch(postKanban());
+
+    console.log(projectID, title, content);
 
     return axios
       .post('/api/classroom/kanban', { projectID, title, content })

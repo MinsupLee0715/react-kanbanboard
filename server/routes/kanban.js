@@ -107,7 +107,7 @@ router.post('/', (req, res) => {
   }
 
   // 데이터가 없을 시
-  if (title == '' || content == '') {
+  if (!projectID || !title || !content) {
     return res.status(400).json({
       error: "Empty Data",
       code: 2
@@ -134,6 +134,8 @@ router.post('/', (req, res) => {
         status: 'TODO',
         projectID: projectID
       };
+
+      console.log(data);
 
       // 칸반 등록
       db.query(query, data, (err) => {

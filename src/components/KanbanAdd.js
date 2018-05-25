@@ -2,6 +2,8 @@ import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import { postKanbanRequest } from '../actions/kanban';
+
 import { Modal, Button, message, Divider, Input, Icon } from 'antd';
 const { TextArea } = Input;
 const confirm = Modal.confirm;
@@ -51,14 +53,23 @@ class KanbanAdd extends React.Component {
   // 두번째 modal에서 OK 시
   handleAdd() {
     this.setState({ loading: true });
-    setTimeout(() => {
-      this.setState({
-        modalVisible: false,
-        loading: false,
+
+    let projectID = this.props.project[0].projectID;
+    let title = this.state.title;
+    let content = this.state.content;
+
+    this.props.postKanbanRequest(projectID, title, content)
+      .then(() => {
+        this.setState({
+          modalVisible: false,
+          loading: false,
+        });
+
+        if (this.props.kanban.status === "SUCCESS") {
+          message.success('칸반을 등록하였습니다.');
+          this.showCancel();
+        }
       });
-      message.success(this.props.project[0].projectID);
-      this.showCancel();
-    }, 2000);
   }
 
   // 두번째 modal에서 Cancel 시
@@ -119,8 +130,17 @@ class KanbanAdd extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    project: state.project.get.project
+    project: state.project.get.project,
+    kanban: state.kanban.post
   };
 };
 
-export default withRouter(connect(mapStateToProps)(KanbanAdd));
+const mapDispatchProps = (dispatch) => {
+  return {
+    postKanbanRequest: (projectID, title, content) => {
+      return dispatch(postKanbanRequest(projectID, title, content));
+    }
+  }
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchProps)(KanbanAdd));
