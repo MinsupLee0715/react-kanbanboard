@@ -2,11 +2,12 @@ import express from 'express';
 import db from '../models/mysqlDatabase';
 const router = express.Router();
 
+
 // /api/classroom/kanban/*
 
 // 프로젝트에 대한 모든 칸반 정보 요청
 router.get('/', (req, res) => { // ../kanban?projectID=''
-  let loginInfo = req.session.loginInfo;
+  const loginInfo = req.session.loginInfo;
   let projectID = req.query.projectID;
 
   // 비로그인 일 시
@@ -51,8 +52,8 @@ router.get('/', (req, res) => { // ../kanban?projectID=''
 
 // 특정 칸반에 대한 정보 요청
 router.get('/:id', (req, res) => { // ../kanban/kanbanid
-  let loginInfo = req.session.loginInfo;
-  let kanbanID = req.params.id;
+  const loginInfo = req.session.loginInfo;
+  const kanbanID = req.params.id;
 
   // 비로그인 일 시
   if (typeof loginInfo.userid === 'undefined') {
@@ -92,7 +93,7 @@ router.get('/:id', (req, res) => { // ../kanban/kanbanid
 
 // 칸반 등록
 router.post('/', (req, res) => {
-  let loginInfo = req.session.loginInfo;
+  const loginInfo = req.session.loginInfo;
 
   let projectID = req.body.projectID;
   let title = req.body.title;
@@ -135,8 +136,6 @@ router.post('/', (req, res) => {
         projectID: projectID
       };
 
-      console.log(data);
-
       // 칸반 등록
       db.query(query, data, (err) => {
         if (err) throw err;
@@ -150,7 +149,7 @@ router.post('/', (req, res) => {
 
 // 특정 칸반에 대한 정보 수정
 router.put('/', (req, res) => {
-  let loginInfo = req.session.loginInfo;
+  const loginInfo = req.session.loginInfo;
 
   // 비로그인 일 시
   if (typeof loginInfo.userid === 'undefined') {
@@ -160,7 +159,7 @@ router.put('/', (req, res) => {
     });
   }
 
-  let kanbanID = req.body.id;
+  const kanbanID = req.body.id;
   let projectID = req.body.projectID;
   let title = req.body.title;
   let content = req.body.content;
@@ -177,11 +176,59 @@ router.put('/', (req, res) => {
   return res.json({ result: 'not yet' });
 });
 
+// 칸반 상태 변경
+router.put('/status', (req, res) => {
+  const loginInfo = req.session.loginInfo;
+
+  // 비로그인 일 시
+  if (typeof loginInfo.userid === 'undefined') {
+    return res.status(400).json({
+      error: "Undefined classID",
+      code: 1
+    });
+  }
+
+  const kanbanID = req.body.kanbanID;
+  const status = req.body.status;
+
+  // 데이터가 없을 시
+  if (!kanbanID || !status) {
+    return res.status(400).json({
+      error: "Empty Data",
+      code: 2
+    });
+  }
+
+  // 상태 확인 (대소문자 구분 OK)
+  const statusList = ['TODO', 'DOING', 'FEEDBACK', 'FINISH'];
+  if (statusList.indexOf(status) < 0) {
+    return res.status(400).json({
+      error: "Wrong Status",
+      code: 3
+    });
+  }
+
+  // input data & query
+  let data = [new Date().toISOString().slice(0, 19), status, kanbanID];
+  console.log(data);
+  let query = '';
+  query = `UPDATE kanban SET updated_date = ?, status = ? 
+    WHERE created_date = ?`;
+
+  // db update
+  db.query(query, data, (err, result) => {
+    if (err) throw err;
+    console.log('칸반 상태 변경 완료');
+    console.log(result);
+    return res.json({ result: 'success' });
+  });
+});
+
 
 // 특정 칸반에 대한 정보 삭제
 router.delete('/', (req, res) => {
-  let loginInfo = req.session.loginInfo;
-  let kanbanID = req.body.id;
+  const loginInfo = req.session.loginInfo;
+  const kanbanID = req.body.id;
 
   // 비로그인 일 시
   if (typeof loginInfo.userid === 'undefined') {

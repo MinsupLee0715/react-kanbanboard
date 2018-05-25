@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import moment from 'moment-timezone';
+
+import {
+  getKanbanListRequest,
+  putKanbanStatusRequest
+} from '../actions/kanban';
 
 import KanbanInfo from '../components/KanbanInfo';
 import KanbanAdd from '../components/KanbanAdd';
 
-import { Row, Col, Button } from 'antd';
-
+import { Row, Col, Button, message, Switch } from 'antd';
 
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+
 import type {
   DraggableStyle,
     DroppableProvided,
@@ -23,14 +29,6 @@ type Item = {|
     title: string,
       date: String
         |}
-
-// fake data generator(가짜 데이터 제너레이터)
-const getItems = (index: number, count: number): Item[] =>
-  Array.from({ length: count }, (v, k) => k).map(k => ({
-    id: `${ index }-${ k }`,
-    title: `${ index }-${ k }`,
-    date: ''
-  }));
 
 // a little function to help us with reordering the result(결과 재정렬을 돕는 함수)
 const reorder = (startIndex, endIndex, list, list2) => {
@@ -86,16 +84,11 @@ class KanbanBoard extends Component<*, State> {
   constructor(props) {
     super(props);
 
-    /*
-    서버에서 칸반정보 받아오자
-    교수일 때는 주소 :project 값으로 가져오고
-    학생이면 수업id로 DB 조회하면됨
-    */
     this.state = {
-      items1: getItems(1, 5),
-      items2: getItems(2, 5),
-      items3: getItems(3, 5),
-      items4: getItems(4, 3),
+      todo: [],
+      doing: [],
+      feedback: [],
+      finish: [],
 
       kanbanInfo: {
         id: '',
@@ -111,7 +104,74 @@ class KanbanBoard extends Component<*, State> {
     this.handleKanbanAddClick = this.handleKanbanAddClick.bind(this);
     this.handleKanbanClick = this.handleKanbanClick.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
+    this.setItems = this.setItems.bind(this);
+    this.getKanbanList = this.getKanbanList.bind(this);
   }
+
+  componentDidMount() {
+    this.getKanbanList();
+  }
+
+  // 서버로부터 칸반 정보를 가져온다.
+  getKanbanList() {
+    let project = this.props.project.project[0];
+
+    if (project.projectID) {
+      // 칸반 리스트 가져오기
+      this.props.getKanbanListRequest(project.projectID)
+        .then(() => {
+          if (this.props.kanban.status === "SUCCESS") {
+            message.success('칸반을 불러왔습니다.');
+            this.setItems(this.props.kanban.kanbanList);
+          }
+        });
+    }
+  }
+
+  // 칸반 정보를 종류별로 분류한다.
+  setItems(kanbanList) {
+    let todo = [];
+    let doing = [];
+    let feedback = [];
+    let finish = [];
+
+    kanbanList.forEach(e => {
+      switch (e.status) {
+        case "TODO":
+          todo.push({
+            id: moment(e.created_date).tz('Asia/Seoul').format().slice(0, 19),
+            title: e.title,
+            date: moment(e.updated_date).tz('Asia/Seoul').format().slice(0, 10)
+          });
+          break;
+        case "DOING":
+          doing.push({
+            id: moment(e.created_date).tz('Asia/Seoul').format().slice(0, 19),
+            title: e.title,
+            date: moment(e.updated_date).tz('Asia/Seoul').format().slice(0, 10)
+          });
+          break;
+        case "FEEDBACK":
+          feedback.push({
+            id: moment(e.created_date).tz('Asia/Seoul').format().slice(0, 19),
+            title: e.title,
+            date: moment(e.updated_date).tz('Asia/Seoul').format().slice(0, 10)
+          });
+          break;
+        case "FINISH":
+          finish.push({
+            id: moment(e.created_date).tz('Asia/Seoul').format().slice(0, 19),
+            title: e.title,
+            date: moment(e.updated_date).tz('Asia/Seoul').format().slice(0, 10)
+          });
+          break;
+        default: break;
+      }
+
+      this.setState({ todo, doing, feedback, finish });
+    });
+  }
+
 
   // 칸반 추가 버튼(+) 클릭 시, 팝업
   handleKanbanAddClick() {
@@ -160,90 +220,108 @@ class KanbanBoard extends Component<*, State> {
       return;
     }
 
-    /* if (!window.confirm("상태를 변경하시겠습니까?")) {
+    if (!window.confirm("상태를 변경하시겠습니까?")) {
       return;
-    } */
+    }
 
     let change = [];
 
     // 1st Lane -> 2nd Lane
     if (result.source.droppableId === 'droppable-1' && result.destination.droppableId === 'droppable-2') {
-      change = reorder(
-        result.source.index,
-        result.destination.index,
-        this.state.items1,
-        this.state.items2
-      );
-      this.setState({
-        items1: change[0],
-        items2: change[1]
-      });
+      this.props.putKanbanStatusRequest(result.draggableId, 'DOING')
+        .then(() => {
+          if (this.props.putStatus.status === 'SUCCESS') {
+            message.success('상태를 변경하였습니다.');
+            change = reorder(
+              result.source.index,
+              result.destination.index,
+              this.state.todo,
+              this.state.doing
+            );
+            this.setState({
+              todo: change[0],
+              doing: change[1]
+            });
+          }
+        });
     }
 
     // 2nd Lane -> 3rd Lane
     if (result.source.droppableId === 'droppable-2' && result.destination.droppableId === 'droppable-3') {
-      change = reorder(
-        result.source.index,
-        result.destination.index,
-        this.state.items2,
-        this.state.items3
-      );
-      this.setState({
-        items2: change[0],
-        items3: change[1]
-      });
+      this.props.putKanbanStatusRequest(result.draggableId, 'FEEDBACK')
+        .then(() => {
+          if (this.props.putStatus.status === 'SUCCESS') {
+            message.success('상태를 변경하였습니다.');
+            change = reorder(
+              result.source.index,
+              result.destination.index,
+              this.state.doing,
+              this.state.feedback
+            );
+            this.setState({
+              doing: change[0],
+              feedback: change[1]
+            });
+          }
+        });
     }
 
     // 2nd Lane -> 1st Lane
     if (result.source.droppableId === 'droppable-2' && result.destination.droppableId === 'droppable-1') {
-      change = reorder(
-        result.source.index,
-        result.destination.index,
-        this.state.items2,
-        this.state.items1
-      );
-      this.setState({
-        items2: change[0],
-        items1: change[1]
-      });
+      this.props.putKanbanStatusRequest(result.draggableId, 'TODO')
+        .then(() => {
+          if (this.props.putStatus.status === 'SUCCESS') {
+            message.success('상태를 변경하였습니다.');
+            change = reorder(
+              result.source.index,
+              result.destination.index,
+              this.state.doing,
+              this.state.todo
+            );
+            this.setState({
+              doing: change[0],
+              todo: change[1]
+            });
+          }
+        });
     }
 
     // 1st -> 1st or 2nd -> 2nd or 3rd -> 3rd (같은 라인에서 이동할 경우)
     if (result.source.droppableId === result.destination.droppableId) {
-      let items1, items2, items3;
+      let todo, doing, feedback;
 
       switch (result.source.droppableId) {
 
         case 'droppable-1':
-          items1 = reorder(
+          todo = reorder(
             result.source.index,
             result.destination.index,
-            this.state.items1,
+            this.state.todo,
           );
           this.setState({
-            items1
+            todo
           });
           break;
 
         case 'droppable-2':
-          items2 = reorder(
+          doing = reorder(
             result.source.index,
             result.destination.index,
-            this.state.items2,
+            this.state.doing,
           );
           this.setState({
-            items2
+            doing
           });
           break;
 
         case 'droppable-3':
-          items3 = reorder(
+          feedback = reorder(
             result.source.index,
             result.destination.index,
-            this.state.items3,
+            this.state.feedback,
           );
           this.setState({
-            items3
+            feedback
           });
           break;
 
@@ -277,12 +355,12 @@ class KanbanBoard extends Component<*, State> {
                         style={ { height: 30, padding: '0 12px' } }
                       >
                         <div style={ { display: 'flex', justifyContent: 'space-between' } }>
-                          <h3>할 일 { this.state.items1.length }</h3>
+                          <h3>할 일 { this.state.todo.length }</h3>
                           <Button type='primary' shape='circle' size='middle' icon='plus' onClick={ this.handleKanbanAddClick } />
                         </div>
 
                       </div>
-                      { this.state.items1.map(item => (
+                      { this.state.todo.map(item => (
                         <Draggable key={ item.id } draggableId={ item.id }>
                           { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
                             <div id={ item.id } onClick={ this.handleKanbanClick }>
@@ -296,7 +374,7 @@ class KanbanBoard extends Component<*, State> {
                               >
                                 <h3>{ item.title }</h3>
                                 <br />
-                                <h5 style={ { textAlign: 'right' } }>{ "2018-05-05" }</h5>
+                                <h5 style={ { textAlign: 'right' } }>{ item.date }</h5>
                               </div>
                               { provided.placeholder }
                             </div>
@@ -317,9 +395,9 @@ class KanbanBoard extends Component<*, State> {
                       <div
                         style={ { height: 30, padding: '0 12px' } }
                       >
-                        <h3>진행 중 { this.state.items2.length }</h3>
+                        <h3>진행 중 { this.state.doing.length }</h3>
                       </div>
-                      { this.state.items2.map(item => (
+                      { this.state.doing.map(item => (
                         <Draggable key={ item.id } draggableId={ item.id }>
                           { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
                             <div id={ item.id } onClick={ this.handleKanbanClick }>
@@ -333,7 +411,7 @@ class KanbanBoard extends Component<*, State> {
                               >
                                 <h3>{ item.title }</h3>
                                 <br />
-                                <h5 style={ { textAlign: 'right' } }>{ "2018-05-05" }</h5>
+                                <h5 style={ { textAlign: 'right' } }>{ item.date }</h5>
                               </div>
                               { provided.placeholder }
                             </div>
@@ -354,9 +432,9 @@ class KanbanBoard extends Component<*, State> {
                       <div
                         style={ { height: 30, padding: '0 12px' } }
                       >
-                        <h3>피드백 { this.state.items3.length }</h3>
+                        <h3>피드백 { this.state.feedback.length }</h3>
                       </div>
-                      { this.state.items3.map(item => (
+                      { this.state.feedback.map(item => (
                         <Draggable key={ item.id } draggableId={ item.id } isDragDisabled='flase'>
                           { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
                             <div id={ item.id } onClick={ this.handleKanbanClick }>
@@ -370,7 +448,7 @@ class KanbanBoard extends Component<*, State> {
                               >
                                 <h3>{ item.title }</h3>
                                 <br />
-                                <h5 style={ { textAlign: 'right' } }>{ "2018-05-05" }</h5>
+                                <h5 style={ { textAlign: 'right' } }>{ item.date }</h5>
                               </div>
                               { provided.placeholder }
                             </div>
@@ -391,9 +469,9 @@ class KanbanBoard extends Component<*, State> {
                       <div
                         style={ { height: 30, padding: '0 12px' } }
                       >
-                        <h3>완료 { this.state.items4.length }</h3>
+                        <h3>완료 { this.state.finish.length }</h3>
                       </div>
-                      { this.state.items4.map(item => (
+                      { this.state.finish.map(item => (
                         <Draggable key={ item.id } draggableId={ item.id } isDragDisabled='flase'>
                           { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
                             <div id={ item.id } onClick={ this.handleKanbanClick }>
@@ -407,7 +485,7 @@ class KanbanBoard extends Component<*, State> {
                               >
                                 <h3>{ item.title }</h3>
                                 <br />
-                                <h5 style={ { textAlign: 'right' } }>{ "2018-05-05" }</h5>
+                                <h5 style={ { textAlign: 'right' } }>{ item.date }</h5>
                               </div>
                               { provided.placeholder }
                             </div>
@@ -428,6 +506,7 @@ class KanbanBoard extends Component<*, State> {
           <KanbanAdd
             data={ this.state.kanbanAddInfo }
             handleCancel={ this.handleCancel }
+            getKanbanList={ this.getKanbanList }
           />
         </Row>
       </div>
@@ -438,8 +517,22 @@ class KanbanBoard extends Component<*, State> {
 
 const mapStateToProps = (state) => {
   return {
-    selectedClass: state.classroom.selectedClass.classInfo
+    selectedClass: state.classroom.selectedClass.classInfo,
+    project: state.project.get,
+    kanban: state.kanban.getList,
+    putStatus: state.kanban.putStatus
   };
 };
 
-export default withRouter(connect(mapStateToProps)(KanbanBoard));
+const mapDispatchProps = (dispatch) => {
+  return {
+    getKanbanListRequest: (projectID) => {
+      return dispatch(getKanbanListRequest(projectID));
+    },
+    putKanbanStatusRequest: (kanbanID, status) => {
+      return dispatch(putKanbanStatusRequest(kanbanID, status));
+    },
+  };
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchProps)(KanbanBoard));

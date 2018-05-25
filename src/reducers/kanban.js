@@ -12,6 +12,7 @@ const initialState = {
   },
   post: { status: "INIT" },
   put: { status: "INIT" },
+  putStatus: { status: "INIT" },
   delete: { status: "INIT" }
 };
 
@@ -100,6 +101,26 @@ export default function kanban(state, action) {
     case types.PUT_KANBAN_FAILURE:
       return update(state, {
         put: {
+          status: { $set: "FAILURE" }
+        }
+      });
+
+    /* put kanban status */
+    case types.PUT_KANBAN_STATUS:
+      return update(state, {
+        putStatus: {
+          status: { $set: "WAIT" }
+        }
+      });
+    case types.PUT_KANBAN_STATUS_SUCCESS:
+      return update(state, {
+        putStatus: {
+          status: { $set: "SUCCESS" }
+        }
+      });
+    case types.PUT_KANBAN_STATUS_FAILURE:
+      return update(state, {
+        putStatus: {
           status: { $set: "FAILURE" }
         }
       });

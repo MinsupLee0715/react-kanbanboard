@@ -20,7 +20,7 @@ export function getKanbanListRequest(projectID) {
     dispatch(getKanbanList());
 
     return axios
-      .get(`/api/classroom/kanban?projectID${ projectID }`)
+      .get(`/api/classroom/kanban?projectID=${ projectID }`)
       .then((res) => {
         dispatch(getKanbanListSuccess(res.data.result));
       })
@@ -77,8 +77,6 @@ export function postKanbanRequest(projectID, title, content) {
   return (dispatch) => {
     dispatch(postKanban());
 
-    console.log(projectID, title, content);
-
     return axios
       .post('/api/classroom/kanban', { projectID, title, content })
       .then((res) => {
@@ -91,57 +89,53 @@ export function postKanbanRequest(projectID, title, content) {
   };
 }
 
-////////////////////////////////////////////////////////////////
-// 아래로 미구현
-////////////////////////////////////////////////////////////////
-
-/* PUT kanban */
-export function putKanban() {
-  return { type: types.PUT_KANBAN };
+/* PUT kanban status */
+export function putKanbanStatus() {
+  return { type: types.PUT_KANBAN_STATUS };
 }
 
-export function putKanbanSuccess() {
-  return { type: types.PUT_KANBAN_SUCCESS };
+export function putKanbanStatusSuccess() {
+  return { type: types.PUT_KANBAN_STATUS_SUCCESS };
 }
 
-export function putKanbanFailure() {
-  return { type: types.PUT_KANBAN_FAILURE };
+export function putKanbanStatusFailure() {
+  return { type: types.PUT_KANBAN_STATUS_FAILURE };
 }
 
-export function putKanbanRequest(projectid) {
+export function putKanbanStatusRequest(kanbanID, status) {
   return (dispatch) => {
-    dispatch(putKanban());
+    dispatch(putKanbanStatus());
 
     return axios
-      .put('/api/classroom/kanban', { projectid })
+      .put('/api/classroom/kanban/status', { kanbanID, status })
       .then((res) => {
-        dispatch(putKanbanSuccess());
+        dispatch(putKanbanStatusSuccess());
       })
       .catch((err) => {
-        dispatch(putKanbanFailure());
+        dispatch(putKanbanStatusFailure());
       });
   };
 }
 
 /* DELETE kanban */
 export function deleteKanban() {
-  return { type: types.PUT_KANBAN };
+  return { type: types.DELETE_KANBAN };
 }
 
 export function deleteKanbanSuccess() {
-  return { type: types.PUT_KANBAN_SUCCESS };
+  return { type: types.DELETE_KANBAN_SUCCESS };
 }
 
 export function deleteKanbanFailure() {
-  return { type: types.PUT_KANBAN_FAILURE };
+  return { type: types.DELETE_KANBAN_FAILURE };
 }
 
-export function deleteKanbanRequest(projectid) {
+export function deleteKanbanRequest(kanbanID) {
   return (dispatch) => {
     dispatch(deleteKanban());
 
     return axios
-      .put('/api/classroom/kanban', { projectid })
+      .delete('/api/classroom/kanban', { kanbanID })
       .then((res) => {
         dispatch(deleteKanbanSuccess());
       })
