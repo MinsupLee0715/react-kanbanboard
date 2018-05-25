@@ -34,7 +34,10 @@ class KanbanAdd extends React.Component {
 
   // 첫번째 modal에서 upload 시
   showConfirm() {
-    this.setState({ modalVisible: true });
+    if (this.state.title == '' || this.state.content == '')
+      message.error('제목과 내용을 입력하십시오.');
+    else
+      this.setState({ modalVisible: true });
   }
   // 첫번째 modal에서 close 시
   showCancel() {

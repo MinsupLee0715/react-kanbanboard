@@ -17,8 +17,37 @@ router.get('/', (req, res) => { // ../kanban?projectID=''
     });
   }
 
-  let query = '';
+  // projectID가 없을 시
+  if (typeof projectID === 'undefined') {
+    return res.status(400).json({
+      error: "Empty projectID",
+      code: 2
+    });
+  }
+
+  // query
+  let query = `SELECT student.studentID, student.name,
+  kanban.created_date, kanban.title, kanban.updated_date, kanban.status, kanban.projectID
+  FROM class_student, kanban, student
+  WHERE class_student.projectID = kanban.projectID
+  AND class_student.studentID = student.studentID
+  AND kanban.projectID = ?
+  AND class_student.studentID = ?`;
+
+  // db select
+  db.query(query, [projectID, loginInfo.userid], (err, result) => {
+    if (err) throw err;
+
+    if (!result[0])
+      return res.status(400).json({
+        error: "Empty Data",
+        code: 3
+      });
+    console.log(loginInfo.userid + ' - 칸반 조회 완료');
+    return res.json({ result: result });
+  });
 });
+
 
 // 특정 칸반에 대한 정보 요청
 router.get('/:id', (req, res) => { // ../kanban/kanbanid
@@ -32,7 +61,34 @@ router.get('/:id', (req, res) => { // ../kanban/kanbanid
       code: 1
     });
   }
+
+  if (!kanbanID) {
+    return res.status(400).json({
+      error: "Undefined kanbanID",
+      code: 2
+    });
+  }
+
+  let query = '';
+  // qeury
+  query = `SELECT * FROM kanban where created_date = ?`;
+
+  // db select
+  db.query(query, kanbanID, (err, result) => {
+    if (err) throw err;
+
+    if (!result[0]) {
+      return res.status(400).json({
+        error: "Empty Data",
+        code: 3
+      });
+    }
+
+    console.log(loginInfo.userid + ' - 칸반 조회');
+    return res.json({ result: result });
+  });
 });
+
 
 // 칸반 등록
 router.post('/', (req, res) => {
@@ -89,10 +145,10 @@ router.post('/', (req, res) => {
   });
 });
 
+
 // 특정 칸반에 대한 정보 수정
-router.put('/:id', (req, res) => {
+router.put('/', (req, res) => {
   let loginInfo = req.session.loginInfo;
-  let kanbanID = req.body.id;
 
   // 비로그인 일 시
   if (typeof loginInfo.userid === 'undefined') {
@@ -102,6 +158,7 @@ router.put('/:id', (req, res) => {
     });
   }
 
+  let kanbanID = req.body.id;
   let projectID = req.body.projectID;
   let title = req.body.title;
   let content = req.body.content;
@@ -115,11 +172,12 @@ router.put('/:id', (req, res) => {
     });
   }
 
-  return res.json({result: 'not yet'});
+  return res.json({ result: 'not yet' });
 });
 
+
 // 특정 칸반에 대한 정보 삭제
-router.delete('/:id', (req, res) => {
+router.delete('/', (req, res) => {
   let loginInfo = req.session.loginInfo;
   let kanbanID = req.body.id;
 
