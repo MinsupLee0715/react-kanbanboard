@@ -5,6 +5,7 @@ import moment from 'moment-timezone';
 
 import {
   getKanbanListRequest,
+  getKanbanRequest,
   putKanbanStatusRequest
 } from '../actions/kanban';
 
@@ -94,6 +95,10 @@ class KanbanBoard extends Component<*, State> {
         id: '',
         title: '',
         content: '',
+        updated_date: '',
+        filename: '',
+        score: 0,
+        kstatus: '',
         status: false
       },
       kanbanAddInfo: {
@@ -182,14 +187,28 @@ class KanbanBoard extends Component<*, State> {
 
   // 칸반 클릭 시, 칸반 불러오기
   handleKanbanClick(e) {
-    this.setState({
-      kanbanInfo: {
-        id: e.currentTarget.id,
-        title: 'title is updated',
-        content: 'ㄲㅈ',
-        status: true
-      }
-    });
+    let kanbanID = e.currentTarget.id;
+    if(kanbanID) {
+      this.props.getKanbanRequest(kanbanID)
+        .then(() => {
+          if(this.props.kanbanInfo.status === 'SUCCESS') {
+            this.setState({
+              kanbanInfo: {
+                id: this.props.kanbanInfo.kanban[0].created_date,
+                title: this.props.kanbanInfo.kanban[0].title,
+                content: this.props.kanbanInfo.kanban[0].content,
+                updated_date: this.props.kanbanInfo.kanban[0].updated_date,
+                filename: this.props.kanbanInfo.kanban[0].filename,
+                score: this.props.kanbanInfo.kanban[0].score,
+                kstatus: this.props.kanbanInfo.kanban[0].status,
+                status: true
+              }
+            });
+          } else {
+            message.error('문제 발생');
+          }          
+        });
+    }
   }
 
   // 칸반 정보 팝업 닫기
@@ -220,9 +239,55 @@ class KanbanBoard extends Component<*, State> {
       return;
     }
 
+  
+    // 1st -> 1st or 2nd -> 2nd or 3rd -> 3rd (같은 라인에서 이동할 경우)
+    if (result.source.droppableId === result.destination.droppableId) {
+      let todo, doing, feedback;
+
+      switch (result.source.droppableId) {
+
+        case 'droppable-1':
+          todo = reorder(
+            result.source.index,
+            result.destination.index,
+            this.state.todo,
+          );
+          this.setState({
+            todo
+          });
+          break;
+
+        case 'droppable-2':
+          doing = reorder(
+            result.source.index,
+            result.destination.index,
+            this.state.doing,
+          );
+          this.setState({
+            doing
+          });
+          break;
+
+        case 'droppable-3':
+          feedback = reorder(
+            result.source.index,
+            result.destination.index,
+            this.state.feedback,
+          );
+          this.setState({
+            feedback
+          });
+          break;
+
+        default: break;
+      }
+      return;
+    }
+
     if (!window.confirm("상태를 변경하시겠습니까?")) {
       return;
     }
+
 
     let change = [];
 
@@ -286,48 +351,6 @@ class KanbanBoard extends Component<*, State> {
         });
     }
 
-    // 1st -> 1st or 2nd -> 2nd or 3rd -> 3rd (같은 라인에서 이동할 경우)
-    if (result.source.droppableId === result.destination.droppableId) {
-      let todo, doing, feedback;
-
-      switch (result.source.droppableId) {
-
-        case 'droppable-1':
-          todo = reorder(
-            result.source.index,
-            result.destination.index,
-            this.state.todo,
-          );
-          this.setState({
-            todo
-          });
-          break;
-
-        case 'droppable-2':
-          doing = reorder(
-            result.source.index,
-            result.destination.index,
-            this.state.doing,
-          );
-          this.setState({
-            doing
-          });
-          break;
-
-        case 'droppable-3':
-          feedback = reorder(
-            result.source.index,
-            result.destination.index,
-            this.state.feedback,
-          );
-          this.setState({
-            feedback
-          });
-          break;
-
-        default: break;
-      }
-    }
   }
 
 
@@ -520,6 +543,7 @@ const mapStateToProps = (state) => {
     selectedClass: state.classroom.selectedClass.classInfo,
     project: state.project.get,
     kanban: state.kanban.getList,
+    kanbanInfo: state.kanban.get,
     putStatus: state.kanban.putStatus
   };
 };
@@ -528,6 +552,9 @@ const mapDispatchProps = (dispatch) => {
   return {
     getKanbanListRequest: (projectID) => {
       return dispatch(getKanbanListRequest(projectID));
+    },
+    getKanbanRequest: (kanbanID) => {
+      return dispatch(getKanbanRequest(kanbanID));
     },
     putKanbanStatusRequest: (kanbanID, status) => {
       return dispatch(putKanbanStatusRequest(kanbanID, status));

@@ -159,3 +159,37 @@ pre {
   border: none;
   box-shadow: 0 0 black;
 }
+
+.ant-modal-content {
+  border-radius: 0;
+}
+.ant-modal-header {
+  border-bottom: 0;
+}
+.ant-modal-footer {
+  border-top: 0;
+}
+
+/* kanban info */
+#title_value.ant-input {
+  font-size: 25px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+#content_value.ant-input{
+  font-size: 18px;
+}
+#title_value.ant-input,
+#content_value.ant-input {
+  outline: none;
+  border: none;
+  width: 100%;
+}
+#title_value.ant-input:focus,
+#title_value.ant-input:hover,
+#content_value.ant-input:focus,
+#content_value.ant-input:hover {
+  outline: none;
+  border: none;
+  box-shadow: 0 0 black;
+}

@@ -49,7 +49,7 @@ export function getKanbanRequest(kanbanID) {
     dispatch(getKanban());
 
     return axios
-      .get(`/api/classroom/kanban/${ kanbanID }`)
+      .get(`/api/classroom/kanban/kanbanInfo/${ kanbanID }`)
       .then((res) => {
         dispatch(getKanbanSuccess(res.data.result));
       })

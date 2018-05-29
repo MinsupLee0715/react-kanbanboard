@@ -87,7 +87,7 @@ class KanbanAdd extends React.Component {
           visible={ this.props.data.status }
           title='칸반 등록 - 할 일 추가'
           width="700px"
-          onCancel={ this.props.handleCancel }
+          onCancel={ this.showCancel }
           footer={ [
             <Button key="add" type='primary' onClick={ this.showConfirm }>Upload</Button>,
             <Button key="back" type='danger' onClick={ this.showCancel }>Close</Button>

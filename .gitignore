@@ -2,4 +2,5 @@ build
 dist/*.js
 dist/*.css
 dist/*.png
+server/files/*
 node_modules

@@ -49,9 +49,8 @@ router.get('/', (req, res) => { // ../kanban?projectID=''
   });
 });
 
-
 // 특정 칸반에 대한 정보 요청
-router.get('/:id', (req, res) => { // ../kanban/kanbanid
+router.get('/kanbanInfo/:id', (req, res) => { // ../kanban/kanbanid
   const loginInfo = req.session.loginInfo;
   const kanbanID = req.params.id;
 
@@ -237,6 +236,11 @@ router.delete('/', (req, res) => {
       code: 1
     });
   }
+});
+
+// 칸반 내 파일 다운로드
+router.get('/download', (req, res) => {
+  res.json({ result: true });
 });
 
 export default router;

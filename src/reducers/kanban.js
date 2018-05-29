@@ -8,7 +8,7 @@ const initialState = {
   },
   get: {
     status: "INIT",
-    kanban: {}
+    kanban: []
   },
   post: { status: "INIT" },
   put: { status: "INIT" },
@@ -54,7 +54,7 @@ export default function kanban(state, action) {
     case types.GET_KANBAN_SUCCESS:
       return update(state, {
         get: {
-          status: { $set: "WAIT" },
+          status: { $set: "SUCCESS" },
           kanban: { $set: action.result }
         }
       });
