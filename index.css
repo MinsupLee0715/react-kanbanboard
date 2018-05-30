@@ -7,6 +7,9 @@ html, body, #root {
   background-position: center;
   background: #fff;
 }
+.layout-body {
+  margin-left: 256px;
+}
 
 /* header */
 .searchInput>input.ant-input {
@@ -29,15 +32,23 @@ html, body, #root {
   background-size: 90%;
   background-repeat: no-repeat;
 }
-
 .ant-layout-sider {
   margin-top: 0px;
   background-image: url("./sidebar.png");
+}
+.ant-btn.logout-btn {
+  width: 60%;
 }
 
 /* profile in left sidebar */
 .profile {
   background: none;
+}
+.profile div.ant-tag {
+  margin: 10px 0;
+}
+.anticon.anticon-mail {
+  font-size: 16px;
 }
 .sideMenu {
   background: none;
@@ -57,7 +68,6 @@ html, body, #root {
 .ant-menu-item-selected>a:hover, .ant-menu-item>a:hover {
   color: rgba(255, 255, 255, 0.8);
 }
-
 .new {
   background: #fff;
 }
@@ -66,7 +76,6 @@ html, body, #root {
 }
 
 /* footer */
-
 .ant-layout-footer {
   padding: 16px 50px 8px;
   background: none;
@@ -113,6 +122,11 @@ h1 {
 /* classroom */
 
 /* project list */
+.swimlane {
+  width: 25%;
+  min-width: 200px;
+  display: inline-block;
+}
 .project-card {
   padding: 8px;
 }
@@ -192,4 +206,35 @@ pre {
   outline: none;
   border: none;
   box-shadow: 0 0 black;
+}
+
+
+/* 반응형 */
+@media (max-width: 576px) {
+  /* body */
+  .layout-body {
+    margin-left: 70px;
+  }
+  /* sider */
+  .sideMenu > li > a {
+    font-size: 20px;
+    text-align: center;
+  }
+  .anticon {
+    font-size: 20px;
+  }
+  .sideMenu > li > a > strong {
+    display: none;
+  }
+  /* logout-button */
+  .ant-btn.logout-btn {
+    width: 80%;
+  }
+  .ant-btn.logout-btn > span {
+    display: none;
+  }
+  /* logo image */
+  .logo {
+    background-image: url("./logo2.png");
+  }
 }

@@ -108,8 +108,8 @@ class Profile extends React.Component {
         </h3>
         <br />
         <Button
+          className="logout-btn"
           icon="logout"
-          style={ { width: 130 } }
           onClick={ this.handleLogout }>Logout</Button>
       </div>
     );

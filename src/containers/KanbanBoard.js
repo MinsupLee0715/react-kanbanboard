@@ -188,10 +188,10 @@ class KanbanBoard extends Component<*, State> {
   // 칸반 클릭 시, 칸반 불러오기
   handleKanbanClick(e) {
     let kanbanID = e.currentTarget.id;
-    if(kanbanID) {
+    if (kanbanID) {
       this.props.getKanbanRequest(kanbanID)
         .then(() => {
-          if(this.props.kanbanInfo.status === 'SUCCESS') {
+          if (this.props.kanbanInfo.status === 'SUCCESS') {
             this.setState({
               kanbanInfo: {
                 id: this.props.kanbanInfo.kanban[0].created_date,
@@ -206,7 +206,7 @@ class KanbanBoard extends Component<*, State> {
             });
           } else {
             message.error('문제 발생');
-          }          
+          }
         });
     }
   }
@@ -239,7 +239,7 @@ class KanbanBoard extends Component<*, State> {
       return;
     }
 
-  
+
     // 1st -> 1st or 2nd -> 2nd or 3rd -> 3rd (같은 라인에서 이동할 경우)
     if (result.source.droppableId === result.destination.droppableId) {
       let todo, doing, feedback;
@@ -363,163 +363,161 @@ class KanbanBoard extends Component<*, State> {
         </h1>
         <br />
 
-        <Row gutter={ 16 }>
+        <Row gutter={ 16 } style={ { whiteSpace: 'nowrap', overflowX: 'auto' } }>
           {/* DragDropContext > Droppable > Draggable */ }
           <DragDropContext onDragEnd={ this.onDragEnd }>
-            <div style={ { display: "inline" } }>
-              <Col span={ 6 } style={ { padding: '0 8px' } }>
-                <Droppable droppableId='droppable-1'>
-                  { (dropProvided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
+            <Col className='swimlane' style={ { padding: '0 8px' } }>
+              <Droppable droppableId='droppable-1'>
+                { (dropProvided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
+                  <div
+                    ref={ dropProvided.innerRef }
+                    style={ getListStyle(snapshot.isDraggingOver) }
+                  >
                     <div
-                      ref={ dropProvided.innerRef }
-                      style={ getListStyle(snapshot.isDraggingOver) }
+                      style={ { height: 30, padding: '0 12px' } }
                     >
-                      <div
-                        style={ { height: 30, padding: '0 12px' } }
-                      >
-                        <div style={ { display: 'flex', justifyContent: 'space-between' } }>
-                          <h3>할 일 { this.state.todo.length }</h3>
-                          <Button type='primary' shape='circle' size='middle' icon='plus' onClick={ this.handleKanbanAddClick } />
-                        </div>
+                      <div style={ { display: 'flex', justifyContent: 'space-between' } }>
+                        <h3>할 일 { this.state.todo.length }</h3>
+                        <Button type='primary' shape='circle' size='middle' icon='plus' onClick={ this.handleKanbanAddClick } />
+                      </div>
 
-                      </div>
-                      { this.state.todo.map(item => (
-                        <Draggable key={ item.id } draggableId={ item.id }>
-                          { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
-                            <div id={ item.id } onClick={ this.handleKanbanClick }>
-                              <div
-                                ref={ provided.innerRef }
-                                style={ getItemStyle(
-                                  provided.draggableStyle,
-                                  snapshot.isDragging
-                                ) }
-                                { ...provided.dragHandleProps }
-                              >
-                                <h3>{ item.title }</h3>
-                                <br />
-                                <h5 style={ { textAlign: 'right' } }>{ item.date }</h5>
-                              </div>
-                              { provided.placeholder }
-                            </div>
-                          ) }
-                        </Draggable>
-                      )) }
                     </div>
-                  ) }
-                </Droppable>
-              </Col>
-              <Col span={ 6 } style={ { padding: '0 8px' } }>
-                <Droppable droppableId='droppable-2'>
-                  { (dropProvided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
+                    { this.state.todo.map(item => (
+                      <Draggable key={ item.id } draggableId={ item.id }>
+                        { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+                          <div id={ item.id } onClick={ this.handleKanbanClick }>
+                            <div
+                              ref={ provided.innerRef }
+                              style={ getItemStyle(
+                                provided.draggableStyle,
+                                snapshot.isDragging
+                              ) }
+                              { ...provided.dragHandleProps }
+                            >
+                              <h3>{ item.title }</h3>
+                              <br />
+                              <h5 style={ { textAlign: 'right' } }>{ item.date }</h5>
+                            </div>
+                            { provided.placeholder }
+                          </div>
+                        ) }
+                      </Draggable>
+                    )) }
+                  </div>
+                ) }
+              </Droppable>
+            </Col>
+            <Col className='swimlane' style={ { padding: '0 8px' } }>
+              <Droppable droppableId='droppable-2'>
+                { (dropProvided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
+                  <div
+                    ref={ dropProvided.innerRef }
+                    style={ getListStyle(snapshot.isDraggingOver) }
+                  >
                     <div
-                      ref={ dropProvided.innerRef }
-                      style={ getListStyle(snapshot.isDraggingOver) }
+                      style={ { height: 30, padding: '0 12px' } }
                     >
-                      <div
-                        style={ { height: 30, padding: '0 12px' } }
-                      >
-                        <h3>진행 중 { this.state.doing.length }</h3>
-                      </div>
-                      { this.state.doing.map(item => (
-                        <Draggable key={ item.id } draggableId={ item.id }>
-                          { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
-                            <div id={ item.id } onClick={ this.handleKanbanClick }>
-                              <div
-                                ref={ provided.innerRef }
-                                style={ getItemStyle(
-                                  provided.draggableStyle,
-                                  snapshot.isDragging
-                                ) }
-                                { ...provided.dragHandleProps }
-                              >
-                                <h3>{ item.title }</h3>
-                                <br />
-                                <h5 style={ { textAlign: 'right' } }>{ item.date }</h5>
-                              </div>
-                              { provided.placeholder }
-                            </div>
-                          ) }
-                        </Draggable>
-                      )) }
+                      <h3>진행 중 { this.state.doing.length }</h3>
                     </div>
-                  ) }
-                </Droppable>
-              </Col>
-              <Col span={ 6 } style={ { padding: '0 8px' } }>
-                <Droppable droppableId='droppable-3'>
-                  { (dropProvided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
+                    { this.state.doing.map(item => (
+                      <Draggable key={ item.id } draggableId={ item.id }>
+                        { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+                          <div id={ item.id } onClick={ this.handleKanbanClick }>
+                            <div
+                              ref={ provided.innerRef }
+                              style={ getItemStyle(
+                                provided.draggableStyle,
+                                snapshot.isDragging
+                              ) }
+                              { ...provided.dragHandleProps }
+                            >
+                              <h3>{ item.title }</h3>
+                              <br />
+                              <h5 style={ { textAlign: 'right' } }>{ item.date }</h5>
+                            </div>
+                            { provided.placeholder }
+                          </div>
+                        ) }
+                      </Draggable>
+                    )) }
+                  </div>
+                ) }
+              </Droppable>
+            </Col>
+            <Col className='swimlane' style={ { padding: '0 8px' } }>
+              <Droppable droppableId='droppable-3'>
+                { (dropProvided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
+                  <div
+                    ref={ dropProvided.innerRef }
+                    style={ getListStyle(snapshot.isDraggingOver) }
+                  >
                     <div
-                      ref={ dropProvided.innerRef }
-                      style={ getListStyle(snapshot.isDraggingOver) }
+                      style={ { height: 30, padding: '0 12px' } }
                     >
-                      <div
-                        style={ { height: 30, padding: '0 12px' } }
-                      >
-                        <h3>피드백 { this.state.feedback.length }</h3>
-                      </div>
-                      { this.state.feedback.map(item => (
-                        <Draggable key={ item.id } draggableId={ item.id } isDragDisabled='flase'>
-                          { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
-                            <div id={ item.id } onClick={ this.handleKanbanClick }>
-                              <div
-                                ref={ provided.innerRef }
-                                style={ getItemStyle(
-                                  provided.draggableStyle,
-                                  snapshot.isDragging
-                                ) }
-                                { ...provided.dragHandleProps }
-                              >
-                                <h3>{ item.title }</h3>
-                                <br />
-                                <h5 style={ { textAlign: 'right' } }>{ item.date }</h5>
-                              </div>
-                              { provided.placeholder }
-                            </div>
-                          ) }
-                        </Draggable>
-                      )) }
+                      <h3>피드백 { this.state.feedback.length }</h3>
                     </div>
-                  ) }
-                </Droppable>
-              </Col>
-              <Col span={ 6 } style={ { padding: '0 8px' } }>
-                <Droppable droppableId='droppable-4' isDropDisabled='flase'>
-                  { (dropProvided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
+                    { this.state.feedback.map(item => (
+                      <Draggable key={ item.id } draggableId={ item.id } isDragDisabled='flase'>
+                        { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+                          <div id={ item.id } onClick={ this.handleKanbanClick }>
+                            <div
+                              ref={ provided.innerRef }
+                              style={ getItemStyle(
+                                provided.draggableStyle,
+                                snapshot.isDragging
+                              ) }
+                              { ...provided.dragHandleProps }
+                            >
+                              <h3>{ item.title }</h3>
+                              <br />
+                              <h5 style={ { textAlign: 'right' } }>{ item.date }</h5>
+                            </div>
+                            { provided.placeholder }
+                          </div>
+                        ) }
+                      </Draggable>
+                    )) }
+                  </div>
+                ) }
+              </Droppable>
+            </Col>
+            <Col className='swimlane' style={ { padding: '0 8px' } }>
+              <Droppable droppableId='droppable-4' isDropDisabled='flase'>
+                { (dropProvided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
+                  <div
+                    ref={ dropProvided.innerRef }
+                    style={ getListStyle(snapshot.isDraggingOver) }
+                  >
                     <div
-                      ref={ dropProvided.innerRef }
-                      style={ getListStyle(snapshot.isDraggingOver) }
+                      style={ { height: 30, padding: '0 12px' } }
                     >
-                      <div
-                        style={ { height: 30, padding: '0 12px' } }
-                      >
-                        <h3>완료 { this.state.finish.length }</h3>
-                      </div>
-                      { this.state.finish.map(item => (
-                        <Draggable key={ item.id } draggableId={ item.id } isDragDisabled='flase'>
-                          { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
-                            <div id={ item.id } onClick={ this.handleKanbanClick }>
-                              <div
-                                ref={ provided.innerRef }
-                                style={ getItemStyle(
-                                  provided.draggableStyle,
-                                  snapshot.isDragging
-                                ) }
-                                { ...provided.dragHandleProps }
-                              >
-                                <h3>{ item.title }</h3>
-                                <br />
-                                <h5 style={ { textAlign: 'right' } }>{ item.date }</h5>
-                              </div>
-                              { provided.placeholder }
-                            </div>
-                          ) }
-                        </Draggable>
-                      )) }
+                      <h3>완료 { this.state.finish.length }</h3>
                     </div>
-                  ) }
-                </Droppable>
-              </Col>
-            </div>
+                    { this.state.finish.map(item => (
+                      <Draggable key={ item.id } draggableId={ item.id } isDragDisabled='flase'>
+                        { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+                          <div id={ item.id } onClick={ this.handleKanbanClick }>
+                            <div
+                              ref={ provided.innerRef }
+                              style={ getItemStyle(
+                                provided.draggableStyle,
+                                snapshot.isDragging
+                              ) }
+                              { ...provided.dragHandleProps }
+                            >
+                              <h3>{ item.title }</h3>
+                              <br />
+                              <h5 style={ { textAlign: 'right' } }>{ item.date }</h5>
+                            </div>
+                            { provided.placeholder }
+                          </div>
+                        ) }
+                      </Draggable>
+                    )) }
+                  </div>
+                ) }
+              </Droppable>
+            </Col>
           </DragDropContext>
 
           <KanbanInfo

@@ -111,7 +111,7 @@ class KanbanInfo extends React.Component {
               value={ this.state.content_value == '' ? this.props.data.content : this.state.content_value }
               onChange={ this.handleChange }
               placeholder="내용을 입력하세요"
-              autosize={ { minRows: 10, maxRows: 15 } }
+              autosize={ { minRows: 5, maxRows: 15 } }
             />
           </Col>
 
