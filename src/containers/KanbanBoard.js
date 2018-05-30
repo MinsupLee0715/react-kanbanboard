@@ -106,6 +106,7 @@ class KanbanBoard extends Component<*, State> {
       }
     }
 
+    this.setInitialize = this.setInitialize.bind(this);
     this.handleKanbanAddClick = this.handleKanbanAddClick.bind(this);
     this.handleKanbanClick = this.handleKanbanClick.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
@@ -117,9 +118,20 @@ class KanbanBoard extends Component<*, State> {
     this.getKanbanList();
   }
 
+  setInitialize() {
+    this.setState({
+      todo: [],
+      doing: [],
+      feedback: [],
+      finish: []
+    });
+  }
+
   // 서버로부터 칸반 정보를 가져온다.
   getKanbanList() {
     let project = this.props.project.project[0];
+
+    this.setInitialize();
 
     if (project.projectID) {
       // 칸반 리스트 가져오기
@@ -358,7 +370,7 @@ class KanbanBoard extends Component<*, State> {
     return (
       <div>
         <h1>
-          { this.props.selectedClass.title }&#40;{ this.props.selectedClass.divide }&#41; / { "프로젝트 명" }
+          { this.props.selectedClass.title }&#40;{ this.props.selectedClass.divide }&#41; / { this.props.project.project[0].title }
           <h6>MEMBER - { "정화평" }</h6>
         </h1>
         <br />
@@ -523,6 +535,7 @@ class KanbanBoard extends Component<*, State> {
           <KanbanInfo
             data={ this.state.kanbanInfo }
             handleCancel={ this.handleCancel }
+            getKanbanList={ this.getKanbanList }
           />
           <KanbanAdd
             data={ this.state.kanbanAddInfo }

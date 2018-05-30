@@ -31,8 +31,8 @@ class Login extends React.Component {
   }
 
   handleStdLogin() {
-    let id = '20131810';//this.state.userid;
-    let pw = '1234';//this.state.password;
+    let id = this.state.userid;
+    let pw = this.state.password;
     let type = "student";
 
     this.props.loginRequest(id, pw, type)
@@ -61,10 +61,8 @@ class Login extends React.Component {
   }
 
   handleProfLogin() {
-    /* let id = this.state.userid;
-    let pw = this.state.password; */
-    let id = "1111";
-    let pw = "1234";
+    let id = this.state.userid;
+    let pw = this.state.password;
     let type = "professor";
 
     this.props.loginRequest(id, pw, type)

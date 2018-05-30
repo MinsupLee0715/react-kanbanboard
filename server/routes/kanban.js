@@ -76,14 +76,6 @@ router.get('/kanbanInfo/:id', (req, res) => { // ../kanban/kanbanid
   // db select
   db.query(query, kanbanID, (err, result) => {
     if (err) throw err;
-
-    if (!result[0]) {
-      return res.status(400).json({
-        error: "Empty Data",
-        code: 3
-      });
-    }
-
     console.log(loginInfo.userid + ' - 칸반 조회');
     return res.json({ result: result });
   });
@@ -158,10 +150,11 @@ router.put('/', (req, res) => {
     });
   }
 
-  const kanbanID = req.body.kanbanID;
+  const kanbanID = req.body.kanbanID.slice(0, 19);
   const title = req.body.title;
   const content = req.body.content;
   const contribute = req.body.contribute;
+  const updated_date = new Date().toISOString().slice(0, 19);
 
   // 데이터가 없을 시
   if (kanbanID == '' || title == '' || content == '') {
@@ -171,7 +164,15 @@ router.put('/', (req, res) => {
     });
   }
 
-  return res.json({ result: 'not yet' });
+  let query = '';
+  query = 'UPDATE kanban SET title = ?, content = ?, updated_date = ? WHERE created_date = ?'
+  let data = [title, content, updated_date, kanbanID];
+
+  db.query(query, data, (err) => {
+    if (err) throw err;
+    console.log("칸반 수정 완료")
+    return res.json({ result: "success" });
+  });
 });
 
 // 칸반 상태 변경
@@ -224,9 +225,9 @@ router.put('/status', (req, res) => {
 
 
 // 특정 칸반에 대한 정보 삭제
-router.delete('/', (req, res) => {
+router.delete('/:id', (req, res) => {
   const loginInfo = req.session.loginInfo;
-  const kanbanID = req.body.id;
+  const kanbanID = req.params.id.slice(0, 19);
 
   // 비로그인 일 시
   if (typeof loginInfo.userid === 'undefined') {
@@ -235,6 +236,41 @@ router.delete('/', (req, res) => {
       code: 1
     });
   }
+  // kanbanID 가 null 일 시
+  if (!kanbanID) {
+    return res.status(400).json({
+      error: "NULL KanbanID",
+      code: 2
+    });
+  }
+
+  let query = '';
+  query = `SELECT * FROM class_student, project, kanban
+    WHERE class_student.projectID = project.projectID
+    AND project.projectID = kanban.projectID
+    AND kanban.created_date = ?
+    AND class_student.studentID = ?`;
+
+  // 해당 프로젝트에 학생이 참가 중인지 확인
+  db.query(query, [kanbanID, loginInfo.userid], (err, result) => {
+    if (err) throw err;
+
+    if (result.length > 0) { // 참가중
+      query = 'DELETE FROM kanban WHERE created_date = ?';
+      db.query(query, kanbanID, (err) => {
+        if (err) throw err;
+        console.log('칸반 삭제 완료');
+        return res.json({ result: 'success' });
+      });
+
+    } else { // 비참가 학생
+      console.log('삭제 권한 없음');
+      return res.status(403).json({
+        error: "Forbidden",
+        code: 3
+      });
+    }
+  });
 });
 
 // 칸반 내 파일 다운로드

@@ -25,7 +25,7 @@ export function getKanbanListRequest(projectID) {
         dispatch(getKanbanListSuccess(res.data.result));
       })
       .catch((err) => {
-        message.error('문제가 발생했습니다.');
+        message.info('데이터가 없습니다.');
         dispatch(getKanbanListFailure());
       });
   };
@@ -112,6 +112,7 @@ export function putKanbanStatusRequest(kanbanID, status) {
         dispatch(putKanbanStatusSuccess());
       })
       .catch((err) => {
+        message.error('문제가 발생했습니다.');
         dispatch(putKanbanStatusFailure());
       });
   };
@@ -141,6 +142,7 @@ export function putKanbanInfoRequest(kanbanID, title, content, contribute) {
         dispatch(putKanbanInfoSuccess());
       })
       .catch((err) => {
+        message.error('문제가 발생했습니다.');
         dispatch(putKanbanInfoFailure());
       });
   };
@@ -164,11 +166,12 @@ export function deleteKanbanRequest(kanbanID) {
     dispatch(deleteKanban());
 
     return axios
-      .delete('/api/classroom/kanban', { kanbanID })
+      .delete(`/api/classroom/kanban/${ kanbanID }`)
       .then((res) => {
         dispatch(deleteKanbanSuccess());
       })
       .catch((err) => {
+        message.error('문제가 발생했습니다.');
         dispatch(deleteKanbanFailure());
       });
   };
