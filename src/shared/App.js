@@ -41,7 +41,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <Layout style={ { height: '100%' } }>
+      <Layout style={ { height: '100%', background:'none' } }>
 
         <Content>
           <Switch>

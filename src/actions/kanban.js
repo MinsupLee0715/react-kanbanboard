@@ -117,6 +117,35 @@ export function putKanbanStatusRequest(kanbanID, status) {
   };
 }
 
+
+/* PUT kanban info */
+export function putKanbanInfo() {
+  return { type: types.PUT_KANBAN_INFO };
+}
+
+export function putKanbanInfoSuccess() {
+  return { type: types.PUT_KANBAN_INFO_SUCCESS };
+}
+
+export function putKanbanInfoFailure() {
+  return { type: types.PUT_KANBAN_INFO_FAILURE };
+}
+
+export function putKanbanInfoRequest(kanbanID, title, content, contribute) {
+  return (dispatch) => {
+    dispatch(putKanbanInfo());
+
+    return axios
+      .put('/api/classroom/kanban', { kanbanID, title, content, contribute })
+      .then((res) => {
+        dispatch(putKanbanInfoSuccess());
+      })
+      .catch((err) => {
+        dispatch(putKanbanInfoFailure());
+      });
+  };
+}
+
 /* DELETE kanban */
 export function deleteKanban() {
   return { type: types.DELETE_KANBAN };

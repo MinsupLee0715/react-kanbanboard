@@ -95,20 +95,20 @@ class Login extends React.Component {
 
   render() {
     return (
-      <Layout style={ { background: "none" } }>
+      <Layout className='main-layout'>
 
-        <Header
+        {/* <Header
           className="header"
-          style={ { position: 'fixed', width: '100%', top: 0, background: '#096dd9' } }>
-        </Header>
+          style={ { width: '100%', top: 0, background: '#096dd9' } }>
+        </Header> */}
 
-        <Layout style={ { padding: '0 0 16px' } }>
+        <Layout>
           <Content style={ { margin: '200px 16px 0', overflow: 'initial' } }>
 
             <div className="login-form"
               style={ { height: "100%", width: '100%', margin: 'auto', /* background: "rgba(80,80,80,0.9)", color: "#fff" */ } }>
               <div className="login-logo" style={ { height: 90, width: '100%', textAlign: 'center' } }>
-                <p style={ { fontSize: 30, padding: "30px 0" } }>MEMBER LOGIN</p>
+                <p style={ { fontSize: 30, padding: "30px 0", color: 'white' } }>MEMBER LOGIN</p>
               </div>
 
               <div className="login-body" style={ { height: 256, width: '100%', padding: 24, margin: 'auto' } }>

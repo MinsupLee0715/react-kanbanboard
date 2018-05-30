@@ -2,10 +2,14 @@ html, body, #root {
   height: 100%;
 }
 
+input, .ant-input {
+  border-radius: 0;
+}
+
 /* body */
 .ant-layout {
   background-position: center;
-  background: #fff;
+  background: none;
 }
 .layout-body {
   margin-left: 256px;
@@ -81,13 +85,20 @@ html, body, #root {
   background: none;
 }
 
-
+/* main-layout */
+.main-layout {
+  height: 930px;
+  background-image: url('https://www.wallpapersrc.com/img/d500505eef0146c7a41b69583fc57029/book-and-macbook-pro-coding-1789x1006.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
 /* about login page */
 h1 {
   color: #014280;
 }
 .login-form {
   max-width: 450px;
+  background: rgba(0,0,0,.15);
 }
 .login-form-button {
   width: 100%;
@@ -109,9 +120,9 @@ h1 {
   border-radius: 0px;
 }
 .professor-btn {
+  border-radius: 0px;
   background: #1DA57A;
   border-color: #1DA57A;
-  border-radius: 0px;
 }
 .professor-btn:focus, .professor-btn:hover {
   background: #1DBE7A;
@@ -166,6 +177,7 @@ pre {
 .kanban-upload .kanban-input.ant-input {
   outline: none;
   border: none;
+  border-radius: 0;
 }
 .kanban-upload .kanban-input.ant-input:focus,
 .kanban-upload .kanban-input.ant-input:hover {

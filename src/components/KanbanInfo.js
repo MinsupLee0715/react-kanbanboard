@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import moment from 'moment-timezone';
 
 import {
-  putKanbanRequest,
+  putKanbanInfoRequest,
   deleteKanbanRequest
 } from '../actions/kanban';
 
@@ -46,7 +46,11 @@ class KanbanInfo extends React.Component {
   // 데이터 수정 중 표시
   isUpdating() {
     if (this.state.isChange) {
-      return <p><strong>수정중...</strong></p>
+      return (
+        <div className="ant-modal-header" style={ { padding: 0 } }>
+          <p><strong>수정중...</strong></p>
+        </div>
+      )
     }
   }
 
@@ -95,8 +99,9 @@ class KanbanInfo extends React.Component {
         visible={ this.props.data.status }
         width="800px"
         onCancel={ this.handleCancel }
-        footer={ [this.isUpdating()] }
+        footer={ [] }
       >
+        { this.isUpdating() }
         <Row gutter={ 16 }>
           <Col md={ 16 }>
             <Input
@@ -140,11 +145,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchProps = (dispatch) => {
   return {
-    putKanbanRequest: (kanbanID, status) => {
-      return dispatch(putKanbanRequest(kanbanID, status));
+    putKanbanInfoRequest: (kanbanID, status) => {
+      return dispatch(putKanbanInfoRequest(kanbanID, status));
     },
-    deleteKanbanRequest: (kanbanID) => {
-      return dispatch(deleteKanbanRequest(kanbanID));
+    deleteKanbanRequest: (kanbanID, title, content, contribute) => {
+      return dispatch(deleteKanbanRequest(kanbanID, title, content, contribute));
     }
   };
 };

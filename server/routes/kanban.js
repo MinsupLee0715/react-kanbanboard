@@ -158,14 +158,13 @@ router.put('/', (req, res) => {
     });
   }
 
-  const kanbanID = req.body.id;
-  let projectID = req.body.projectID;
-  let title = req.body.title;
-  let content = req.body.content;
-  let contribute = req.body.contribute;
+  const kanbanID = req.body.kanbanID;
+  const title = req.body.title;
+  const content = req.body.content;
+  const contribute = req.body.contribute;
 
   // 데이터가 없을 시
-  if (title == '' || content == '') {
+  if (kanbanID == '' || title == '' || content == '') {
     return res.status(400).json({
       error: "Empty Data",
       code: 2
