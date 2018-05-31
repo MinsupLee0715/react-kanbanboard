@@ -31,14 +31,14 @@ input, .ant-input {
 /* left sidebar */
 .logo {
   height: 120px;
-  background-image: url("./logo.png");
+  background-image: url("./images/logo.png");
   background-position: center;
   background-size: 90%;
   background-repeat: no-repeat;
 }
 .ant-layout-sider {
   margin-top: 0px;
-  background-image: url("./sidebar.png");
+  background-image: url("./images/sidebar.png");
 }
 .ant-btn.logout-btn {
   width: 60%;
@@ -47,9 +47,6 @@ input, .ant-input {
 /* profile in left sidebar */
 .profile {
   background: none;
-}
-.profile div.ant-tag {
-  margin: 10px 0;
 }
 .anticon.anticon-mail {
   font-size: 16px;
@@ -247,6 +244,6 @@ pre {
   }
   /* logo image */
   .logo {
-    background-image: url("./logo2.png");
+    background-image: url("./images/logo2.png");
   }
 }

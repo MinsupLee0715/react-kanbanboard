@@ -27,13 +27,13 @@ router.get('/', (req, res) => { // ../kanban?projectID=''
   }
 
   // query
-  let query = `SELECT student.studentID, student.name,
-  kanban.created_date, kanban.title, kanban.updated_date, kanban.status, kanban.projectID
-  FROM class_student, kanban, student
-  WHERE class_student.projectID = kanban.projectID
-  AND class_student.studentID = student.studentID
-  AND kanban.projectID = ?
-  AND class_student.studentID = ?`;
+  let query = `SELECT Student.studentID, Student.name,
+  Kanban.created_date, Kanban.title, Kanban.updated_date, Kanban.status, Kanban.projectID
+  FROM Class_Student, Kanban, student
+  WHERE Class_Student.projectID = Kanban.projectID
+  AND Class_Student.studentID = Student.studentID
+  AND Kanban.projectID = ?
+  AND Class_Student.studentID = ?`;
 
   // db select
   db.query(query, [projectID, loginInfo.userid], (err, result) => {
@@ -71,7 +71,7 @@ router.get('/kanbanInfo/:id', (req, res) => { // ../kanban/kanbanid
 
   let query = '';
   // qeury
-  query = `SELECT * FROM kanban where created_date = ?`;
+  query = `SELECT * FROM Kanban where created_date = ?`;
 
   // db select
   db.query(query, kanbanID, (err, result) => {
@@ -109,7 +109,7 @@ router.post('/', (req, res) => {
   let query = '';
 
   // 수업 내 학생 소속 여부 확인
-  query = 'SELECT * FROM class_student WHERE studentID = ? AND projectID = ?';
+  query = 'SELECT * FROM Class_Student WHERE studentID = ? AND projectID = ?';
   db.query(query, [loginInfo.userid, projectID], (err, result) => {
     if (err) throw err;
     if (result.length == 0) { // 검색결과가 없을 시
@@ -119,7 +119,7 @@ router.post('/', (req, res) => {
       });
     } else { // 검색결과가 있을 시
 
-      query = 'INSERT INTO kanban SET ?';
+      query = 'INSERT INTO Kanban SET ?';
       let data = { // 입력 데이터
         title: title,
         content: content,
@@ -165,7 +165,7 @@ router.put('/', (req, res) => {
   }
 
   let query = '';
-  query = 'UPDATE kanban SET title = ?, content = ?, updated_date = ? WHERE created_date = ?'
+  query = 'UPDATE Kanban SET title = ?, content = ?, updated_date = ? WHERE created_date = ?'
   let data = [title, content, updated_date, kanbanID];
 
   db.query(query, data, (err) => {
@@ -211,7 +211,7 @@ router.put('/status', (req, res) => {
   let data = [new Date().toISOString().slice(0, 19), status, kanbanID];
   console.log(data);
   let query = '';
-  query = `UPDATE kanban SET updated_date = ?, status = ? 
+  query = `UPDATE Kanban SET updated_date = ?, status = ? 
     WHERE created_date = ?`;
 
   // db update
@@ -245,18 +245,18 @@ router.delete('/:id', (req, res) => {
   }
 
   let query = '';
-  query = `SELECT * FROM class_student, project, kanban
-    WHERE class_student.projectID = project.projectID
-    AND project.projectID = kanban.projectID
-    AND kanban.created_date = ?
-    AND class_student.studentID = ?`;
+  query = `SELECT * FROM Class_Student, Project, Kanban
+    WHERE Class_Student.projectID = Project.projectID
+    AND Project.projectID = Kanban.projectID
+    AND Kanban.created_date = ?
+    AND Class_Student.studentID = ?`;
 
   // 해당 프로젝트에 학생이 참가 중인지 확인
   db.query(query, [kanbanID, loginInfo.userid], (err, result) => {
     if (err) throw err;
 
     if (result.length > 0) { // 참가중
-      query = 'DELETE FROM kanban WHERE created_date = ?';
+      query = 'DELETE FROM Kanban WHERE created_date = ?';
       db.query(query, kanbanID, (err) => {
         if (err) throw err;
         console.log('칸반 삭제 완료');

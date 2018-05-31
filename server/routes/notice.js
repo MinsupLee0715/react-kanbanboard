@@ -17,7 +17,7 @@ router.get('/', (req, res) => {
   let classid = req.query.classid;
   let query = '';
 
-  query = 'SELECT * FROM notice WHERE classID=?';
+  query = 'SELECT * FROM Notice WHERE classID=?';
   db.query(query, classid, (err, result) => {
     if (err) throw err;
     console.log("공지사항: " + result.length);
@@ -54,7 +54,7 @@ router.post('/', (req, res) => {
     });
   }
 
-  let query = 'INSERT INTO notice SET ?';
+  let query = 'INSERT INTO Notice SET ?';
   db.query(query, noticeData, (err, result) => {
     if (err) throw err;
     console.log("공지사항: " + result.length);

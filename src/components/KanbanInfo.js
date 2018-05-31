@@ -114,7 +114,7 @@ class KanbanInfo extends React.Component {
     let content = this.state.content_value == '' ? this.props.data.content : this.state.content_value;
     this.props.putKanbanInfoRequest(kanbanID, title, content, null)
       .then(() => {
-        if (this.props.put.status == "SUCCESS") {
+        if (this.props.put.status === "SUCCESS") {
           message.success("수정되었습니다.");
           this.setState({
             updateModalVisible: false,
@@ -124,7 +124,7 @@ class KanbanInfo extends React.Component {
           this.setInitialize();
           this.props.handleCancel();
           this.props.getKanbanList();
-        }
+        } else message.error('sdf');
       });
   }
 
@@ -136,7 +136,7 @@ class KanbanInfo extends React.Component {
 
     this.props.deleteKanbanRequest(kanbanID)
       .then(() => {
-        if (this.props.delete.status == "SUCCESS") {
+        if (this.props.delete.status === "SUCCESS") {
           message.info('삭제되었습니다.');
           this.setState({
             updateModalVisible: false,

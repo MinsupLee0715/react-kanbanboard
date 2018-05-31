@@ -19,9 +19,9 @@ router.post('/login', (req, res) => {
   /* 로그인 시도 */
   let query = "";
   if (req.body.type == "student") {
-    query = "select * from student where studentID=?";
+    query = "SELECT * FROM Student where studentID=?";
   } else {
-    query = "select * from professor where professorID=?";
+    query = "SELECT * FROM Professor where professorID=?";
   }
   db.query(query, loginInfo, (err, result, fields) => {
     if (err) throw err;

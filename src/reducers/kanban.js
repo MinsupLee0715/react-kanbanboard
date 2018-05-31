@@ -86,19 +86,19 @@ export default function kanban(state, action) {
       });
 
     /* put kanban */
-    case types.PUT_KANBAN:
+    case types.PUT_KANBAN_INFO:
       return update(state, {
         put: {
           status: { $set: "WAIT" }
         }
       });
-    case types.PUT_KANBAN_SUCCESS:
+    case types.PUT_KANBAN_INFO_SUCCESS:
       return update(state, {
         put: {
           status: { $set: "SUCCESS" }
         }
       });
-    case types.PUT_KANBAN_FAILURE:
+    case types.PUT_KANBAN_INFO_FAILURE:
       return update(state, {
         put: {
           status: { $set: "FAILURE" }

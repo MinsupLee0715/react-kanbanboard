@@ -27,7 +27,7 @@ router.post('/myclassrooms', (req, res) => {
 
   // 교수일 경우
   if (loginInfo.type == 'professor') {
-    query = "SELECT * FROM classroom WHERE professorID=?";
+    query = "SELECT * FROM Classroom WHERE professorID=?";
     db.query(query, loginInfo.userid, (err, result) => {
       if (err) throw err;
       console.log("수업 목록: " + result.length);
@@ -35,24 +35,24 @@ router.post('/myclassrooms', (req, res) => {
     });
 
   } else { // 학생일 경우
-    query = `SELECT professor.name,
+    query = `SELECT Professor.name,
     class.classID,
     class.title,
     class.divide,
     class.period
-    FROM professor JOIN (
+    FROM Professor JOIN (
       SELECT
-        classroom.classID,
-        classroom.professorID,
-        classroom.title,
-        classroom.divide,
-        classroom.period,
-        class_student.studentID,
-        class_student.projectID
-      FROM classroom JOIN (
-        SELECT * FROM class_student WHERE studentID=?
-      ) AS class_student ON class_student.classID = classroom.classID
-    ) AS class ON class.professorID = professor.professorID`;
+        Classroom.classID,
+        Classroom.professorID,
+        Classroom.title,
+        Classroom.divide,
+        Classroom.period,
+        Class_Student.studentID,
+        Class_Student.projectID
+      FROM Classroom JOIN (
+        SELECT * FROM Class_Student WHERE studentID=?
+      ) AS Class_Student ON Class_Student.classID = Classroom.classID
+    ) AS Class ON class.professorID = Professor.professorID`;
     
     db.query(query, loginInfo.userid, (err, result) => {
       if (err) throw err;
@@ -68,14 +68,14 @@ router.get('/getClassStudent', (req, res) => {
   console.log(classID);
   let query = `SELECT * FROM (
     (SELECT
-      class_student.classID,
-      class_student.studentID,
-      class_student.projectID,
-      student.name FROM class_student
-      JOIN student
-      ON  class_student.studentID = student.studentID)
-      AS class_student
-    ) WHERE class_student.classID = ?`;
+      Class_Student.classID,
+      Class_Student.studentID,
+      Class_Student.projectID,
+      Student.name FROM Class_Student
+      JOIN Student
+      ON  Class_Student.studentID = Student.studentID)
+      AS Class_Student
+    ) WHERE Class_Student.classID = ?`;
 
   db.query(query, classID, (err, result) => {
     if (err) throw err;
