@@ -6,10 +6,12 @@ Kanban Board used by University for project management
 
 ### Install
  - Node.js
- - MongoDB
+ - MySQL
 
 ---
 ### Start
 ##### npm install
-##### npm run build
-##### npm start || npm run server
+##### npm run build - Front-end Buuild
+##### npm run serverBuild - Node.js server build
+##### npm start
+##### development mode - npm run dev && npm run server

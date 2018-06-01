@@ -8,8 +8,28 @@ import {
   deleteKanbanRequest
 } from '../actions/kanban';
 
-import { Modal, Button, Icon, Row, Col, Divider, Input, message } from 'antd';
+import { Modal, Button, Icon, Row, Col, Divider, Input, message, Upload } from 'antd';
 const { TextArea } = Input;
+
+// 파일 업로드
+const props = {
+  name: 'file',
+  action: '/api/classroom/kanban/upload',
+  headers: {
+    authorization: 'authorization-text',
+  },
+  onChange(info) {
+    if (info.file.status !== 'uploading') {
+      console.log(info.file, info.fileList);
+    }
+    if (info.file.status === 'done') {
+      message.success(`${ info.file.name } file uploaded successfully`);
+    } else if (info.file.status === 'error') {
+      message.error(`${ info.file.name } file upload failed.`);
+    }
+  },
+};
+
 
 class KanbanInfo extends React.Component {
 
@@ -155,6 +175,7 @@ class KanbanInfo extends React.Component {
     this.setState({ updateModalVisible: false, deleteModalVisible: false });
   }
 
+
   render() {
 
     // 삭제 버튼
@@ -191,6 +212,13 @@ class KanbanInfo extends React.Component {
 
             <Col md={ 8 }>
               <h3><strong>상태<Divider type="vertical" />{ this.props.data.kstatus }</strong></h3>
+
+              <Upload { ...props }>
+                <Button>
+                  <Icon type="upload" /> Click to Upload
+                </Button>
+              </Upload>
+
               { this.isDownload() }
               <br /><br /><br /><br />
               <p>생성일 { moment(this.props.data.id).tz('Asia/Seoul').format().slice(0, 10) }</p>

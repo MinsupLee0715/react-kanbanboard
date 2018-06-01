@@ -165,7 +165,7 @@ router.put('/', (req, res) => {
   }
 
   let query = '';
-  query = 'UPDATE Kanban SET title = ?, content = ?, updated_date = ? WHERE created_date = ?'
+  query = 'UPDATE Kanban SET title = ?, content = ?, updated_date = ? WHERE created_date = ?';
   let data = [title, content, updated_date, kanbanID];
 
   db.query(query, data, (err) => {
@@ -271,6 +271,12 @@ router.delete('/:id', (req, res) => {
       });
     }
   });
+});
+
+// 칸반 내 파일 업로드
+router.post('/upload', (req, res) => {
+  console.log(req.file);
+  res.json({ result: true });
 });
 
 // 칸반 내 파일 다운로드
