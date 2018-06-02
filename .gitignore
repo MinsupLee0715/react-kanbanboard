@@ -4,4 +4,5 @@ dist/*.css
 dist/*.png
 dist/*.jpg
 server/files/*
+uploads
 node_modules
