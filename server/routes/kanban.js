@@ -1,6 +1,20 @@
 import express from 'express';
 import db from '../models/mysqlDatabase';
+
+import multer from 'multer';
 const router = express.Router();
+
+let storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/') // 파일 저장 위치
+  },
+  filename: (req, file, cb) => {
+    // 저장될 파일 이름 + 확장자
+    cb(null, file.originalname)
+  }
+});
+
+let upload = multer({ storage: storage });
 
 
 // /api/classroom/kanban/*
@@ -274,9 +288,10 @@ router.delete('/:id', (req, res) => {
 });
 
 // 칸반 내 파일 업로드
-router.post('/upload', (req, res) => {
+router.post('/upload', upload.single('filename'), (req, res) => {
   console.log(req.file);
-  res.json({ result: true });
+  console.log(req.body);
+  res.json({ result: 'success' });
 });
 
 // 칸반 내 파일 다운로드

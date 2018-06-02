@@ -95,11 +95,6 @@ class Login extends React.Component {
     return (
       <Layout className='main-layout'>
 
-        {/* <Header
-          className="header"
-          style={ { width: '100%', top: 0, background: '#096dd9' } }>
-        </Header> */}
-
         <Layout>
           <Content style={ { margin: '200px 16px 0', overflow: 'initial' } }>
 
@@ -121,7 +116,8 @@ class Login extends React.Component {
                       prefix={ <Icon type="user" style={ { color: 'rgba(0,0,0,.25)' } } /> }
                       placeholder="User ID"
                       onChange={ this.handleChange }
-                      value={ this.state.userid } />
+                      value={ this.state.userid }
+                      autoFocus />
                   </FormItem>
 
                   <FormItem style={ { marginBottom: 12 } } >

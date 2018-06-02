@@ -2,6 +2,9 @@ import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import moment from 'moment-timezone';
+//import reqwest from 'reqwest';
+
+import { post } from 'axios';
 
 import {
   putKanbanInfoRequest,
@@ -10,25 +13,6 @@ import {
 
 import { Modal, Button, Icon, Row, Col, Divider, Input, message, Upload } from 'antd';
 const { TextArea } = Input;
-
-// 파일 업로드
-const props = {
-  name: 'file',
-  action: '/api/classroom/kanban/upload',
-  headers: {
-    authorization: 'authorization-text',
-  },
-  onChange(info) {
-    if (info.file.status !== 'uploading') {
-      console.log(info.file, info.fileList);
-    }
-    if (info.file.status === 'done') {
-      message.success(`${ info.file.name } file uploaded successfully`);
-    } else if (info.file.status === 'error') {
-      message.error(`${ info.file.name } file upload failed.`);
-    }
-  },
-};
 
 
 class KanbanInfo extends React.Component {
@@ -42,7 +26,10 @@ class KanbanInfo extends React.Component {
       content_value: '',
       loading: false,
       updateModalVisible: false,
-      deleteModalVisible: false
+      deleteModalVisible: false,
+
+      uploadFile: null,
+      //uploading: false
     };
 
     this.isDownload = this.isDownload.bind(this);
@@ -59,6 +46,10 @@ class KanbanInfo extends React.Component {
     this.handleDelete = this.handleDelete.bind(this);
     this.onUpdate = this.onUpdate.bind(this);
     this.onDelete = this.onDelete.bind(this);
+
+    this.onFileChange = this.onFileChange.bind(this);
+    this.onFormSubmit = this.onFormSubmit.bind(this);
+    this.onFileUpload = this.onFileUpload.bind(this);
   }
 
   // 첨부파일이 있을 시 표시
@@ -144,7 +135,7 @@ class KanbanInfo extends React.Component {
           this.setInitialize();
           this.props.handleCancel();
           this.props.getKanbanList();
-        } else message.error('sdf');
+        }
       });
   }
 
@@ -176,7 +167,81 @@ class KanbanInfo extends React.Component {
   }
 
 
+  // 서버로 파일 전송
+  /*   handleUpload = () => {
+      const uploadData = new FormData();
+      uploadData.append('file', this.state.uploadFile);
+  
+      this.setState({ uploading: true });
+  
+      reqwest({
+        url: '/api/classroom/kanban/upload',
+        method: 'post',
+        processData: false,
+        data: uploadData,
+        success: () => {
+          this.setState({
+            uploadFile: [],
+            uploading: 1
+          });
+          message.success('Upload Succesfully');
+        },
+        error: () => {
+          this.setState({ uploading: false });
+          message.error('Upload Failed');
+        }
+      });
+    } */
+
+
+  // 업로드 할 파일 선택
+  onFileChange(e) {
+    this.setState({ uploadFile: e.target.files[0] });
+  }
+  // 업로드 실행
+  onFormSubmit(e) {
+    e.preventDefault();
+    this.onFileUpload(this.state.uploadFile)
+      .then((res) => {
+        console.log(res);
+        message.success('Success Upload');
+      })
+      .catch((err) => {
+        message.error('Failed Upload');
+      });;
+  }
+  // 업로드 관련 정의
+  onFileUpload(file) {
+    const url = '/api/classroom/kanban/upload';
+    const formData = new FormData();
+    formData.append('filename', file);
+    formData.append('kanbanID', 'kanbanID');
+    const config = {
+      headers: {
+        'content-type': 'multipart/form-data'
+      }
+    }
+    return post(url, formData, config);
+  }
+
+
   render() {
+
+    /*     const { uploading } = this.state;
+        const props = {
+          action: '/api/classroom/kanban/upload',
+          onRemove: (file) => {
+            this.setState({ uploadFile: [] });
+          },
+          beforeUpload: (file) => {
+            this.setState({ uploadFile: [] });
+            this.setState(({ uploadFile }) => ({
+              uploadFile: [...uploadFile, file],
+            }));
+            return false;
+          },
+          fileList: this.state.uploadFile,
+        }; */
 
     // 삭제 버튼
     let deleteButton = (
@@ -213,11 +278,27 @@ class KanbanInfo extends React.Component {
             <Col md={ 8 }>
               <h3><strong>상태<Divider type="vertical" />{ this.props.data.kstatus }</strong></h3>
 
-              <Upload { ...props }>
-                <Button>
-                  <Icon type="upload" /> Click to Upload
-                </Button>
-              </Upload>
+              <div>
+                {/* <Upload { ...props }>
+                  <Button>
+                    <Icon type="upload" /> Select File
+                  </Button>
+                </Upload>
+                <Button
+                  className="upload-demo-start"
+                  type="primary"
+                  onClick={ this.handleUpload }
+                  disabled={ this.state.uploadFile.length === 0 }
+                  loading={ uploading }
+                >
+                  { uploading ? 'Uploading' : 'Start Upload' }
+                </Button> */}
+
+                <form onSubmit={ this.onFormSubmit } >
+                  <input type='file' name='filename' onChange={ this.onFileChange } />
+                  <input type='submit' value='Upload' />
+                </form>
+              </div>
 
               { this.isDownload() }
               <br /><br /><br /><br />
