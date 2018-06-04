@@ -407,7 +407,7 @@ class KanbanBoard extends Component<*, State> {
         <Row gutter={ 16 } style={ { whiteSpace: 'nowrap', overflowX: 'auto' } }>
           {/* DragDropContext > Droppable > Draggable */ }
           <DragDropContext onDragEnd={ this.onDragEnd }>
-            <Col className='swimlane' style={ { padding: '0 8px', float: 'left' } }>
+            <Col className='swimlane' style={ { padding: '0 8px' } }>
               <Droppable droppableId='droppable-1'>
                 { (dropProvided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
                   <div
@@ -448,7 +448,7 @@ class KanbanBoard extends Component<*, State> {
                 ) }
               </Droppable>
             </Col>
-            <Col className='swimlane' style={ { padding: '0 8px', float: 'left' } }>
+            <Col className='swimlane' style={ { padding: '0 8px' } }>
               <Droppable droppableId='droppable-2'>
                 { (dropProvided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
                   <div
@@ -485,7 +485,7 @@ class KanbanBoard extends Component<*, State> {
                 ) }
               </Droppable>
             </Col>
-            <Col className='swimlane' style={ { padding: '0 8px', float: 'left' } }>
+            <Col className='swimlane' style={ { padding: '0 8px' } }>
               <Droppable droppableId='droppable-3'>
                 { (dropProvided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
                   <div
@@ -522,7 +522,7 @@ class KanbanBoard extends Component<*, State> {
                 ) }
               </Droppable>
             </Col>
-            <Col className='swimlane' style={ { padding: '0 8px', float: 'left' } }>
+            <Col className='swimlane' style={ { padding: '0 8px' } }>
               <Droppable droppableId='droppable-4' isDropDisabled='flase'>
                 { (dropProvided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
                   <div
