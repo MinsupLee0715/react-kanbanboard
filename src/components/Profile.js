@@ -30,7 +30,6 @@ class Profile extends React.Component {
         if (this.props.getMessage.status === 'SUCCESS') {
           let message = [];
           let getMessage = this.props.getMessage.message;
-          console.log(this.props.getMessage.message);
 
           for (let i in getMessage) {
             if (!getMessage[i].isCheck) {

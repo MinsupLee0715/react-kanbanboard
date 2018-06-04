@@ -197,7 +197,7 @@ router.put('/', (req, res) => {
         if (err) throw err;
         console.log('updated professor message');
 
-        query = `SELECT Classroom.professorID, Classroom.title 
+        query = `SELECT Classroom.professorID, Classroom.title, Classroom.classID 
           FROM Classroom, (SELECT DISTINCT Class_student.classID
             FROM Class_student, Project
             WHERE Class_student.projectID = project.projectID) AS tttt
@@ -208,12 +208,12 @@ router.put('/', (req, res) => {
           if (err) throw err;
 
           // 학생에게 승인 메시지 추가
-          query = 'INSERT INTO Message (userID, type, projectID, isCheck, classTitle) VALUES ';
+          query = 'INSERT INTO Message (userID, type, classID, projectID, isCheck, classTitle) VALUES ';
           for (let i in studentList) {
             if (i == 0)
-              query += `("${ studentList[i] }", "PA", "${ projectID }", false, "${ result[0].title }")`;
+              query += `("${ studentList[i] }", "PA", "${ result[0].classID }","${ projectID }", false, "${ result[0].title }")`;
             else
-              query += `, ("${ studentList[i] }", "PA", "${ projectID }", false, "${ result[0].title }")`;
+              query += `, ("${ studentList[i] }", "PA", "${ result[0].classID }","${ projectID }", false, "${ result[0].title }")`;
           }
           db.query(query, (err) => {
             if (err) throw err;
