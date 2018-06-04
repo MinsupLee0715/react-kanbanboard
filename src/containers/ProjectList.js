@@ -81,7 +81,7 @@ class ProjectList extends React.Component {
   render() {
     return (
       <div>
-        <h1>{ this.props.selectedClass.title }&#40;{ this.props.selectedClass.divide }&#41; / { "프로젝트 목록" }</h1>
+        <h3>{ this.props.selectedClass.title }&#40;{ this.props.selectedClass.divide }&#41; / { "프로젝트 목록" }</h3>
 
         <div style={ { height: '100%', padding: 24, textAlign: 'center' } }>
 

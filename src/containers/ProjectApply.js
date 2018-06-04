@@ -93,7 +93,7 @@ class ProjectApply extends React.Component {
 
     return (
       <div>
-        <h1>{ this.props.selectedClass.title }&#40;{ this.props.selectedClass.divide }&#41; / 프로젝트 신청</h1>
+        <h3>{ this.props.selectedClass.title }&#40;{ this.props.selectedClass.divide }&#41; / 프로젝트 신청</h3>
 
         <div style={ { height: '100%', padding: 24, margin: 24, border: "1px solid #ddd" } }>
 

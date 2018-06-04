@@ -276,7 +276,7 @@ class KanbanInfo extends React.Component {
             </Col>
 
             <Col md={ 8 }>
-              <h3><strong>상태<Divider type="vertical" />{ this.props.data.kstatus }</strong></h3>
+              <h5><strong>상태<Divider type="vertical" />{ this.props.data.kstatus }</strong></h5>
 
               <div>
                 {/* <Upload { ...props }>
@@ -315,7 +315,7 @@ class KanbanInfo extends React.Component {
           confirmLoading={ this.state.loading }
           onCancel={ this.handleModalCancel }
         >
-          <h3>칸반을 수정하시겠습니까?</h3>
+          <h5>칸반을 수정하시겠습니까?</h5>
         </Modal>
         <Modal
           visible={ this.state.deleteModalVisible }
@@ -324,7 +324,7 @@ class KanbanInfo extends React.Component {
           confirmLoading={ this.state.loading }
           onCancel={ this.handleModalCancel }
         >
-          <h3>칸반을 삭제하시겠습니까?</h3>
+          <h5>칸반을 삭제하시겠습니까?</h5>
         </Modal>
       </React.Fragment>
     );

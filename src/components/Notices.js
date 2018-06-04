@@ -37,7 +37,7 @@ class Notices extends React.Component {
         <Divider style={ { margin: "12px 0" } } />
         <Row>
           <Col span={ 18 }>
-            <h2>{ this.state.title }</h2>
+            <h4>{ this.state.title }</h4>
           </Col>
           <Col span={ 6 } style={ { textAlign: "right" } }>
             <span>{ this.state.date }</span>

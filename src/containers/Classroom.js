@@ -24,6 +24,7 @@ class Classroom extends React.Component {
   }
 
   componentDidMount() {
+    // 프로젝트 목록 불러오기
     this.props.getProjectRequest(this.props.selectedClass.classID)
       .then(() => {
         if (this.props.getProject.status === "SUCCESS") {

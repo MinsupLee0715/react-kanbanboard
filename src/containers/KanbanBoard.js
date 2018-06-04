@@ -3,6 +3,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import moment from 'moment-timezone';
 
+import { getClassStudentRequest } from '../actions/classroom';
 import {
   getKanbanListRequest,
   getKanbanRequest,
@@ -86,6 +87,8 @@ class KanbanBoard extends Component<*, State> {
     super(props);
 
     this.state = {
+      students: '',
+
       todo: [],
       doing: [],
       feedback: [],
@@ -116,6 +119,7 @@ class KanbanBoard extends Component<*, State> {
 
   componentDidMount() {
     this.getKanbanList();
+    this.getProjectStudent();
   }
 
   setInitialize() {
@@ -125,6 +129,31 @@ class KanbanBoard extends Component<*, State> {
       feedback: [],
       finish: []
     });
+  }
+
+  // 서버로부터 학생 정보를 가져온다.
+  getProjectStudent() {
+    let classID = this.props.selectedClass.classID;
+    let project = this.props.project.project[0];
+
+    this.props.getClassStudentRequest(classID)
+      .then(() => {
+        if (this.props.getStudents.status === "SUCCESS") {
+          console.log("학생 목록 가져옴");
+          let studentList = this.props.getStudents.student;
+          let students = '';
+
+          for (let i in studentList) {
+            if (studentList[i].projectID == project.projectID) {
+              if (students == '')
+                students = studentList[i].name;
+              else
+                students += ', ' + studentList[i].name;
+            }
+          }
+          this.setState({ students: students })
+        }
+      });
   }
 
   // 서버로부터 칸반 정보를 가져온다.
@@ -369,10 +398,10 @@ class KanbanBoard extends Component<*, State> {
   render() {
     return (
       <div>
-        <h1>
+        <h3>
           { this.props.selectedClass.title }&#40;{ this.props.selectedClass.divide }&#41; / { this.props.project.project[0].title }
-          <h6>MEMBER - { "정화평" }</h6>
-        </h1>
+          <h5>MEMBER - { this.state.students }</h5>
+        </h3>
         <br />
 
         <Row gutter={ 16 } style={ { whiteSpace: 'nowrap', overflowX: 'auto' } }>
@@ -389,7 +418,7 @@ class KanbanBoard extends Component<*, State> {
                       style={ { height: 30, padding: '0 12px' } }
                     >
                       <div style={ { display: 'flex', justifyContent: 'space-between' } }>
-                        <h3>할 일 { this.state.todo.length }</h3>
+                        <h5>할 일 { this.state.todo.length }</h5>
                         <Button type='primary' shape='circle' size='middle' icon='plus' onClick={ this.handleKanbanAddClick } />
                       </div>
 
@@ -406,9 +435,9 @@ class KanbanBoard extends Component<*, State> {
                               ) }
                               { ...provided.dragHandleProps }
                             >
-                              <h3>{ item.title }</h3>
+                              <h5>{ item.title }</h5>
                               <br />
-                              <h5 style={ { textAlign: 'right' } }>{ item.date }</h5>
+                              <h6 style={ { textAlign: 'right' } }>{ item.date }</h6>
                             </div>
                             { provided.placeholder }
                           </div>
@@ -429,7 +458,7 @@ class KanbanBoard extends Component<*, State> {
                     <div
                       style={ { height: 30, padding: '0 12px' } }
                     >
-                      <h3>진행 중 { this.state.doing.length }</h3>
+                      <h5>진행 중 { this.state.doing.length }</h5>
                     </div>
                     { this.state.doing.map(item => (
                       <Draggable key={ item.id } draggableId={ item.id }>
@@ -443,9 +472,9 @@ class KanbanBoard extends Component<*, State> {
                               ) }
                               { ...provided.dragHandleProps }
                             >
-                              <h3>{ item.title }</h3>
+                              <h5>{ item.title }</h5>
                               <br />
-                              <h5 style={ { textAlign: 'right' } }>{ item.date }</h5>
+                              <h6 style={ { textAlign: 'right' } }>{ item.date }</h6>
                             </div>
                             { provided.placeholder }
                           </div>
@@ -466,7 +495,7 @@ class KanbanBoard extends Component<*, State> {
                     <div
                       style={ { height: 30, padding: '0 12px' } }
                     >
-                      <h3>피드백 { this.state.feedback.length }</h3>
+                      <h5>피드백 { this.state.feedback.length }</h5>
                     </div>
                     { this.state.feedback.map(item => (
                       <Draggable key={ item.id } draggableId={ item.id } isDragDisabled='flase'>
@@ -480,9 +509,9 @@ class KanbanBoard extends Component<*, State> {
                               ) }
                               { ...provided.dragHandleProps }
                             >
-                              <h3>{ item.title }</h3>
+                              <h5>{ item.title }</h5>
                               <br />
-                              <h5 style={ { textAlign: 'right' } }>{ item.date }</h5>
+                              <h6 style={ { textAlign: 'right' } }>{ item.date }</h6>
                             </div>
                             { provided.placeholder }
                           </div>
@@ -503,7 +532,7 @@ class KanbanBoard extends Component<*, State> {
                     <div
                       style={ { height: 30, padding: '0 12px' } }
                     >
-                      <h3>완료 { this.state.finish.length }</h3>
+                      <h5>완료 { this.state.finish.length }</h5>
                     </div>
                     { this.state.finish.map(item => (
                       <Draggable key={ item.id } draggableId={ item.id } isDragDisabled='flase'>
@@ -517,9 +546,9 @@ class KanbanBoard extends Component<*, State> {
                               ) }
                               { ...provided.dragHandleProps }
                             >
-                              <h3>{ item.title }</h3>
+                              <h5>{ item.title }</h5>
                               <br />
-                              <h5 style={ { textAlign: 'right' } }>{ item.date }</h5>
+                              <h6 style={ { textAlign: 'right' } }>{ item.date }</h6>
                             </div>
                             { provided.placeholder }
                           </div>
@@ -555,7 +584,8 @@ const mapStateToProps = (state) => {
     project: state.project.get,
     kanban: state.kanban.getList,
     kanbanInfo: state.kanban.get,
-    putStatus: state.kanban.putStatus
+    putStatus: state.kanban.putStatus,
+    getStudents: state.classroom.classStudent
   };
 };
 
@@ -570,6 +600,9 @@ const mapDispatchProps = (dispatch) => {
     putKanbanStatusRequest: (kanbanID, status) => {
       return dispatch(putKanbanStatusRequest(kanbanID, status));
     },
+    getClassStudentRequest: (classID) => {
+      return dispatch(getClassStudentRequest(classID));
+    }
   };
 };
 

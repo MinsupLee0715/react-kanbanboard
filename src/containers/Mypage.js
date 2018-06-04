@@ -129,7 +129,7 @@ class Mypage extends React.Component {
           <Searchbar />
 
           <Content style={ { minHeight: 768, margin: '12px 16px 0', overflow: 'initial' } }>
-            <h1>내 강의실</h1>
+            <h3>내 강의실</h3>
 
             <Card>
 

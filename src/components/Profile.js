@@ -97,7 +97,7 @@ class Profile extends React.Component {
     return (
       <div className="profile"
         style={ { padding: "0 0 25px", textAlign: "center" } }>
-        <h3>
+        <h6>
           <Tag>{ this.props.currentUser.type }</Tag>
           <strong style={ { color: "#072561" } }>{ this.props.currentUser.name } 님  </strong>
           <Dropdown overlay={ menu } trigger={ ['click'] }>
@@ -105,7 +105,7 @@ class Profile extends React.Component {
               <a style={ { color: "#072561" } }><Icon type="mail" /></a>
             </Badge>
           </Dropdown>
-        </h3>
+        </h6>
         <br />
         <Button
           className="logout-btn"

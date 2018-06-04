@@ -28,7 +28,7 @@ class Project extends React.Component {
           else if (this.props.getProject.project[0].status == 'standby')
             return (
               <div style={ { textAlign: 'center' } }>
-                <h1>승인 대기 중</h1>
+                <h3>승인 대기 중</h3>
 
               </div>
             )

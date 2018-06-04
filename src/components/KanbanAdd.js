@@ -116,13 +116,12 @@ class KanbanAdd extends React.Component {
 
         <Modal
           visible={ this.state.modalVisible }
-          title='확인'
           width="520px"
           onOk={ this.handleAdd }
           confirmLoading={ this.state.loading }
           onCancel={ this.handleModalCancel }
         >
-          <h3>입력한 정보로 칸반을 등록하시겠습니까?</h3>
+          <h5>입력한 정보로 칸반을 등록하시겠습니까?</h5>
         </Modal>
       </React.Fragment>
     );

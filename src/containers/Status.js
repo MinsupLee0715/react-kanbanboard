@@ -6,7 +6,7 @@ class Status extends React.Component {
   render() {
     return (
       <div>
-        <h1>{ "과목 명" } / { "프로젝트 통계" }</h1>
+        <h3>{ "과목 명" } / { "프로젝트 통계" }</h3>
 
         <div style={ { height: '100%', padding: 24, background: '#fff', textAlign: 'center' } }>
           Status
