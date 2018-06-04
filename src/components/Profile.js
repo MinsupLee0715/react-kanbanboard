@@ -3,6 +3,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { logoutRequest } from '../actions/auth';
+import { getMessageRequest } from '../actions/message';
 
 import { Menu, Dropdown, Button, Tag, Badge, Icon, message } from 'antd';
 
@@ -11,8 +12,67 @@ class Profile extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      message: []
+    };
+
     this.handleLogout = this.handleLogout.bind(this);
+    this.getMessageFunc = this.getMessageFunc.bind(this);
   }
+
+  componentDidMount() {
+    this.getMessageFunc();
+  }
+
+  getMessageFunc() {
+    this.props.getMessageRequest()
+      .then(() => {
+        if (this.props.getMessage.status === 'SUCCESS') {
+          let message = [];
+          let getMessage = this.props.getMessage.message;
+          console.log(this.props.getMessage.message);
+
+          for (let i in getMessage) {
+            if (!getMessage[i].isCheck) {
+              let data = {
+                classTitle: getMessage[i].classTitle,
+                projectTitle: getMessage[i].projectTitle,
+                type: getMessage[i].type == "PA" ? '프로젝트 신청 알림' : '피드백 알림',
+                receive_date: getMessage[i].receive_date.slice(0, 10)
+              }
+              message.push(
+                <Menu.Item className="new">
+                  <h6>{ data.classTitle } / { data.projectTitle }</h6>
+                  <h6>{ data.type }</h6>
+                  <h6>{ data.receive_date }</h6>
+                </Menu.Item>
+              );
+              message.push(<Menu.Divider />);
+            }
+          }
+          for (let i in getMessage) {
+            if (getMessage[i].isCheck) {
+              let data = {
+                classTitle: getMessage[i].classTitle,
+                projectTitle: getMessage[i].projectTitle,
+                type: getMessage[i].type == "PA" ? '프로젝트 신청 알림' : '피드백 알림',
+                receive_date: getMessage[i].receive_date.slice(0, 10)
+              }
+              message.push(
+                <Menu.Item className="old">
+                  <h6>{ data.classTitle } / { data.projectTitle }</h6>
+                  <h6>{ data.type }</h6>
+                  <h6>{ data.receive_date }</h6>
+                </Menu.Item>
+              );
+              message.push(<Menu.Divider />);
+            }
+          }
+          this.setState({ message });
+        }
+      });
+  }
+
 
   handleLogout() {
     this.props.logoutRequest()
@@ -31,66 +91,7 @@ class Profile extends React.Component {
 
     const menu = (
       <Menu style={ { overflow: 'auto', width: 300, maxHeight: 500 } }>
-        <Menu.Item className="new">
-          <h5>{ "과목명" } / { "프로젝트명" }</h5>
-          <h5>{ "피드백 요청이 있습니다." }</h5>
-          <h5>{ "2018-04-08" } / { "이름" }</h5>
-        </Menu.Item>
-        <Menu.Divider />
-        <Menu.Item className="new">
-          <h5>{ "과목명" } / { "프로젝트명" }</h5>
-          <h5>{ "피드백 요청이 있습니다." }</h5>
-          <h5>{ "2018-04-08" } / { "이름" }</h5>
-        </Menu.Item>
-        <Menu.Divider />
-        <Menu.Item className="new">
-          <h5>{ "과목명" } / { "프로젝트명" }</h5>
-          <h5>{ "피드백 요청이 있습니다." }</h5>
-          <h5>{ "2018-04-08" } / { "이름" }</h5>
-        </Menu.Item>
-        <Menu.Divider />
-        <Menu.Item className="new">
-          <h5>{ "과목명" } / { "프로젝트명" }</h5>
-          <h5>{ "피드백 요청이 있습니다." }</h5>
-          <h5>{ "2018-04-08" } / { "이름" }</h5>
-        </Menu.Item>
-        <Menu.Divider />
-        <Menu.Item className="old">
-          <h5>{ "과목명" } / { "프로젝트명" }</h5>
-          <h5>{ "피드백 요청이 있습니다." }</h5>
-          <h5>{ "2018-04-08" } / { "이름" }</h5>
-        </Menu.Item>
-        <Menu.Divider />
-        <Menu.Item className="old">
-          <h5>{ "과목명" } / { "프로젝트명" }</h5>
-          <h5>{ "피드백 요청이 있습니다." }</h5>
-          <h5>{ "2018-04-08" } / { "이름" }</h5>
-        </Menu.Item>
-        <Menu.Divider />
-        <Menu.Item className="old">
-          <h5>{ "과목명" } / { "프로젝트명" }</h5>
-          <h5>{ "피드백 요청이 있습니다." }</h5>
-          <h5>{ "2018-04-08" } / { "이름" }</h5>
-        </Menu.Item>
-        <Menu.Divider />
-        <Menu.Item className="old">
-          <h5>{ "과목명" } / { "프로젝트명" }</h5>
-          <h5>{ "피드백 요청이 있습니다." }</h5>
-          <h5>{ "2018-04-08" } / { "이름" }</h5>
-        </Menu.Item>
-        <Menu.Divider />
-        <Menu.Item className="old">
-          <h5>{ "과목명" } / { "프로젝트명" }</h5>
-          <h5>{ "피드백 요청이 있습니다." }</h5>
-          <h5>{ "2018-04-08" } / { "이름" }</h5>
-        </Menu.Item>
-        <Menu.Divider />
-        <Menu.Item className="old">
-          <h5>{ "과목명" } / { "프로젝트명" }</h5>
-          <h5>{ "피드백 요청이 있습니다." }</h5>
-          <h5>{ "2018-04-08" } / { "이름" }</h5>
-        </Menu.Item>
-        <Menu.Divider />
+        { this.state.message }
       </Menu>
     );
 
@@ -101,7 +102,7 @@ class Profile extends React.Component {
           <Tag>{ this.props.currentUser.type }</Tag>
           <strong style={ { color: "#072561" } }>{ this.props.currentUser.name } 님  </strong>
           <Dropdown overlay={ menu } trigger={ ['click'] }>
-            <Badge count={ 3 } dot>
+            <Badge count={ this.state.message.length } dot>
               <a style={ { color: "#072561" } }><Icon type="mail" /></a>
             </Badge>
           </Dropdown>
@@ -119,7 +120,8 @@ class Profile extends React.Component {
 const mapStateToProps = (state) => {
   return {
     currentUser: state.auth.status.currentUser,
-    logout: state.auth.status.isLogin
+    logout: state.auth.status.isLogin,
+    getMessage: state.message.get
   };
 }
 
@@ -127,6 +129,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     logoutRequest: () => {
       return dispatch(logoutRequest());
+    },
+    getMessageRequest: () => {
+      return dispatch(getMessageRequest());
     }
   };
 };

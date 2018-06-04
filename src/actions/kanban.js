@@ -102,12 +102,12 @@ export function putKanbanStatusFailure() {
   return { type: types.PUT_KANBAN_STATUS_FAILURE };
 }
 
-export function putKanbanStatusRequest(kanbanID, status) {
+export function putKanbanStatusRequest(classID, kanbanID, status) {
   return (dispatch) => {
     dispatch(putKanbanStatus());
 
     return axios
-      .put('/api/classroom/kanban/status', { kanbanID, status })
+      .put('/api/classroom/kanban/status', { classID, kanbanID, status })
       .then((res) => {
         dispatch(putKanbanStatusSuccess());
       })

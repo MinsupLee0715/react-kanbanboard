@@ -32,7 +32,7 @@ class Approve extends React.Component {
   }
 
   handleApprove(key) {
-    this.props.putProjectRequest(key, 'start')
+    this.props.putProjectRequest(this.props.selectedClass.classID, key, 'start')
       .then(() => {
         if (this.props.putProject.status === "SUCCESS") {
           message.success('승인 완료');
@@ -42,7 +42,7 @@ class Approve extends React.Component {
   }
 
   handleDelete(key) {
-    this.props.putProjectRequest(key, 'reject')
+    this.props.putProjectRequest(this.props.selectedClass.classID, key, 'reject')
       .then(() => {
         if (this.props.putProject.status === "SUCCESS") {
           message.success('삭제 완료');
@@ -167,8 +167,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchProps = (dispatch) => {
   return {
-    putProjectRequest: (projectID, status) => {
-      return dispatch(putProjectRequest(projectID, status));
+    putProjectRequest: (classID, projectID, status) => {
+      return dispatch(putProjectRequest(classID, projectID, status));
     },
     getProjectRequest: (classID) => {
       return dispatch(getProjectRequest(classID));

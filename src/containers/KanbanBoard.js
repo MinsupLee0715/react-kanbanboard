@@ -334,7 +334,7 @@ class KanbanBoard extends Component<*, State> {
 
     // 1st Lane -> 2nd Lane
     if (result.source.droppableId === 'droppable-1' && result.destination.droppableId === 'droppable-2') {
-      this.props.putKanbanStatusRequest(result.draggableId, 'DOING')
+      this.props.putKanbanStatusRequest(this.props.selectedClass.classID, result.draggableId, 'DOING')
         .then(() => {
           if (this.props.putStatus.status === 'SUCCESS') {
             message.success('상태를 변경하였습니다.');
@@ -354,7 +354,7 @@ class KanbanBoard extends Component<*, State> {
 
     // 2nd Lane -> 3rd Lane
     if (result.source.droppableId === 'droppable-2' && result.destination.droppableId === 'droppable-3') {
-      this.props.putKanbanStatusRequest(result.draggableId, 'FEEDBACK')
+      this.props.putKanbanStatusRequest(this.props.selectedClass.classID, result.draggableId, 'FEEDBACK')
         .then(() => {
           if (this.props.putStatus.status === 'SUCCESS') {
             message.success('상태를 변경하였습니다.');
@@ -374,7 +374,7 @@ class KanbanBoard extends Component<*, State> {
 
     // 2nd Lane -> 1st Lane
     if (result.source.droppableId === 'droppable-2' && result.destination.droppableId === 'droppable-1') {
-      this.props.putKanbanStatusRequest(result.draggableId, 'TODO')
+      this.props.putKanbanStatusRequest(this.props.selectedClass.classID, result.draggableId, 'TODO')
         .then(() => {
           if (this.props.putStatus.status === 'SUCCESS') {
             message.success('상태를 변경하였습니다.');
@@ -407,7 +407,7 @@ class KanbanBoard extends Component<*, State> {
         <Row gutter={ 16 } style={ { whiteSpace: 'nowrap', overflowX: 'auto' } }>
           {/* DragDropContext > Droppable > Draggable */ }
           <DragDropContext onDragEnd={ this.onDragEnd }>
-            <Col className='swimlane' style={ { padding: '0 8px' } }>
+            <Col className='swimlane' style={ { padding: '0 8px', float: 'left' } }>
               <Droppable droppableId='droppable-1'>
                 { (dropProvided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
                   <div
@@ -597,8 +597,8 @@ const mapDispatchProps = (dispatch) => {
     getKanbanRequest: (kanbanID) => {
       return dispatch(getKanbanRequest(kanbanID));
     },
-    putKanbanStatusRequest: (kanbanID, status) => {
-      return dispatch(putKanbanStatusRequest(kanbanID, status));
+    putKanbanStatusRequest: (classID, kanbanID, status) => {
+      return dispatch(putKanbanStatusRequest(classID, kanbanID, status));
     },
     getClassStudentRequest: (classID) => {
       return dispatch(getClassStudentRequest(classID));

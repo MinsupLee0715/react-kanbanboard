@@ -73,12 +73,12 @@ export function putProjectFailure() {
   return { type: types.PUT_PROJECT_FAILURE };
 }
 
-export function putProjectRequest(projectid, status) {
+export function putProjectRequest(classID, projectID, status) {
   return (dispatch) => {
     dispatch(putProject());
 
     return axios
-      .put('/api/classroom/project', { projectid, status })
+      .put('/api/classroom/project', { classID, projectID, status })
       .then((res) => {
         dispatch(putProjectSuccess());
       })

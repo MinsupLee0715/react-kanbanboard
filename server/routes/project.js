@@ -137,22 +137,38 @@ router.post('/', (req, res) => {
                 return;
               });
             } // if err
-            console.log('프로젝트 신청 완료')
-            return res.json({ result: 'success' });
+            console.log('프로젝트 신청 완료');
+
+            query = 'SELECT title, professorID FROM Classroom WHERE classID = ?';
+            db.query(query, classID, (err, result) => {
+              if (err) throw err;
+
+              let classTitle = result[0].title;
+              let professorID = result[0].professorID;
+
+              query = 'INSERT INTO Message (userID, type, classID, projectID, isCheck, classTitle) VALUES (?, ?, ?, ?, ?, ?)';
+              // PA = project apply
+              let data = [professorID, 'PA', classID, projectID, false, classTitle];
+              db.query(query, data, (err) => {
+                if (err) throw err;
+                console.log('insert into message');
+                return res.json({ result: 'success' });
+              }); // insert into Message
+            }); // SELECT professorID
           }); // commit
         }); // update Class_Student
       }); // insert into project
 
     }); // transaction
 
-  }); // select student in class
+  }); // SELECT student in class
 
 });
 
 /* 프로젝트 승인 */
 router.put('/', (req, res) => {
   let loginInfo = req.session.loginInfo;
-  let projectid = req.body.projectid;
+  let projectID = req.body.projectID;
   let status = req.body.status;
 
   // 교수가 아닐 시
@@ -164,20 +180,70 @@ router.put('/', (req, res) => {
   }
 
   let query = '';
-  if (status === "start") { // 프로젝트 승인
-    query = 'UPDATE Project SET status="start" WHERE projectID = ?';
-    db.query(query, projectid, (err, result) => {
+  if (status === "start") {
+    // 프로젝트 학생 검색
+    query = 'SELECT * FROM Class_Student WHERE projectID = ?';
+    console.log(projectID);
+    db.query(query, projectID, (err, result) => {
       if (err) throw err;
-      console.log('프로젝트 승인 완료');
-      return res.send({ result: true });
-    });
+
+      let studentList = [];
+      for (let i in result) studentList.push(result[i].studentID);
+      console.log(studentList);
+
+      // 교수 메시지 읽음으로 표시
+      query = 'UPDATE Message SET isCheck = ? WHERE projectID = ? AND userID = ?';
+      db.query(query, [true, projectID, loginInfo.userid], (err) => {
+        if (err) throw err;
+        console.log('updated professor message');
+
+        query = `SELECT Classroom.professorID, Classroom.title 
+          FROM Classroom, (SELECT DISTINCT Class_student.classID
+            FROM Class_student, Project
+            WHERE Class_student.projectID = project.projectID) AS tttt
+          WHERE Classroom.classID = tttt.classID
+          AND Classroom.professorID = ?`;
+
+        db.query(query, loginInfo.userid, (err, result) => {
+          if (err) throw err;
+
+          // 학생에게 승인 메시지 추가
+          query = 'INSERT INTO Message (userID, type, projectID, isCheck, classTitle) VALUES ';
+          for (let i in studentList) {
+            if (i == 0)
+              query += `("${ studentList[i] }", "PA", "${ projectID }", false, "${ result[0].title }")`;
+            else
+              query += `, ("${ studentList[i] }", "PA", "${ projectID }", false, "${ result[0].title }")`;
+          }
+          db.query(query, (err) => {
+            if (err) throw err;
+
+            // 프로젝트 승인
+            query = 'UPDATE Project SET status="start" WHERE projectID = ?';
+            db.query(query, projectID, (err, result) => {
+              if (err) throw err;
+              console.log('프로젝트 승인 완료');
+              return res.send({ result: true });
+            }); // 프로젝트 승인
+          })
+        }); // 학생 메시지 추가
+      }); // 교수 메시지 읽음 표시
+    }); // 프로젝트 학생 검색
 
   } else { // 프로젝트 거절(삭제)
     query = 'DELETE FROM Project WHERE projectID = ?'
-    db.query(query, projectid, (err, result) => {
+    db.query(query, projectID, (err, result) => {
       if (err) throw err;
-      console.log('프로젝트 삭제 완료: ' + projectid);
-      return res.send({ result: true });
+      console.log('프로젝트 삭제 완료: ' + projectID);
+
+      // 교수 메시지 읽음으로 표시
+      query = 'UPDATE Message SET isCheck = ? WHERE projectID = ? AND userID = ?';
+      db.query(query, [true, projectID, loginInfo.userid], (err) => {
+        if (err) throw err;
+        console.log('updated professor message');
+
+        return res.send({ result: true });
+      });
     });
   }
 });

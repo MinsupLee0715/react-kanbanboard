@@ -202,6 +202,7 @@ router.put('/status', (req, res) => {
   }
 
   const kanbanID = req.body.kanbanID;
+  const classID = req.body.classID;
   const status = req.body.status;
 
   // 데이터가 없을 시
@@ -225,16 +226,33 @@ router.put('/status', (req, res) => {
   let data = [new Date().toISOString().slice(0, 19), status, kanbanID];
   console.log(data);
   let query = '';
-  query = `UPDATE Kanban SET updated_date = ?, status = ? 
-    WHERE created_date = ?`;
+  query = `UPDATE Kanban SET updated_date = ?, status = ? WHERE created_date = ?`;
 
   // db update
-  db.query(query, data, (err, result) => {
+  db.query(query, data, (err, ) => {
     if (err) throw err;
     console.log('칸반 상태 변경 완료');
-    console.log(result);
-    return res.json({ result: 'success' });
-  });
+
+    if (data[1] == 'FEEDBACK') {
+      // 교수 id 검색
+      query = 'SELECT title, professorID FROM Classroom WHERE classID = ?';
+      db.query(query, classID, (err, result) => {
+        if (err) throw err;
+
+        let classTitle = result[0].title;
+
+        // message 추가
+        query = 'INSERT INTO Message (userID, type, classID, kanbanID, isCheck, classTitle) VALUES (?, ?, ?, ?, ?, ?)';
+        // FB = FeedBack
+        db.query(query, [professorID, 'FB', classID, kanbanID, false, classTitle], (err) => {
+          if (err) throw err;
+          console.log('insert into message');
+          return res.json({ result: 'success' });
+        }); // insert into Message
+      }); // select professorID
+    } else
+      return res.json({ result: 'success' });
+  }); // update kanban status
 });
 
 

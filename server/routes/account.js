@@ -71,4 +71,26 @@ router.get('/isLogin', (req, res) => {
   return res.json({ result: req.session.loginInfo });
 });
 
+/* 메시지 확인 */
+router.get('/message', (req, res) => {
+  let loginInfo = req.session.loginInfo;
+
+  if (typeof req.session.loginInfo === "undefined") {
+    return res.status(401).json({
+      error: "User is undefined",
+      code: 1
+    });
+  }
+
+  console.log(loginInfo.userid + ' 메시지 조회');
+
+  let query = '';
+  query = 'SELECT * FROM Message WHERE userID = ?';
+  db.query(query, loginInfo.userid, (err, result) => {
+    if (err) throw err;
+
+    return res.json({ result: result });
+  });
+});
+
 export default router;
