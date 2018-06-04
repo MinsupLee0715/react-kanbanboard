@@ -43,7 +43,7 @@ router.get('/', (req, res) => { // ../kanban?projectID=''
   // query
   let query = `SELECT Student.studentID, Student.name,
   Kanban.created_date, Kanban.title, Kanban.updated_date, Kanban.status, Kanban.projectID
-  FROM Class_Student, Kanban, student
+  FROM Class_Student, Kanban, Student
   WHERE Class_Student.projectID = Kanban.projectID
   AND Class_Student.studentID = Student.studentID
   AND Kanban.projectID = ?
@@ -135,6 +135,7 @@ router.post('/', (req, res) => {
 
       query = 'INSERT INTO Kanban SET ?';
       let data = { // 입력 데이터
+        created_date: new Date().toISOString().slice(0, 19),
         title: title,
         content: content,
         status: 'TODO',
@@ -239,6 +240,7 @@ router.put('/status', (req, res) => {
       db.query(query, classID, (err, result) => {
         if (err) throw err;
 
+        let professorID = result[0].professorID;
         let classTitle = result[0].title;
 
         // message 추가

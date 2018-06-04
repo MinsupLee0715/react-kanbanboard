@@ -36,10 +36,10 @@ router.post('/myclassrooms', (req, res) => {
 
   } else { // 학생일 경우
     query = `SELECT Professor.name,
-    class.classID,
-    class.title,
-    class.divide,
-    class.period
+    Class.classID,
+    Class.title,
+    Class.divide,
+    Class.period
     FROM Professor JOIN (
       SELECT
         Classroom.classID,
@@ -52,7 +52,7 @@ router.post('/myclassrooms', (req, res) => {
       FROM Classroom JOIN (
         SELECT * FROM Class_Student WHERE studentID=?
       ) AS Class_Student ON Class_Student.classID = Classroom.classID
-    ) AS Class ON class.professorID = Professor.professorID`;
+    ) AS Class ON Class.professorID = Professor.professorID`;
     
     db.query(query, loginInfo.userid, (err, result) => {
       if (err) throw err;
@@ -61,7 +61,7 @@ router.post('/myclassrooms', (req, res) => {
     });
   }
 });
-
+   
 /* 수업 내 학생 조회 */
 router.get('/getClassStudent', (req, res) => {
   let classID = req.query.classID;

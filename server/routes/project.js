@@ -145,10 +145,11 @@ router.post('/', (req, res) => {
 
               let classTitle = result[0].title;
               let professorID = result[0].professorID;
+              let messageID = new Date().toISOString().slice(0, 19);
 
-              query = 'INSERT INTO Message (userID, type, classID, projectID, isCheck, classTitle) VALUES (?, ?, ?, ?, ?, ?)';
+              query = 'INSERT INTO Message (receive_date, userID, type, classID, projectID, isCheck, classTitle) VALUES (?, ?, ?, ?, ?, ?, ?)';
               // PA = project apply
-              let data = [professorID, 'PA', classID, projectID, false, classTitle];
+              let data = [messageID, professorID, 'PA', classID, projectID, false, classTitle];
               db.query(query, data, (err) => {
                 if (err) throw err;
                 console.log('insert into message');
@@ -198,9 +199,9 @@ router.put('/', (req, res) => {
         console.log('updated professor message');
 
         query = `SELECT Classroom.professorID, Classroom.title, Classroom.classID 
-          FROM Classroom, (SELECT DISTINCT Class_student.classID
-            FROM Class_student, Project
-            WHERE Class_student.projectID = project.projectID) AS tttt
+          FROM Classroom, (SELECT DISTINCT Class_Student.classID
+            FROM Class_Student, Project
+            WHERE Class_Student.projectID = Project.projectID) AS tttt
           WHERE Classroom.classID = tttt.classID
           AND Classroom.professorID = ?`;
 
@@ -208,12 +209,12 @@ router.put('/', (req, res) => {
           if (err) throw err;
 
           // 학생에게 승인 메시지 추가
-          query = 'INSERT INTO Message (userID, type, classID, projectID, isCheck, classTitle) VALUES ';
+          query = 'INSERT INTO Message (receive_date, userID, type, classID, projectID, isCheck, classTitle) VALUES ';
           for (let i in studentList) {
             if (i == 0)
-              query += `("${ studentList[i] }", "PA", "${ result[0].classID }","${ projectID }", false, "${ result[0].title }")`;
+              query += `("${ new Date().toISOString().slice(0, 19); }", "${ studentList[i] }", "PA", "${ result[0].classID }","${ projectID }", false, "${ result[0].title }")`;
             else
-              query += `, ("${ studentList[i] }", "PA", "${ result[0].classID }","${ projectID }", false, "${ result[0].title }")`;
+              query += `, ("${ new Date().toISOString().slice(0, 19) }", "${ studentList[i] }", "PA", "${ result[0].classID }","${ projectID }", false, "${ result[0].title }")`;
           }
           db.query(query, (err) => {
             if (err) throw err;
