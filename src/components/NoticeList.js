@@ -12,13 +12,17 @@ class NoticeList extends React.Component {
     super(props);
 
     this.state = {
-      noticeList: []
+      noticeList: [],
+      loading: false
     };
   }
 
   componentDidMount() {
+    this.setState({ loading: true });
     this.props.getNoticeRequest(this.props.match.params.id)
       .then(() => {
+        this.setState({ loading: false });
+
         if (this.props.getNotice.status === "SUCCESS") {
           let list = [];
           let noticeList = this.props.notices;
@@ -78,6 +82,7 @@ class NoticeList extends React.Component {
           size="middle"
           pagination={ { position: 'none' } }
           onRow={ rowClick }
+          loading={ this.state.loading }
         />
       </div>
     );

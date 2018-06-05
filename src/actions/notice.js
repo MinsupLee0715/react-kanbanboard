@@ -29,7 +29,6 @@ export function getNoticeRequest(classid) {
   };
 }
 
-
 /* POST notice */
 export function postNotice() {
   return { type: types.POST_NOTICE };
@@ -54,6 +53,34 @@ export function postNoticeRequest(classid, title, content) {
       })
       .catch((err) => {
         dispatch(postNoticeFailure());
+      });
+  };
+}
+
+/* NOTICE notice */
+export function deleteNotice() {
+  return { type: types.DELETE_NOTICE };
+}
+
+export function deleteNoticeSuccess() {
+  return { type: types.DELETE_NOTICE_SUCCESS };
+}
+
+export function deleteNoticeFailure() {
+  return { type: types.DELETE_NOTICE_FAILURE };
+}
+
+export function deleteNoticeRequest(noticeID) {
+  return (dispatch) => {
+    dispatch(deleteNotice());
+
+    return axios
+      .delete(`/api/classroom/notice/${ noticeID }`)
+      .then((res) => {
+        dispatch(deleteNoticeSuccess());
+      })
+      .catch((err) => {
+        dispatch(deleteNoticeFailure());
       });
   };
 }

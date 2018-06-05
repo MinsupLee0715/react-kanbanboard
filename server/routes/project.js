@@ -211,10 +211,11 @@ router.put('/', (req, res) => {
           // 학생에게 승인 메시지 추가
           query = 'INSERT INTO Message (receive_date, userID, type, classID, projectID, isCheck, classTitle) VALUES ';
           for (let i in studentList) {
-            if (i == 0)
-              query += `("${ new Date().toISOString().slice(0, 19); }", "${ studentList[i] }", "PA", "${ result[0].classID }","${ projectID }", false, "${ result[0].title }")`;
-            else
+            if (i == 0) {
+              query += `("${ new Date().toISOString().slice(0, 19) }", "${ studentList[i] }", "PA", "${ result[0].classID }","${ projectID }", false, "${ result[0].title }")`;
+            } else {
               query += `, ("${ new Date().toISOString().slice(0, 19) }", "${ studentList[i] }", "PA", "${ result[0].classID }","${ projectID }", false, "${ result[0].title }")`;
+            }
           }
           db.query(query, (err) => {
             if (err) throw err;

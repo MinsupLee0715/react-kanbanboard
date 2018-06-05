@@ -26,7 +26,8 @@ class Mypage extends React.Component {
 
     this.state = {
       period: "학기 선택",
-      classData: []
+      classData: [],
+      loading: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -34,33 +35,38 @@ class Mypage extends React.Component {
 
 
   componentDidMount() {
-    console.log("/mypage");
+    this.setState({ loading: true });
+
     this.props.getClassroomRequest()
       .then(() => {
-        /* Select Child Setting */
-        menuData = [];
-        menuChlidren = [];
-        for (let i in this.props.getClasses) {
-          if (menuData.indexOf(this.props.getClasses[i].period) == -1) {
-            menuData.push(this.props.getClasses[i].period);
+        this.setState({ loading: false });
+
+        if (this.props.getStatus === "SUCCESS") {
+          /* Select Child Setting */
+          menuData = [];
+          menuChlidren = [];
+          for (let i in this.props.getClasses) {
+            if (menuData.indexOf(this.props.getClasses[i].period) == -1) {
+              menuData.push(this.props.getClasses[i].period);
+            }
+          };
+          menuData.sort();
+          menuData.reverse();
+
+          for (let i in menuData) {
+            menuChlidren.push(<Option value={ menuData[i] }>{ menuData[i] }</Option>);
           }
-        };
-        menuData.sort();
-        menuData.reverse();
 
-        for (let i in menuData) {
-          menuChlidren.push(<Option value={ menuData[i] }>{ menuData[i] }</Option>);
+          this.setState({ period: menuData[0] }, () => {
+            this.handleChange(this.state.period);
+          });
         }
-
-        this.setState({ period: menuData[0] }, () => {
-          this.handleChange(this.state.period);
-        });
       });
   }
 
   handleChange(value) {
+    this.setState({ loading: true });
     this.setState({ period: value }, () => {
-      console.log(this.state.period);
       classList = [];
       for (let i in this.props.getClasses) {
         if (this.props.getClasses[i].period == this.state.period)
@@ -72,7 +78,7 @@ class Mypage extends React.Component {
             professor: this.props.getClasses[i].name
           });
       }
-      this.setState({ classData: classList });
+      this.setState({ classData: classList, loading: false });
     });
   }
 
@@ -147,6 +153,7 @@ class Mypage extends React.Component {
                 size="middle"
                 pagination={ { position: 'none' } }
                 onRow={ rowClick }
+                loading={ this.state.loading }
               />
 
             </Card>
@@ -162,7 +169,8 @@ class Mypage extends React.Component {
 const mapStateToProps = (state) => {
   return {
     currentUser: state.auth.status.currentUser,
-    getClasses: state.classroom.getClasses.classroom
+    getClasses: state.classroom.getClasses.classroom,
+    getStatus: state.classroom.getClasses.status
   };
 };
 

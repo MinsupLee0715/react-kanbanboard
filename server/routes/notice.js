@@ -62,4 +62,25 @@ router.post('/', (req, res) => {
   });
 });
 
+router.delete('/:id', (req, res) => {
+  let loginInfo = req.session.loginInfo;
+  let noticeID = req.params.id;
+
+  // 교수가 아닐 시
+  if (loginInfo.type != 'professor') {
+    return res.status(403).json({
+      error: "Forbidden",
+      code: 1
+    });
+  }
+
+  // 삭제 쿼리
+  let query = 'DELETE FROM Notice WHERE date = ?';
+  db.query(query, noticeID, (err, result) => {
+    if (err) throw err;
+    console.log("공지사항 삭제 완료");
+    return res.send({ result: true });
+  });
+});
+
 export default router;

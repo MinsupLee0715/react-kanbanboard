@@ -31,7 +31,6 @@ class NoticeUpload extends React.Component {
   }
 
   handlePost() {
-    console.log(this.props.selectedClass);
     let classid = this.props.selectedClass.classID;
     let title = this.state.title;
     let content = this.state.content;

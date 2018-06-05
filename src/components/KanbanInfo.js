@@ -2,7 +2,6 @@ import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import moment from 'moment-timezone';
-//import reqwest from 'reqwest';
 
 import { post } from 'axios';
 
@@ -11,7 +10,7 @@ import {
   deleteKanbanRequest
 } from '../actions/kanban';
 
-import { Modal, Button, Icon, Row, Col, Divider, Input, message, Upload } from 'antd';
+import { Modal, Button, Icon, Row, Col, Divider, Input, message, Upload, Spin } from 'antd';
 const { TextArea } = Input;
 
 
@@ -21,6 +20,8 @@ class KanbanInfo extends React.Component {
     super(props);
 
     this.state = {
+      spin_loading: false,
+
       isChange: false,
       title_value: '',
       content_value: '',
@@ -118,19 +119,20 @@ class KanbanInfo extends React.Component {
 
   // 데이터 업로드 실행
   onUpdate() {
-    this.setState({ loading: true });
+    this.setState({ loading: true, spin_loading: false });
 
+    //let kanbanID = this.props.data.id;
     let kanbanID = moment(this.props.data.id).tz('Asia/Seoul').format();
     let title = this.state.title_value == '' ? this.props.data.title : this.state.title_value;
     let content = this.state.content_value == '' ? this.props.data.content : this.state.content_value;
     this.props.putKanbanInfoRequest(kanbanID, title, content, null)
       .then(() => {
+        this.setState({ spin_loading: false, loading: false });
         if (this.props.put.status === "SUCCESS") {
           message.success("수정되었습니다.");
           this.setState({
             updateModalVisible: false,
-            deleteModalVisible: false,
-            loading: false
+            deleteModalVisible: false
           });
           this.setInitialize();
           this.props.handleCancel();
@@ -141,18 +143,19 @@ class KanbanInfo extends React.Component {
 
   // 삭제 실행
   onDelete() {
-    this.setState({ loading: true });
+    this.setState({ loading: true, spin_loading: false });
 
+    //let kanbanID = this.props.data.id;
     let kanbanID = moment(this.props.data.id).tz('Asia/Seoul').format();
 
     this.props.deleteKanbanRequest(kanbanID)
       .then(() => {
+        this.setState({ spin_loading: false, loading: false });
         if (this.props.delete.status === "SUCCESS") {
           message.info('삭제되었습니다.');
           this.setState({
             updateModalVisible: false,
-            deleteModalVisible: false,
-            loading: false
+            deleteModalVisible: false
           });
           this.setInitialize();
           this.props.handleCancel();
@@ -165,34 +168,6 @@ class KanbanInfo extends React.Component {
   handleModalCancel() {
     this.setState({ updateModalVisible: false, deleteModalVisible: false });
   }
-
-
-  // 서버로 파일 전송
-  /*   handleUpload = () => {
-      const uploadData = new FormData();
-      uploadData.append('file', this.state.uploadFile);
-  
-      this.setState({ uploading: true });
-  
-      reqwest({
-        url: '/api/classroom/kanban/upload',
-        method: 'post',
-        processData: false,
-        data: uploadData,
-        success: () => {
-          this.setState({
-            uploadFile: [],
-            uploading: 1
-          });
-          message.success('Upload Succesfully');
-        },
-        error: () => {
-          this.setState({ uploading: false });
-          message.error('Upload Failed');
-        }
-      });
-    } */
-
 
   // 업로드 할 파일 선택
   onFileChange(e) {
@@ -210,6 +185,7 @@ class KanbanInfo extends React.Component {
         message.error('Failed Upload');
       });;
   }
+  
   // 업로드 관련 정의
   onFileUpload(file) {
     const url = '/api/classroom/kanban/upload';
@@ -226,22 +202,6 @@ class KanbanInfo extends React.Component {
 
 
   render() {
-
-    /*     const { uploading } = this.state;
-        const props = {
-          action: '/api/classroom/kanban/upload',
-          onRemove: (file) => {
-            this.setState({ uploadFile: [] });
-          },
-          beforeUpload: (file) => {
-            this.setState({ uploadFile: [] });
-            this.setState(({ uploadFile }) => ({
-              uploadFile: [...uploadFile, file],
-            }));
-            return false;
-          },
-          fileList: this.state.uploadFile,
-        }; */
 
     // 삭제 버튼
     let deleteButton = (
@@ -279,21 +239,6 @@ class KanbanInfo extends React.Component {
               <h5><strong>상태<Divider type="vertical" />{ this.props.data.kstatus }</strong></h5>
 
               <div>
-                {/* <Upload { ...props }>
-                  <Button>
-                    <Icon type="upload" /> Select File
-                  </Button>
-                </Upload>
-                <Button
-                  className="upload-demo-start"
-                  type="primary"
-                  onClick={ this.handleUpload }
-                  disabled={ this.state.uploadFile.length === 0 }
-                  loading={ uploading }
-                >
-                  { uploading ? 'Uploading' : 'Start Upload' }
-                </Button> */}
-
                 <form onSubmit={ this.onFormSubmit } >
                   <input type='file' name='filename' onChange={ this.onFileChange } />
                   <input type='submit' value='Upload' />
@@ -304,28 +249,32 @@ class KanbanInfo extends React.Component {
               <br /><br /><br /><br />
               <p>생성일 { moment(this.props.data.id).tz('Asia/Seoul').format().slice(0, 10) }</p>
               <p>업데이트 날짜 { moment(this.props.data.updated_date).tz('Asia/Seoul').format().slice(0, 10) }</p>
+              {/* <p>생성일 { this.props.data.id.slice(0, 10) }</p>
+              <p>업데이트 날짜 { this.props.data.updated_date.slice(0, 10) }</p> */}
             </Col>
           </Row>
         </Modal>
 
-        <Modal
-          visible={ this.state.updateModalVisible }
-          width="480px"
-          onOk={ this.onUpdate }
-          confirmLoading={ this.state.loading }
-          onCancel={ this.handleModalCancel }
-        >
-          <h5>칸반을 수정하시겠습니까?</h5>
-        </Modal>
-        <Modal
-          visible={ this.state.deleteModalVisible }
-          width="480px"
-          onOk={ this.onDelete }
-          confirmLoading={ this.state.loading }
-          onCancel={ this.handleModalCancel }
-        >
-          <h5>칸반을 삭제하시겠습니까?</h5>
-        </Modal>
+        <Spin spinning={ this.state.spin_loading }>
+          <Modal
+            visible={ this.state.updateModalVisible }
+            width="480px"
+            onOk={ this.onUpdate }
+            confirmLoading={ this.state.loading }
+            onCancel={ this.handleModalCancel }
+          >
+            <h5>칸반을 수정하시겠습니까?</h5>
+          </Modal>
+          <Modal
+            visible={ this.state.deleteModalVisible }
+            width="480px"
+            onOk={ this.onDelete }
+            confirmLoading={ this.state.loading }
+            onCancel={ this.handleModalCancel }
+          >
+            <h5>칸반을 삭제하시겠습니까?</h5>
+          </Modal>
+        </Spin>
       </React.Fragment>
     );
   }

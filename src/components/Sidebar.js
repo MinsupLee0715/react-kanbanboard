@@ -29,7 +29,7 @@ class Sidebar extends React.Component {
     return (
       <Sider
         breakpoint="sm"
-        collapsedWidth="70"
+        collapsedWidth={ 70 }
         onCollapse={ (collapsed, type) => { console.log(collapsed, type); } }
         width={ 256 }
         style={ { overflow: 'hidden', height: '100%', position: 'fixed', left: 0 } }>

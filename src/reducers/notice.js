@@ -4,6 +4,7 @@ import update from 'react-addons-update';
 const initialState = {
   get: { status: "INIT" },
   post: { status: "INIT" },
+  delete: { status: "INIT" },
   notice: []
 };
 
@@ -54,6 +55,26 @@ export default function classroom(state, action) {
           status: { $set: "FAILURE" }
         }
       });
+
+      /* delete notice */
+      case types.DELETE_NOTICE:
+        return update(state, {
+          delete: {
+            status: { $set: "WAIT" }
+          }
+        });
+      case types.DELETE_NOTICE_SUCCESS:
+        return update(state, {
+          delete: {
+            status: { $set: "SUCCESS" }
+          }
+        });
+      case types.DELETE_NOTICE_FAILURE:
+        return update(state, {
+          delete: {
+            status: { $set: "FAILURE" }
+          }
+        });
 
     default: return state;
   }

@@ -4,14 +4,14 @@ import update from 'react-addons-update';
 const initialState = {
   getClasses: {
     status: "INIT",
-    classroom: {}
+    classroom: []
   },
   selectedClass: {
-    classInfo: {}
+    classInfo: []
   },
   classStudent: {
     status: "INIT",
-    student: {}
+    student: []
   }
 };
 
