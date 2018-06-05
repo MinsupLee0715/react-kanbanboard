@@ -38,6 +38,13 @@ export default function project(state, action) {
           status: { $set: "FAILURE" }
         }
       });
+    /* set project */
+    case types.SET_PROJECT:
+      return update(state, {
+        get: {
+          project: { $set: action.project }
+        }
+      });
 
     /* post project */
     case types.POST_PROJECT:

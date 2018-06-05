@@ -2,6 +2,17 @@ import axios from 'axios';
 import * as types from './ActionTypes';
 import { message } from 'antd';
 
+/* Set project */
+export function setProject(project) {
+  return { type: types.SET_PROJECT, project };
+}
+
+export function setProjectRequest(project) {
+  return (dispatch) => {
+    dispatch(setProject(project));
+  };
+}
+
 /* GET project */
 export function getProject() {
   return { type: types.GET_PROJECT };

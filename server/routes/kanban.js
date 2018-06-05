@@ -40,17 +40,23 @@ router.get('/', (req, res) => { // ../kanban?projectID=''
     });
   }
 
-  // query
-  let query = `SELECT Student.studentID, Student.name,
-  Kanban.created_date, Kanban.title, Kanban.updated_date, Kanban.status, Kanban.projectID
-  FROM Class_Student, Kanban, Student
-  WHERE Class_Student.projectID = Kanban.projectID
-  AND Class_Student.studentID = Student.studentID
-  AND Kanban.projectID = ?
-  AND Class_Student.studentID = ?`;
+  let query = '';
+
+  // 비로그인 일 시
+  if (typeof loginInfo.type === 'student') {
+    query = `SELECT Student.studentID, Student.name,
+      Kanban.created_date, Kanban.title, Kanban.updated_date, Kanban.status, Kanban.projectID
+      FROM Class_Student, Kanban, Student
+      WHERE Class_Student.projectID = Kanban.projectID
+      AND Class_Student.studentID = Student.studentID
+      AND Kanban.projectID = ?
+      AND Class_Student.studentID = '${ loginInfo.userid }'`;
+  } else {
+    query = `SELECT * FROM KANBAN WHERE Kanban.projectID = ?`;
+  }
 
   // db select
-  db.query(query, [projectID, loginInfo.userid], (err, result) => {
+  db.query(query, projectID, (err, result) => {
     if (err) throw err;
 
     if (!result[0])

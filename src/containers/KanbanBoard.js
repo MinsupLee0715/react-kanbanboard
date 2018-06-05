@@ -88,6 +88,7 @@ class KanbanBoard extends Component<*, State> {
 
     this.state = {
       loading: false,
+      projectTitle: '',
 
       students: '',
 
@@ -120,8 +121,23 @@ class KanbanBoard extends Component<*, State> {
   }
 
   componentDidMount() {
-    this.getKanbanList();
-    this.getProjectStudent();
+    let pathname = this.props.history.location.pathname;
+    let pathSplit = pathname.split('/');
+
+    for (let i in this.props.project.project) {
+      if (this.props.project.project[i].projectID == pathSplit[4]) {
+        this.setState({ projectTitle: this.props.project.project[i].title });
+        break;
+      }
+    }
+
+    if (this.props.currentUser.type == 'professor') {
+      this.getKanbanList(pathSplit[4]);
+      this.getProjectStudent(pathSplit[4]);
+    } else {
+      this.getKanbanList(this.props.project.project[0].projectID);
+      this.getProjectStudent(this.props.project.project[0].projectID);
+    }
   }
 
   setInitialize() {
@@ -134,9 +150,8 @@ class KanbanBoard extends Component<*, State> {
   }
 
   // 서버로부터 학생 정보를 가져온다.
-  getProjectStudent() {
+  getProjectStudent(project) {
     let classID = this.props.selectedClass.classID;
-    let project = this.props.project.project[0];
 
     this.props.getClassStudentRequest(classID)
       .then(() => {
@@ -146,7 +161,7 @@ class KanbanBoard extends Component<*, State> {
           let students = '';
 
           for (let i in studentList) {
-            if (studentList[i].projectID == project.projectID) {
+            if (studentList[i].projectID == project) {
               if (students == '')
                 students = studentList[i].name;
               else
@@ -159,14 +174,13 @@ class KanbanBoard extends Component<*, State> {
   }
 
   // 서버로부터 칸반 정보를 가져온다.
-  getKanbanList() {
-    let project = this.props.project.project[0];
+  getKanbanList(project) {
     this.setInitialize();
 
-    if (project.projectID) {
+    if (project) {
       // 칸반 리스트 가져오기
       this.setState({ loading: true });
-      this.props.getKanbanListRequest(project.projectID)
+      this.props.getKanbanListRequest(project)
         .then(() => {
           this.setState({ loading: false });
           if (this.props.kanban.status === "SUCCESS") {
@@ -409,13 +423,13 @@ class KanbanBoard extends Component<*, State> {
     return (
       <div>
         <h3>
-          { this.props.selectedClass.title }&#40;{ this.props.selectedClass.divide }&#41; / { this.props.project.project[0].title }
+          { this.props.selectedClass.title }&#40;{ this.props.selectedClass.divide }&#41; / { this.state.projectTitle }
           <h5>MEMBER - { this.state.students }</h5>
         </h3>
         <br />
 
         <Row gutter={ 16 } style={ { whiteSpace: 'nowrap', overflowX: 'auto' } }>
-          
+
           <Spin spinning={ this.state.loading }>
             {/* DragDropContext > Droppable > Draggable */ }
             <DragDropContext onDragEnd={ this.onDragEnd }>
@@ -593,6 +607,7 @@ class KanbanBoard extends Component<*, State> {
 
 const mapStateToProps = (state) => {
   return {
+    currentUser: state.auth.status.currentUser,
     selectedClass: state.classroom.selectedClass.classInfo,
     project: state.project.get,
     kanban: state.kanban.getList,

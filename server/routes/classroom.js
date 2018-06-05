@@ -13,6 +13,9 @@ router.use('/project', project);
 router.use('/kanban', kanban);
 
 
+/* 수업 정보 가져오기 */
+//router.get('/getClassInfo/')
+
 /* 내 강의실 */
 router.post('/myclassrooms', (req, res) => {
   if (typeof req.session.loginInfo === "undefined") {

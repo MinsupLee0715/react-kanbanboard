@@ -8,7 +8,6 @@ const router = express.Router();
 router.get('/', (req, res) => {
   let loginInfo = req.session.loginInfo;
   let classID = req.query.classID;
-  //let projectID = req.query.projectID;
 
   if (typeof classID === 'undefined') {
     return res.status(400).json({
