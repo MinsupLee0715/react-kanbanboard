@@ -4,6 +4,9 @@ import db from '../models/mysqlDatabase';
 import multer from 'multer';
 const router = express.Router();
 
+import feedback from './feedback';
+router.use('/feedback', feedback);
+
 let storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/'); // 파일 저장 위치

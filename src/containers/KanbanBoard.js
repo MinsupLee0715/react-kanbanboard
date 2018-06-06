@@ -9,6 +9,7 @@ import {
   getKanbanRequest,
   putKanbanStatusRequest
 } from '../actions/kanban';
+import { getFeedbackRequest } from '../actions/feedback';
 
 import KanbanInfo from '../components/KanbanInfo';
 import KanbanAdd from '../components/KanbanAdd';
@@ -105,10 +106,11 @@ class KanbanBoard extends Component<*, State> {
         filename: '',
         score: 0,
         kstatus: '',
-        status: false
+        feedback: null,
+        status: false // visible
       },
       kanbanAddInfo: {
-        status: false
+        status: false // visible
       }
     }
 
@@ -253,22 +255,31 @@ class KanbanBoard extends Component<*, State> {
     let kanbanID = e.currentTarget.id;
     if (kanbanID) {
       this.setState({ loading: true });
+      // 칸반 불러오기
       this.props.getKanbanRequest(kanbanID)
         .then(() => {
           if (this.props.kanbanInfo.status === 'SUCCESS') {
             this.setState({ loading: false });
-            this.setState({
-              kanbanInfo: {
-                id: this.props.kanbanInfo.kanban[0].created_date,
-                title: this.props.kanbanInfo.kanban[0].title,
-                content: this.props.kanbanInfo.kanban[0].content,
-                updated_date: this.props.kanbanInfo.kanban[0].updated_date,
-                filename: this.props.kanbanInfo.kanban[0].filename,
-                score: this.props.kanbanInfo.kanban[0].score,
-                kstatus: this.props.kanbanInfo.kanban[0].status,
-                status: true
-              }
-            });
+
+            // 칸반의 피드백(comment) 불러오기
+            this.props.getFeedbackRequest(kanbanID)
+              .then(() => {
+                if (this.props.getFeedback.status === "SUCCESS") {
+                  this.setState({
+                    kanbanInfo: {
+                      id: this.props.kanbanInfo.kanban[0].created_date,
+                      title: this.props.kanbanInfo.kanban[0].title,
+                      content: this.props.kanbanInfo.kanban[0].content,
+                      updated_date: this.props.kanbanInfo.kanban[0].updated_date,
+                      filename: this.props.kanbanInfo.kanban[0].filename,
+                      score: this.props.kanbanInfo.kanban[0].score,
+                      kstatus: this.props.kanbanInfo.kanban[0].status,
+                      feedback: this.props.getFeedback.feedback,
+                      status: true
+                    }
+                  });
+                }
+              });
           } else {
             message.error('문제 발생');
           }
@@ -283,6 +294,7 @@ class KanbanBoard extends Component<*, State> {
         id: '',
         title: '',
         content: '',
+        feedback: null,
         status: false
       },
       kanbanAddInfo: {
@@ -445,7 +457,7 @@ class KanbanBoard extends Component<*, State> {
                       >
                         <div style={ { display: 'flex', justifyContent: 'space-between' } }>
                           <h5>할 일 { this.state.todo.length }</h5>
-                          <Button type='primary' shape='circle' size='middle' icon='plus' onClick={ this.handleKanbanAddClick } />
+                          { this.props.currentUser.type == "student" ? <Button type='primary' shape='circle' size='middle' icon='plus' onClick={ this.handleKanbanAddClick } /> : null }
                         </div>
 
                       </div>
@@ -613,7 +625,8 @@ const mapStateToProps = (state) => {
     kanban: state.kanban.getList,
     kanbanInfo: state.kanban.get,
     putStatus: state.kanban.putStatus,
-    getStudents: state.classroom.classStudent
+    getStudents: state.classroom.classStudent,
+    getFeedback: state.feedback.get
   };
 };
 
@@ -630,7 +643,10 @@ const mapDispatchProps = (dispatch) => {
     },
     getClassStudentRequest: (classID) => {
       return dispatch(getClassStudentRequest(classID));
-    }
+    },
+    getFeedbackRequest: (kanbanID) => {
+      return dispatch(getFeedbackRequest(kanbanID));
+    },
   };
 };
 

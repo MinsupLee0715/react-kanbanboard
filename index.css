@@ -203,7 +203,8 @@ pre {
   font-size: 18px;
 }
 #title_value.ant-input,
-#content_value.ant-input {
+#content_value.ant-input,
+#feedback_value.ant-input {
   outline: none;
   border: none;
   width: 100%;
@@ -211,7 +212,9 @@ pre {
 #title_value.ant-input:focus,
 #title_value.ant-input:hover,
 #content_value.ant-input:focus,
-#content_value.ant-input:hover {
+#content_value.ant-input:hover,
+#feedback_value.ant-input:focus,
+#feedback_value.ant-input:hover {
   outline: none;
   border: none;
   box-shadow: 0 0 black;

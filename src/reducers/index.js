@@ -4,6 +4,7 @@ import notice from './notice';
 import project from './project';
 import kanban from './kanban';
 import message from './message';
+import feedback from './feedback';
 
 import { combineReducers } from 'redux';
 
@@ -13,5 +14,6 @@ export default combineReducers({
   notice,
   project,
   kanban,
-  message
+  message,
+  feedback
 });
