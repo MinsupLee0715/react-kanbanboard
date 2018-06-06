@@ -6,11 +6,13 @@ const router = express.Router();
 
 let storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/') // 파일 저장 위치
+    cb(null, 'uploads/'); // 파일 저장 위치
   },
   filename: (req, file, cb) => {
     // 저장될 파일 이름 + 확장자
-    cb(null, file.originalname)
+    let filename = req.body.kanbanID.replace(/:/gi, ';');
+    console.log(filename);
+    cb(null, filename + ";" + file.originalname);
   }
 });
 
@@ -315,14 +317,46 @@ router.delete('/:id', (req, res) => {
 
 // 칸반 내 파일 업로드
 router.post('/upload', upload.single('filename'), (req, res) => {
-  console.log(req.file);
-  console.log(req.body);
-  res.json({ result: 'success' });
+  let query = '';
+  query = `UPDATE Kanban SET updated_date = ?, filename = ? WHERE created_date = ?`;
+  let data = [new Date().toISOString().slice(0, 19), req.file.originalname, req.body.kanbanID];
+  db.query(query, data, (err) => {
+    if (err) throw err;
+
+    console.log(req.body.kanbanID + '에 파일을 업로드 함');
+    res.json({ result: 'success' });
+  });
 });
 
 // 칸반 내 파일 다운로드
-router.get('/download', (req, res) => {
-  res.json({ result: true });
+router.get('/download/:kanbanID', (req, res) => {
+  let kanbanID = req.params.kanbanID;
+  let query = '';
+
+  if (!kanbanID) {
+    return res.status(400).json({
+      error: "NULL KanbanID",
+      code: 1
+    });
+  }
+
+  query = 'SELECT filename FROM Kanban WHERE created_date = ?';
+  db.query(query, kanbanID, (err, result) => {
+    if (err) throw err;
+
+    if (!result[0]) {
+      return res.status(400).json({
+        error: "Empty File",
+        code: 2
+      });
+    }
+
+    let filename = req.params.kanbanID.replace(/:/gi, ';') + ';' + result[0].filename;
+    let sendname = filename.slice(20, filename.length);
+    console.log(kanbanID + " - 파일 다운로드");
+
+    res.download('uploads/' + filename, sendname);
+  });
 });
 
 export default router;

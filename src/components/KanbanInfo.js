@@ -3,7 +3,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import moment from 'moment-timezone';
 
-import { post } from 'axios';
+import { post, get } from 'axios';
 
 import {
   putKanbanInfoRequest,
@@ -29,8 +29,7 @@ class KanbanInfo extends React.Component {
       updateModalVisible: false,
       deleteModalVisible: false,
 
-      uploadFile: null,
-      //uploading: false
+      uploadFile: null
     };
 
     this.isDownload = this.isDownload.bind(this);
@@ -53,14 +52,21 @@ class KanbanInfo extends React.Component {
     this.onFileUpload = this.onFileUpload.bind(this);
   }
 
+  componentDidMount() {
+
+  }
+
   // 첨부파일이 있을 시 표시
   isDownload() {
+    let kanbanID = moment(this.props.data.id).tz('Asia/Seoul').format().slice(0, 19);
     if (this.props.data.filename) {
       return (
-        <React.Fragment>
-          <Icon type="download" style={ { fontSize: 25, background: '#e8e8e8' } } />
-          <span style={ { fontSize: 18 } }>&nbsp;&nbsp;{ this.props.data.filename }</span>
-        </React.Fragment>
+        <form method="get" action={ `/api/classroom/kanban/download/${ kanbanID }` }>
+          <label htmlFor="dwfile" className="btn btn-outline-secondary btn-sm"
+            style={ { maxWidth: "200px", overflow: "hidden" } }>
+            <Icon type="download" /> { this.props.data.filename }</label>
+          <input type="submit" id="dwfile" name="dwfile" style={ { display: 'none' } } />
+        </form>
       )
     }
   }
@@ -90,7 +96,8 @@ class KanbanInfo extends React.Component {
     this.setState({
       title_value: '',
       content_value: '',
-      isChange: false
+      isChange: false,
+      uploadFile: null
     });
   }
 
@@ -136,7 +143,7 @@ class KanbanInfo extends React.Component {
           });
           this.setInitialize();
           this.props.handleCancel();
-          this.props.getKanbanList();
+          this.props.getKanbanList(this.props.project[0].projectID);
         }
       });
   }
@@ -153,13 +160,14 @@ class KanbanInfo extends React.Component {
         this.setState({ spin_loading: false, loading: false });
         if (this.props.delete.status === "SUCCESS") {
           message.info('삭제되었습니다.');
+
           this.setState({
             updateModalVisible: false,
             deleteModalVisible: false
           });
           this.setInitialize();
           this.props.handleCancel();
-          this.props.getKanbanList();
+          this.props.getKanbanList(this.props.project[0].projectID);
         }
       });
   }
@@ -178,20 +186,20 @@ class KanbanInfo extends React.Component {
     e.preventDefault();
     this.onFileUpload(this.state.uploadFile)
       .then((res) => {
-        console.log(res);
+        this.handleCancel();
         message.success('Success Upload');
       })
       .catch((err) => {
         message.error('Failed Upload');
-      });;
+      });
   }
-  
+
   // 업로드 관련 정의
   onFileUpload(file) {
     const url = '/api/classroom/kanban/upload';
     const formData = new FormData();
+    formData.append('kanbanID', moment(this.props.data.id).tz('Asia/Seoul').format().slice(0, 19));
     formData.append('filename', file);
-    formData.append('kanbanID', 'kanbanID');
     const config = {
       headers: {
         'content-type': 'multipart/form-data'
@@ -221,16 +229,16 @@ class KanbanInfo extends React.Component {
             <Col md={ 16 }>
               <Input
                 id="title_value"
-                value={ this.state.title_value == '' ? this.props.data.title : this.state.title_value }
+                value={ this.state.title_value || this.props.data.title }
                 onChange={ this.handleChange }
-                placeholder="제목을 입력하세요"
+                placeholder={ this.props.data.title }
               />
 
               <TextArea
                 id="content_value"
-                value={ this.state.content_value == '' ? this.props.data.content : this.state.content_value }
+                value={ this.state.content_value || this.props.data.content }
                 onChange={ this.handleChange }
-                placeholder="내용을 입력하세요"
+                placeholder={ this.props.data.content }
                 autosize={ { minRows: 5, maxRows: 15 } }
               />
             </Col>
@@ -240,11 +248,23 @@ class KanbanInfo extends React.Component {
 
               <div>
                 <form onSubmit={ this.onFormSubmit } >
-                  <input type='file' name='filename' onChange={ this.onFileChange } />
-                  <input type='submit' value='Upload' />
+                  <label htmlFor="filename" className="btn btn-outline-secondary btn-sm">
+                    <Icon type="upload" /> Click to Upload</label>
+                  <input type='file' id='filename' name='filename'
+                    onChange={ this.onFileChange }
+                    style={ { display: 'none' } } />
+                  <br />
+                  { this.state.uploadFile
+                    ? <React.Fragment>
+                      { this.state.uploadFile.name }
+                      <br />
+                      <label htmlFor="upload" className="btn btn-outline-secondary btn-sm">Upload</label>
+                      <input type='submit' id='upload' value='Upload' style={ { display: 'none' } } />
+                    </React.Fragment>
+                    : "파일을 선택해주세요." }
                 </form>
               </div>
-
+              <br />
               { this.isDownload() }
               <br /><br /><br /><br />
               <p>생성일 { moment(this.props.data.id).tz('Asia/Seoul').format().slice(0, 10) }</p>
