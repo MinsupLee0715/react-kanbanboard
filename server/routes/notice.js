@@ -14,11 +14,11 @@ router.get('/', (req, res) => {
     });
   };
 
-  let classid = req.query.classid;
+  let classID = req.query.classID;
   let query = '';
 
-  query = 'SELECT * FROM Notice WHERE classID=?';
-  db.query(query, classid, (err, result) => {
+  query = 'SELECT * FROM Notice WHERE classID = ?';
+  db.query(query, classID, (err, result) => {
     if (err) throw err;
     console.log("공지사항: " + result.length);
     return res.json({ result: result });
@@ -40,14 +40,14 @@ router.post('/', (req, res) => {
 
   // 클라이언트로부터 받은 데이터
   let noticeData = {
-    classid: req.body.classid,
+    classID: req.body.classID,
     title: req.body.title,
     content: req.body.content,
     date: new Date().toISOString().slice(0, 19) // to Mysql Datetime
   };
 
   // 입력 데이터가 없을 시
-  if (noticeData.classid === "" || noticeData.title === "" || noticeData.content === "") {
+  if (noticeData.classID === "" || noticeData.title === "" || noticeData.content === "") {
     return res.status(400).json({
       error: "Empty data",
       code: 2
@@ -55,10 +55,39 @@ router.post('/', (req, res) => {
   }
 
   let query = 'INSERT INTO Notice SET ?';
-  db.query(query, noticeData, (err, result) => {
+  db.query(query, noticeData, (err) => {
     if (err) throw err;
-    console.log("공지사항: " + result.length);
-    return res.send({ result: true });
+    console.log("공지사항 등록 완료");
+
+    query = `SELECT Class_Student.studentID, Classroom.title
+    FROM Class_Student, Classroom
+    WHERE Class_Student.classID = Classroom.classID
+    AND Class_Student.classID = ?`;
+    db.query(query, noticeData.classID, (err, result) => {
+      if (err) throw err;
+
+      /* 학생 ID 목록 */
+      let studentList = [];
+      result.forEach(e => {
+        studentList.push(e.studentID);
+      });
+
+      /* 수업 내 학생에게 공지사항 등록 메시지 전송 */
+      query = 'INSERT INTO Message (receive_date, userID, type, classID, isCheck, classTitle) VALUES ';
+      for (let i in studentList) {
+        if (i == 0) {
+          query += `("${ new Date().toISOString().slice(0, 19) }", "${ studentList[i] }", "NTC", "${ noticeData.classID }", false, "${ result[0].title }")`;
+        } else {
+          query += `, ("${ new Date().toISOString().slice(0, 19) }", "${ studentList[i] }", "NTC", "${ noticeData.classID }", false, "${ result[0].title }")`;
+        }
+      }
+
+      db.query(query, (err) => {
+        if (err) throw err;
+        console.log('공지사항 메시지 전송 완료');
+        return res.send({ result: true });
+      });
+    });
   });
 });
 

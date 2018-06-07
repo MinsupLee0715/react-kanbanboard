@@ -2,14 +2,14 @@ import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import moment from 'moment-timezone';
-
 import { post, get } from 'axios';
 
 import {
   putKanbanInfoRequest,
   deleteKanbanRequest
 } from '../actions/kanban';
-import { postFeedbackRequest } from '../actions/feedback';
+
+import KanbanFeedback from './KanbanFeedback';
 
 import { Modal, Button, Icon, Row, Col, Divider, Input, message, Upload, Spin } from 'antd';
 const { TextArea } = Input;
@@ -31,6 +31,7 @@ class KanbanInfo extends React.Component {
       loading: false,
       updateModalVisible: false,
       deleteModalVisible: false,
+      feedbackModalVisible: false,
 
       uploadFile: null
     };
@@ -45,10 +46,11 @@ class KanbanInfo extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleModalCancel = this.handleModalCancel.bind(this);
-    this.handleUploadFeedback = this.handleUploadFeedback.bind(this);
 
     this.handleUpdate = this.handleUpdate.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleFeedback = this.handleFeedback.bind(this);
+
     this.onUpdate = this.onUpdate.bind(this);
     this.onDelete = this.onDelete.bind(this);
 
@@ -132,8 +134,15 @@ class KanbanInfo extends React.Component {
 
   // 화면을 닫을 때 (state 초기화 및 창닫기) 또는 (데이터 수정 확인)
   handleCancel() {
+    this.setState({
+      updateModalVisible: false,
+      deleteModalVisible: false,
+      feedbackModalVisible: false
+    });
+
     this.setInitialize();
     this.props.handleCancel();
+    this.props.getKanbanList();
   }
 
   // 데이터 업로드 확인창
@@ -145,11 +154,14 @@ class KanbanInfo extends React.Component {
     this.setState({ deleteModalVisible: true });
   }
 
+  // 피드백 창
+  handleFeedback() {
+    this.setState({ feedbackModalVisible: true });
+  }
+
   // 데이터 업로드 실행
   onUpdate() {
     this.setState({ loading: true, spin_loading: false });
-    let pathname = this.props.history.location.pathname;
-    let pathSplit = pathname.split('/');
 
     //let kanbanID = this.props.data.id;
     let kanbanID = moment(this.props.data.id).tz('Asia/Seoul').format();
@@ -160,13 +172,7 @@ class KanbanInfo extends React.Component {
         this.setState({ spin_loading: false, loading: false });
         if (this.props.put.status === "SUCCESS") {
           message.success("수정되었습니다.");
-          this.setState({
-            updateModalVisible: false,
-            deleteModalVisible: false
-          });
-          this.setInitialize();
-          this.props.handleCancel();
-          this.props.getKanbanList(pathSplit[4]);
+          this.handleCancel();
         }
       });
   }
@@ -176,29 +182,24 @@ class KanbanInfo extends React.Component {
     this.setState({ loading: true, spin_loading: false });
 
     let kanbanID = moment(this.props.data.id).tz('Asia/Seoul').format();
-    let pathname = this.props.history.location.pathname;
-    let pathSplit = pathname.split('/');
 
     this.props.deleteKanbanRequest(kanbanID)
       .then(() => {
         this.setState({ spin_loading: false, loading: false });
         if (this.props.delete.status === "SUCCESS") {
           message.info('삭제되었습니다.');
-
-          this.setState({
-            updateModalVisible: false,
-            deleteModalVisible: false
-          });
-          this.setInitialize();
-          this.props.handleCancel();
-          this.props.getKanbanList(pathSplit[4]);
+          this.handleCancel();
         }
       });
   }
 
   // 수정 확인 modal Cancel 시
   handleModalCancel() {
-    this.setState({ updateModalVisible: false, deleteModalVisible: false });
+    this.setState({
+      updateModalVisible: false,
+      deleteModalVisible: false,
+      feedbackModalVisible: false
+    });
   }
 
   // 업로드 할 파일 선택
@@ -235,25 +236,6 @@ class KanbanInfo extends React.Component {
     return post(url, formData, config);
   }
 
-  // 피드백 업로드
-  handleUploadFeedback() {
-    let pathname = this.props.history.location.pathname;
-    let pathSplit = pathname.split('/');
-
-    let kanbanID = moment(this.props.data.id).tz('Asia/Seoul').format().slice(0, 19);
-
-    this.props.postFeedbackRequest(kanbanID, this.state.feedback_value)
-      .then(() => {
-        if (this.props.postFeedback.status === "SUCCESS") {
-          message.info('피드백을 등록하였습니다.');
-
-          this.setInitialize();
-          this.props.handleCancel();
-          this.props.getKanbanList(pathSplit[4]);
-        }
-      });
-  }
-
 
   render() {
 
@@ -262,13 +244,29 @@ class KanbanInfo extends React.Component {
       <Button onClick={ this.handleDelete }>Delete</Button>
     );
 
+    // 피드백 버튼
+    let feedbackButton = (
+      this.props.data.kstatus === "FEEDBACK"
+        ? <button className="btn btn-secondary" onClick={ this.handleFeedback }>피드백 작성</button>
+        : null
+    );
+
+    let showScore = (
+      this.props.data.score
+        ? <h5><span class="badge badge-success" style={ { width: 70 } }>{ this.props.data.score }점</span></h5>
+        : null
+    );
+
+
     return (
       <React.Fragment>
         <Modal
           visible={ this.props.data.status }
           width="800px"
           onCancel={ this.handleCancel }
-          footer={ this.props.currentUser.type == "student" ? [deleteButton, this.confirmUpdate()] : null }
+          footer={ this.props.currentUser.type == "student"
+            ? [deleteButton, this.confirmUpdate()]
+            : [feedbackButton] }
         >
           { this.props.currentUser.type == "student" ? this.isUpdating() : null } {/* 수정 중 표시 */ }
           <Row gutter={ 16 }>
@@ -291,25 +289,6 @@ class KanbanInfo extends React.Component {
               <hr />
               <h6><strong>피드백</strong></h6>
               { this.isFeedback() }
-              { this.props.currentUser.type === "professor" ?
-                <div>
-                  <div className="form-row">
-                    <div className="col-10">
-                      <TextArea
-                        id="feedback_value"
-                        value={ this.state.feedback_value }
-                        onChange={ this.props.currentUser.type === "professor" ? this.handleChange : null }
-                        placeholder="내용을 입력해주세요"
-                        autosize={ { minRows: 1, maxRows: 3 } }
-                      />
-                    </div>
-                    <div className="col-2">
-                      <button onClick={ this.handleUploadFeedback } className="btn btn-outline-success">등록</button>
-                    </div>
-                  </div>
-                </div>
-
-                : null }
             </Col>
 
 
@@ -337,6 +316,7 @@ class KanbanInfo extends React.Component {
               <br />
               { this.isDownload() }
               <br /><br /><br /><br />
+              { showScore }
               <p>생성일 { moment(this.props.data.id).tz('Asia/Seoul').format().slice(0, 10) }</p>
               <p>업데이트 날짜 { moment(this.props.data.updated_date).tz('Asia/Seoul').format().slice(0, 10) }</p>
               {/* <p>생성일 { this.props.data.id.slice(0, 10) }</p>
@@ -365,6 +345,14 @@ class KanbanInfo extends React.Component {
             <h5>칸반을 삭제하시겠습니까?</h5>
           </Modal>
         </Spin>
+
+        <KanbanFeedback
+          kanbanID={ this.props.data.id }
+          visible={ this.state.feedbackModalVisible }
+          onCancel={ this.handleModalCancel }
+          handleCancel={ this.handleCancel }
+        />
+
       </React.Fragment>
     );
   }
@@ -377,8 +365,7 @@ const mapStateToProps = (state) => {
     project: state.project.get.project,
     get: state.kanban.get,
     put: state.kanban.put,
-    delete: state.kanban.delete,
-    postFeedback: state.feedback.post
+    delete: state.kanban.delete
   };
 };
 
@@ -389,9 +376,6 @@ const mapDispatchProps = (dispatch) => {
     },
     deleteKanbanRequest: (kanbanID) => {
       return dispatch(deleteKanbanRequest(kanbanID));
-    },
-    postFeedbackRequest: (kanbanID, content) => {
-      return dispatch(postFeedbackRequest(kanbanID, content));
     }
   };
 };

@@ -14,12 +14,12 @@ export function getNoticeFailure() {
   return { type: types.GET_NOTICE_FAILURE };
 }
 
-export function getNoticeRequest(classid) {
+export function getNoticeRequest(classID) {
   return (dispatch) => {
     dispatch(getNotice());
 
     return axios
-      .get(`/api/classroom/notice?classid=${ classid }`)
+      .get(`/api/classroom/notice?classID=${ classID }`)
       .then((res) => {
         dispatch(getNoticeSuccess(res.data.result));
       })
@@ -42,12 +42,12 @@ export function postNoticeFailure() {
   return { type: types.POST_NOTICE_FAILURE };
 }
 
-export function postNoticeRequest(classid, title, content) {
+export function postNoticeRequest(classID, title, content) {
   return (dispatch) => {
     dispatch(postNotice());
 
     return axios
-      .post('/api/classroom/notice', { classid, title, content })
+      .post('/api/classroom/notice', { classID, title, content })
       .then((res) => {
         dispatch(postNoticeSuccess());
       })

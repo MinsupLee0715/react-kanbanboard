@@ -31,19 +31,19 @@ class NoticeUpload extends React.Component {
   }
 
   handlePost() {
-    let classid = this.props.selectedClass.classID;
+    let classID = this.props.selectedClass.classID;
     let title = this.state.title;
     let content = this.state.content;
 
-    if (!classid) message.error('수업 정보를 확인하십시오.');
+    if (!classID) message.error('수업 정보를 확인하십시오.');
     else {
       if (title == '' || content == '') message.error('제목과 내용을 입력하십시오.');
       else
-        this.props.postNoticeRequest(classid, title, content)
+        this.props.postNoticeRequest(classID, title, content)
           .then(() => {
             if (this.props.status === 'SUCCESS') {
               message.success('등록되었습니다.');
-              this.props.history.push(`/classroom/${ classid }/notice`);
+              this.props.history.push(`/classroom/${ classID }/notice`);
             } else {
               message.error('등록 실패');
             }
@@ -97,8 +97,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    postNoticeRequest: (classid, title, content) => {
-      return dispatch(postNoticeRequest(classid, title, content));
+    postNoticeRequest: (classID, title, content) => {
+      return dispatch(postNoticeRequest(classID, title, content));
     }
   };
 };

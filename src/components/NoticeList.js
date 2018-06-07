@@ -101,8 +101,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getNoticeRequest: (classid) => {
-      return dispatch(getNoticeRequest(classid));
+    getNoticeRequest: (classID) => {
+      return dispatch(getNoticeRequest(classID));
     }
   };
 };

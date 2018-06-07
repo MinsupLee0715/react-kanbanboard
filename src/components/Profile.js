@@ -16,27 +16,40 @@ class Profile extends React.Component {
       message: []
     };
 
-    this.handleLogout = this.handleLogout.bind(this);
+    this.messageType = this.messageType.bind(this);
     this.getMessageFunc = this.getMessageFunc.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
   }
 
   componentDidMount() {
     this.getMessageFunc();
   }
 
+  messageType(type) {
+    switch (type) {
+      case "PA": return "프로젝트 신청이 있습니다.";
+      case "FB": return "피드백 요청이 있습니다.";
+      case "PAS": return "프로젝트가 승인되었습니다.";
+      case "TODO": return "피드백이 완료되었습니다. >> 재진행";
+      case "FINISH": return "피드백이 완료되었습니다 >> 완료";
+      case "NTC": return "공지사항이 등록되었습니다.";
+      default: return "알 수 없는 알림";
+    }
+  };
+
   getMessageFunc() {
     this.props.getMessageRequest()
       .then(() => {
         if (this.props.getMessage.status === 'SUCCESS') {
           let message = [];
-          let getMessage = this.props.getMessage.message;
+          let getMessage = this.props.getMessage.message.reverse();
 
           for (let i in getMessage) {
             if (!getMessage[i].isCheck) {
               let data = {
                 classTitle: getMessage[i].classTitle,
                 projectTitle: getMessage[i].projectTitle,
-                type: getMessage[i].type == "PA" ? '프로젝트 신청 알림' : '피드백 알림',
+                type: this.messageType(getMessage[i].type),
                 receive_date: getMessage[i].receive_date.slice(0, 10)
               }
               message.push(
@@ -54,7 +67,7 @@ class Profile extends React.Component {
               let data = {
                 classTitle: getMessage[i].classTitle,
                 projectTitle: getMessage[i].projectTitle,
-                type: getMessage[i].type == "PA" ? '프로젝트 신청 알림' : '피드백 알림',
+                type: this.messageType(getMessage[i].type),
                 receive_date: getMessage[i].receive_date.slice(0, 10)
               }
               message.push(

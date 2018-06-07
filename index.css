@@ -171,13 +171,19 @@ pre {
 
 
 /* kanban */
-.kanban-upload .kanban-input.ant-input {
+.kanban-upload .kanban-input.ant-input,
+.feedback-upload .feedback-input.ant-input,
+#feedback_content.ant-input {
   outline: none;
   border: none;
   border-radius: 0;
 }
 .kanban-upload .kanban-input.ant-input:focus,
-.kanban-upload .kanban-input.ant-input:hover {
+.kanban-upload .kanban-input.ant-input:hover,
+.feedback-upload .feedback-input.ant-input:focus,
+.feedback-upload .feedback-input.ant-input:hover
+#feedback_content.ant-input:focus,
+#feedback_content.ant-input:hover {
   outline: none;
   border: none;
   box-shadow: 0 0 black;

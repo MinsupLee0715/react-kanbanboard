@@ -48,6 +48,7 @@ class KanbanAdd extends React.Component {
       content: ''
     });
     this.props.handleCancel();
+    this.props.getKanbanList();
   }
 
   // 두번째 modal에서 OK 시
@@ -67,7 +68,6 @@ class KanbanAdd extends React.Component {
 
         if (this.props.kanban.status === "SUCCESS") {
           message.success('칸반을 등록하였습니다.');
-          this.props.getKanbanList(pathSplit[4]);
           this.showCancel();
         }
       });

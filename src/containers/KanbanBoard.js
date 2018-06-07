@@ -133,13 +133,8 @@ class KanbanBoard extends Component<*, State> {
       }
     }
 
-    if (this.props.currentUser.type == 'professor') {
-      this.getKanbanList(pathSplit[4]);
-      this.getProjectStudent(pathSplit[4]);
-    } else {
-      this.getKanbanList(this.props.project.project[0].projectID);
-      this.getProjectStudent(this.props.project.project[0].projectID);
-    }
+    this.getKanbanList();
+    this.getProjectStudent();
   }
 
   setInitialize() {
@@ -152,7 +147,17 @@ class KanbanBoard extends Component<*, State> {
   }
 
   // 서버로부터 학생 정보를 가져온다.
-  getProjectStudent(project) {
+  getProjectStudent() {
+    let project;
+    let pathname = this.props.history.location.pathname;
+    let pathSplit = pathname.split('/');
+
+    if (this.props.currentUser.type === 'professor') {
+      project = pathSplit[4];
+    } else if (this.props.currentUser.type === 'student') {
+      project = this.props.project.project[0].projectID;
+    }
+
     let classID = this.props.selectedClass.classID;
 
     this.props.getClassStudentRequest(classID)
@@ -176,7 +181,17 @@ class KanbanBoard extends Component<*, State> {
   }
 
   // 서버로부터 칸반 정보를 가져온다.
-  getKanbanList(project) {
+  getKanbanList() {
+    let project;
+    let pathname = this.props.history.location.pathname;
+    let pathSplit = pathname.split('/');
+
+    if (this.props.currentUser.type === 'professor') {
+      project = pathSplit[4];
+    } else if (this.props.currentUser.type === 'student') {
+      project = this.props.project.project[0].projectID;
+    }
+
     this.setInitialize();
 
     if (project) {

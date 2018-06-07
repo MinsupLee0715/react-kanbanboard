@@ -235,7 +235,8 @@ router.put('/status', (req, res) => {
   }
 
   // input data & query
-  let data = [new Date().toISOString().slice(0, 19), status, kanbanID];
+  let date = new Date().toISOString().slice(0, 19);
+  let data = [date, status, kanbanID];
   console.log(data);
   let query = '';
   query = `UPDATE Kanban SET updated_date = ?, status = ? WHERE created_date = ?`;
@@ -245,19 +246,26 @@ router.put('/status', (req, res) => {
     if (err) throw err;
     console.log('칸반 상태 변경 완료');
 
+    /* 칸반 상태가 피드백인 경우만 교수에게 메시지 전송 */
     if (data[1] == 'FEEDBACK') {
       // 교수 id 검색
       query = 'SELECT title, professorID FROM Classroom WHERE classID = ?';
       db.query(query, classID, (err, result) => {
         if (err) throw err;
 
-        let professorID = result[0].professorID;
-        let classTitle = result[0].title;
-
         // message 추가
-        query = 'INSERT INTO Message (userID, type, classID, kanbanID, isCheck, classTitle) VALUES (?, ?, ?, ?, ?, ?)';
+        query = 'INSERT INTO Message SET ?';
+        data = {
+          receive_date: date,
+          userID: result[0].professorID,
+          type: 'FB',
+          classID: classID,
+          kanbanID: kanbanID,
+          isCheck: false,
+          classTitle: result[0].title
+        };
         // FB = FeedBack
-        db.query(query, [professorID, 'FB', classID, kanbanID, false, classTitle], (err) => {
+        db.query(query, data, (err) => {
           if (err) throw err;
           console.log('insert into message');
           return res.json({ result: 'success' });

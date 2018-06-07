@@ -43,12 +43,12 @@ export function postFeedbackFailure() {
   return { type: types.POST_FEEDBACK_FAILURE };
 }
 
-export function postFeedbackRequest(kanbanID, content) {
+export function postFeedbackRequest(kanbanID, content, status, point) {
   return (dispatch) => {
     dispatch(postFeedback());
 
     return axios
-      .post('/api/classroom/kanban/feedback', { kanbanID, content })
+      .post('/api/classroom/kanban/feedback', { kanbanID, content, status, point })
       .then((res) => {
         dispatch(postFeedbackSuccess());
       })

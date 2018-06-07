@@ -79,6 +79,14 @@ router.post('/', (req, res) => {
     });
   }
 
+  // 학생 목록에 본인이 없을 시
+  if (student.indexOf(loginInfo.userid) < 0) {
+    return res.status(403).json({
+      error: "Forbidden",
+      code: 2
+    });
+  }
+
   let query = '';
 
   // 수업 내 학생 검색
@@ -110,8 +118,8 @@ router.post('/', (req, res) => {
     db.beginTransaction((err) => {
 
       // 프로젝트 추가: standy 상태
-      query = 'INSERT INTO Project (projectID, title, status) VALUES (?, ?, "standby")';
-      db.query(query, [projectID, title], (err, result) => {
+      query = 'INSERT INTO Project (projectID, title, status, leader) VALUES (?, ?, "standby", ?)';
+      db.query(query, [projectID, title, loginInfo.userid], (err) => {
         if (err) {
           db.rollback(() => {
             console.log('err1');
@@ -197,6 +205,7 @@ router.put('/', (req, res) => {
         if (err) throw err;
         console.log('updated professor message');
 
+
         query = `SELECT Classroom.professorID, Classroom.title, Classroom.classID 
           FROM Classroom, (SELECT DISTINCT Class_Student.classID
             FROM Class_Student, Project
@@ -211,9 +220,9 @@ router.put('/', (req, res) => {
           query = 'INSERT INTO Message (receive_date, userID, type, classID, projectID, isCheck, classTitle) VALUES ';
           for (let i in studentList) {
             if (i == 0) {
-              query += `("${ new Date().toISOString().slice(0, 19) }", "${ studentList[i] }", "PA", "${ result[0].classID }","${ projectID }", false, "${ result[0].title }")`;
+              query += `("${ new Date().toISOString().slice(0, 19) }", "${ studentList[i] }", "PAS", "${ result[0].classID }","${ projectID }", false, "${ result[0].title }")`;
             } else {
-              query += `, ("${ new Date().toISOString().slice(0, 19) }", "${ studentList[i] }", "PA", "${ result[0].classID }","${ projectID }", false, "${ result[0].title }")`;
+              query += `, ("${ new Date().toISOString().slice(0, 19) }", "${ studentList[i] }", "PAS", "${ result[0].classID }","${ projectID }", false, "${ result[0].title }")`;
             }
           }
           db.query(query, (err) => {
