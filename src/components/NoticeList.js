@@ -33,7 +33,7 @@ class NoticeList extends React.Component {
                 key: noticeList[i].date,
                 number: parseInt(i) + parseInt(1),
                 title: noticeList[i].title,
-                date: noticeList[i].date.slice(0, 10)
+                date: noticeList[i].date
               });
             }
           }

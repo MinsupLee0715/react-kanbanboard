@@ -50,7 +50,7 @@ class Profile extends React.Component {
                 classTitle: getMessage[i].classTitle,
                 projectTitle: getMessage[i].projectTitle,
                 type: this.messageType(getMessage[i].type),
-                receive_date: getMessage[i].receive_date.slice(0, 10)
+                receive_date: getMessage[i].receive_date
               }
               message.push(
                 <Menu.Item className="new">
@@ -68,7 +68,7 @@ class Profile extends React.Component {
                 classTitle: getMessage[i].classTitle,
                 projectTitle: getMessage[i].projectTitle,
                 type: this.messageType(getMessage[i].type),
-                receive_date: getMessage[i].receive_date.slice(0, 10)
+                receive_date: getMessage[i].receive_date
               }
               message.push(
                 <Menu.Item className="old">

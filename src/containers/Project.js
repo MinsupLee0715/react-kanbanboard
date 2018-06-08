@@ -38,32 +38,17 @@ class Project extends React.Component {
             if (this.props.getProject.project.length == 0)
               this.setState({ component: <ProjectApply /> });
             else if (this.props.getProject.project[0].status == 'standby')
-              return (
-                <div style={ { textAlign: 'center' } }>
-                  <h3>승인 대기 중</h3>
-                </div>
-              );
+              this.setState({
+                component:
+                  <div style={ { textAlign: 'center' } }>
+                    <h3>승인 대기 중</h3>
+                  </div>
+              });
             else
               this.setState({ component: <KanbanBoard /> });
 
           } else if (this.props.currentUser.type == 'professor') { // 교수일 시
             this.setState({ component: <KanbanBoard /> });
-            /* let pathname = this.props.history.location.pathname;
-            let pathSplit = pathname.split('/');
-
-            if (pathSplit[4]) {
-              let project = [];
-              console.log(pathSplit[4]);
-
-              for (let i in this.props.getProject.project) {
-                if (this.props.getProject.project[i].projectID == pathSplit[4]) {
-                  project.push(this.props.getProject.project[i]);
-                }
-              }
-              this.props.setProjectRequest(project);
-              this.setState({ component: <KanbanBoard /> });
-            } else
-              this.setState({ component: <NotFound /> }); */
           } else // 너는 누구냐
             this.setState({ component: <NotFound /> });
         }

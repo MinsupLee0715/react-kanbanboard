@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import moment from 'moment-timezone';
 import { post, get } from 'axios';
 
 import {
@@ -65,7 +64,7 @@ class KanbanInfo extends React.Component {
 
   // 첨부파일이 있을 시 표시
   isDownload() {
-    let kanbanID = moment(this.props.data.id).tz('Asia/Seoul').format().slice(0, 19);
+    let kanbanID = this.props.data.id;
     if (this.props.data.filename) {
       return (
         <form method="get" action={ `/api/classroom/kanban/download/${ kanbanID }` }>
@@ -85,7 +84,7 @@ class KanbanInfo extends React.Component {
         feedback.push(
           <div className="form-row">
             <div className="col-10"><p>{ e.content }</p></div>
-            <div className="col-2"><p>{ e.date.slice(0, 10) }</p></div>
+            <div className="col-2"><p>{ e.date }</p></div>
           </div>
         );
       });
@@ -164,7 +163,7 @@ class KanbanInfo extends React.Component {
     this.setState({ loading: true, spin_loading: false });
 
     //let kanbanID = this.props.data.id;
-    let kanbanID = moment(this.props.data.id).tz('Asia/Seoul').format();
+    let kanbanID = this.props.data.id;
     let title = this.state.title_value == '' ? this.props.data.title : this.state.title_value;
     let content = this.state.content_value == '' ? this.props.data.content : this.state.content_value;
     this.props.putKanbanInfoRequest(kanbanID, title, content, null)
@@ -181,7 +180,7 @@ class KanbanInfo extends React.Component {
   onDelete() {
     this.setState({ loading: true, spin_loading: false });
 
-    let kanbanID = moment(this.props.data.id).tz('Asia/Seoul').format();
+    let kanbanID = this.props.data.id;
 
     this.props.deleteKanbanRequest(kanbanID)
       .then(() => {
@@ -226,7 +225,7 @@ class KanbanInfo extends React.Component {
 
     const url = '/api/classroom/kanban/upload';
     const formData = new FormData();
-    formData.append('kanbanID', moment(this.props.data.id).tz('Asia/Seoul').format().slice(0, 19));
+    formData.append('kanbanID', this.props.data.id);
     formData.append('filename', file);
     const config = {
       headers: {
@@ -317,10 +316,8 @@ class KanbanInfo extends React.Component {
               { this.isDownload() }
               <br /><br /><br /><br />
               { showScore }
-              <p>생성일 { moment(this.props.data.id).tz('Asia/Seoul').format().slice(0, 10) }</p>
-              <p>업데이트 날짜 { moment(this.props.data.updated_date).tz('Asia/Seoul').format().slice(0, 10) }</p>
-              {/* <p>생성일 { this.props.data.id.slice(0, 10) }</p>
-              <p>업데이트 날짜 { this.props.data.updated_date.slice(0, 10) }</p> */}
+              <p>생성일 { this.props.data.id }</p>
+              <p>업데이트 날짜 { this.props.data.updated_date }</p>
             </Col>
           </Row>
         </Modal>

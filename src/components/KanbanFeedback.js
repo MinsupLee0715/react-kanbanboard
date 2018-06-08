@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import moment from 'moment-timezone';
 
 import { postFeedbackRequest } from '../actions/feedback';
 
@@ -40,7 +39,7 @@ class KanbanFeedback extends React.Component {
 
   // 재수행 시
   handleRedo() {
-    let kanbanID = moment(this.props.kanbanID).tz('Asia/Seoul').format().slice(0, 19);
+    let kanbanID = this.props.kanbanID;
 
     this.props.postFeedbackRequest(kanbanID, this.state.feedback_content, "TODO", null)
       .then(() => {
@@ -54,7 +53,7 @@ class KanbanFeedback extends React.Component {
   // 완료 시
   handleFinish() {
 
-    let kanbanID = moment(this.props.kanbanID).tz('Asia/Seoul').format().slice(0, 19);
+    let kanbanID = this.props.kanbanID;
 
     this.props.postFeedbackRequest(kanbanID, this.state.feedback_content, "FINISH", this.state.point)
       .then(() => {

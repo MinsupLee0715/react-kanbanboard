@@ -24,9 +24,42 @@ router.get('/', (req, res) => {
 
     // 수업 내 전체 프로젝트 조회
     let params = [loginInfo.userid, classID];
-    query = `SELECT * FROM Project_Professor WHERE professorID = ? AND classID = ?`;
+    query = `SELECT * FROM (SELECT Projects.classID AS classID,
+      Projects.projectID AS projectID,
+      Projects.title AS title,
+      Projects.status AS status,
+      Projects.studentID AS studentID,
+      Projects.name AS name,
+      professor.professorID AS professorID
+      FROM
+        (SELECT Professor.professorID AS professorID,
+        Classroom.classID AS classID 
+        FROM Professor, Classroom
+        WHERE Professor.professorID = Classroom.professorID) AS professor,
+        (SELECT Project.projectID AS projectID,
+         Project.title AS title,
+         Project.status AS status,
+         Class_Student.classID AS classID,
+         Class_Student.studentID AS studentID,
+         Class_Student.name AS name 
+         FROM
+           (SELECT Class_Student.projectID AS projectID,
+           Class_Student.classID AS classID,
+           Student.studentID AS studentID,
+           Student.name AS name 
+           FROM Class_Student, Student
+           WHERE Class_Student.studentID = Student.studentID
+            ) AS Class_Student, Project
+          WHERE Class_Student.projectID = Project.projectID) AS Projects
+        WHERE Projects.classID = professor.classID) AS Project_Professor
+      WHERE Project_Professor.professorID = ? AND Project_Professor.classID = ?`;
     db.query(query, params, (err, result) => {
-      if (err) throw err;
+      if (err) {
+        return res.status(403).json({
+          error: "Check Data",
+          code: 3
+        });
+      } // if err
       console.log(loginInfo.name + ' 교수 ' + classID + ' 프로젝트 조회');
       return res.json({ result: result });
     });
@@ -38,7 +71,12 @@ router.get('/', (req, res) => {
     query = `SELECT * FROM Project WHERE projectID = (
       SELECT projectID FROM Class_Student WHERE classID = ? AND studentID = ?);`;
     db.query(query, params, (err, result) => {
-      if (err) throw err;
+      if (err) {
+        return res.status(403).json({
+          error: "Check Data",
+          code: 3
+        });
+      } // if err
       console.log(loginInfo.name + ' 학생 프로젝트 조회: ');
       console.log(result[0]);
       return res.json({ result: result });
@@ -60,7 +98,7 @@ router.post('/', (req, res) => {
   let classID = req.body.classID;
   let title = req.body.title;
   let student = req.body.student;
-  let projectID = new Date().toISOString().slice(0, 19) // to Mysql Datetime
+  let projectID = new Date().toLocaleString();
   let status = 'standby';
 
   // 데이터 누락 시
@@ -92,7 +130,12 @@ router.post('/', (req, res) => {
   // 수업 내 학생 검색
   query = 'SELECT * FROM Class_Student WHERE classID = ? AND studentID IN (?)';
   db.query(query, [classID, student], (err, result) => {
-    if (err) throw err;
+    if (err) {
+      return res.status(403).json({
+        error: "Check Data",
+        code: 3
+      });
+    } // if err
 
     // 수업 외 학생이 포함되었을 시
     if (result.length != student.length) {
@@ -113,62 +156,56 @@ router.post('/', (req, res) => {
       }
     }
 
+    // 프로젝트 추가: standy 상태
+    query = 'INSERT INTO Project (projectID, title, status, leader) VALUES (?, ?, "standby", ?)';
+    db.query(query, [projectID, title, loginInfo.userid], (err) => {
+      if (err) {
+        return res.status(403).json({
+          error: "Check Data",
+          code: 3
+        });
+      } // if err
 
-    // 트랜젝션 처리
-    db.beginTransaction((err) => {
-
-      // 프로젝트 추가: standy 상태
-      query = 'INSERT INTO Project (projectID, title, status, leader) VALUES (?, ?, "standby", ?)';
-      db.query(query, [projectID, title, loginInfo.userid], (err) => {
+      // Class_Student 관계 추가
+      query = 'UPDATE Class_Student SET projectID = ? WHERE classID = ? AND studentID IN (?)';
+      db.query(query, [projectID, classID, student], (err, result) => {
         if (err) {
-          db.rollback(() => {
-            console.log('err1');
-            return;
+          return res.status(403).json({
+            error: "Check Data",
+            code: 3
           });
         } // if err
+        console.log('프로젝트 신청 완료');
 
-        // Class_Student 관계 추가
-        query = 'UPDATE Class_Student SET projectID = ? WHERE classID = ? AND studentID IN (?)';
-        db.query(query, [projectID, classID, student], (err, result) => {
+        query = 'SELECT title, professorID FROM Classroom WHERE classID = ?';
+        db.query(query, classID, (err, result) => {
           if (err) {
-            db.rollback(() => {
-              console.log('err2');
-              return;
+            return res.status(403).json({
+              error: "Check Data",
+              code: 3
             });
           } // if err
 
-          db.commit((err) => {
+          let classTitle = result[0].title;
+          let professorID = result[0].professorID;
+          let messageID = new Date().toLocaleString();
+
+          query = 'INSERT INTO Message (receive_date, userID, type, classID, projectID, isCheck, classTitle) VALUES (?, ?, ?, ?, ?, ?, ?)';
+          // PA = project apply
+          let data = [messageID, professorID, 'PA', classID, projectID, false, classTitle];
+          db.query(query, data, (err) => {
             if (err) {
-              db.rollback(() => {
-                console.log('err3');
-                return;
+              return res.status(403).json({
+                error: "Check Data",
+                code: 3
               });
             } // if err
-            console.log('프로젝트 신청 완료');
-
-            query = 'SELECT title, professorID FROM Classroom WHERE classID = ?';
-            db.query(query, classID, (err, result) => {
-              if (err) throw err;
-
-              let classTitle = result[0].title;
-              let professorID = result[0].professorID;
-              let messageID = new Date().toISOString().slice(0, 19);
-
-              query = 'INSERT INTO Message (receive_date, userID, type, classID, projectID, isCheck, classTitle) VALUES (?, ?, ?, ?, ?, ?, ?)';
-              // PA = project apply
-              let data = [messageID, professorID, 'PA', classID, projectID, false, classTitle];
-              db.query(query, data, (err) => {
-                if (err) throw err;
-                console.log('insert into message');
-                return res.json({ result: 'success' });
-              }); // insert into Message
-            }); // SELECT professorID
-          }); // commit
-        }); // update Class_Student
-      }); // insert into project
-
-    }); // transaction
-
+            console.log('insert into message');
+            return res.json({ result: 'success' });
+          }); // insert into Message
+        }); // SELECT professorID
+      }); // update Class_Student
+    }); // insert into project
   }); // SELECT student in class
 
 });
@@ -193,7 +230,19 @@ router.put('/', (req, res) => {
     query = 'SELECT * FROM Class_Student WHERE projectID = ?';
     console.log(projectID);
     db.query(query, projectID, (err, result) => {
-      if (err) throw err;
+      if (err) {
+        return res.status(403).json({
+          error: "Check Data",
+          code: 3
+        });
+      } // if err
+
+      if (result.length == 0) {
+        return res.status(401).json({
+          error: "Empty Data",
+          code: 2
+        });
+      }
 
       let studentList = [];
       for (let i in result) studentList.push(result[i].studentID);
@@ -202,7 +251,12 @@ router.put('/', (req, res) => {
       // 교수 메시지 읽음으로 표시
       query = 'UPDATE Message SET isCheck = ? WHERE projectID = ? AND userID = ?';
       db.query(query, [true, projectID, loginInfo.userid], (err) => {
-        if (err) throw err;
+        if (err) {
+          return res.status(403).json({
+            error: "Check Data",
+            code: 3
+          });
+        } // if err
         console.log('updated professor message');
 
 
@@ -214,24 +268,39 @@ router.put('/', (req, res) => {
           AND Classroom.professorID = ?`;
 
         db.query(query, loginInfo.userid, (err, result) => {
-          if (err) throw err;
+          if (err) {
+            return res.status(403).json({
+              error: "Check Data",
+              code: 3
+            });
+          } // if err
 
           // 학생에게 승인 메시지 추가
           query = 'INSERT INTO Message (receive_date, userID, type, classID, projectID, isCheck, classTitle) VALUES ';
           for (let i in studentList) {
             if (i == 0) {
-              query += `("${ new Date().toISOString().slice(0, 19) }", "${ studentList[i] }", "PAS", "${ result[0].classID }","${ projectID }", false, "${ result[0].title }")`;
+              query += `("${ new Date().toLocaleString() }", "${ studentList[i] }", "PAS", "${ result[0].classID }","${ projectID }", false, "${ result[0].title }")`;
             } else {
-              query += `, ("${ new Date().toISOString().slice(0, 19) }", "${ studentList[i] }", "PAS", "${ result[0].classID }","${ projectID }", false, "${ result[0].title }")`;
+              query += `, ("${ new Date().toLocaleString() }", "${ studentList[i] }", "PAS", "${ result[0].classID }","${ projectID }", false, "${ result[0].title }")`;
             }
           }
           db.query(query, (err) => {
-            if (err) throw err;
+            if (err) {
+              return res.status(403).json({
+                error: "Check Data",
+                code: 3
+              });
+            } // if err
 
             // 프로젝트 승인
             query = 'UPDATE Project SET status="start" WHERE projectID = ?';
             db.query(query, projectID, (err, result) => {
-              if (err) throw err;
+              if (err) {
+                return res.status(403).json({
+                  error: "Check Data",
+                  code: 3
+                });
+              } // if err
               console.log('프로젝트 승인 완료');
               return res.send({ result: true });
             }); // 프로젝트 승인
@@ -243,13 +312,23 @@ router.put('/', (req, res) => {
   } else { // 프로젝트 거절(삭제)
     query = 'DELETE FROM Project WHERE projectID = ?'
     db.query(query, projectID, (err, result) => {
-      if (err) throw err;
+      if (err) {
+        return res.status(403).json({
+          error: "Check Data",
+          code: 3
+        });
+      } // if err
       console.log('프로젝트 삭제 완료: ' + projectID);
 
       // 교수 메시지 읽음으로 표시
       query = 'UPDATE Message SET isCheck = ? WHERE projectID = ? AND userID = ?';
       db.query(query, [true, projectID, loginInfo.userid], (err) => {
-        if (err) throw err;
+        if (err) {
+          return res.status(403).json({
+            error: "Check Data",
+            code: 3
+          });
+        } // if err
         console.log('updated professor message');
 
         return res.send({ result: true });
@@ -285,7 +364,12 @@ router.get('/getStandbyProject', (req, res) => {
     ON Project.projectID = Class_Student.projectID
     WHERE classID = ?`;
   db.query(query, classID, (err, result) => {
-    if (err) throw err;
+    if (err) {
+      return res.status(403).json({
+        error: "Check Data",
+        code: 3
+      });
+    } // if err
 
     console.log('승인 대기 목록 조회 완료');
     return res.json({ result: result });

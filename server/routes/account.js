@@ -24,7 +24,12 @@ router.post('/login', (req, res) => {
     query = "SELECT * FROM Professor where professorID=?";
   }
   db.query(query, loginInfo, (err, result, fields) => {
-    if (err) throw err;
+    if (err) {
+      return res.status(403).json({
+        error: "Check Data",
+        code: 3
+      });
+    } // if err
 
     if (result == '') {
       return res.status(401).json({
@@ -87,7 +92,12 @@ router.get('/message', (req, res) => {
   let query = '';
   query = 'SELECT * FROM Message WHERE userID = ?';
   db.query(query, loginInfo.userid, (err, result) => {
-    if (err) throw err;
+    if (err) {
+      return res.status(403).json({
+        error: "Check Data",
+        code: 3
+      });
+    } // if err
 
     return res.json({ result: result });
   });

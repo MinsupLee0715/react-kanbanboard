@@ -32,7 +32,12 @@ router.post('/myclassrooms', (req, res) => {
   if (loginInfo.type == 'professor') {
     query = "SELECT * FROM Classroom WHERE professorID=?";
     db.query(query, loginInfo.userid, (err, result) => {
-      if (err) throw err;
+      if (err) {
+        return res.status(403).json({
+          error: "Check Data",
+          code: 3
+        });
+      } // if err
       console.log("수업 목록: " + result.length);
       return res.json({ result: result });
     });
@@ -58,7 +63,12 @@ router.post('/myclassrooms', (req, res) => {
     ) AS Class ON Class.professorID = Professor.professorID`;
     
     db.query(query, loginInfo.userid, (err, result) => {
-      if (err) throw err;
+      if (err) {
+        return res.status(403).json({
+          error: "Check Data",
+          code: 3
+        });
+      } // if err
       console.log("수업 목록: " + result.length);
       return res.json({ result: result });
     });
@@ -81,7 +91,12 @@ router.get('/getClassStudent', (req, res) => {
     ) WHERE Class_Student.classID = ?`;
 
   db.query(query, classID, (err, result) => {
-    if (err) throw err;
+    if (err) {
+        return res.status(403).json({
+          error: "Check Data",
+          code: 3
+        });
+      } // if err
     console.log(classID + " 수강 학생 조회 완료");
     res.json({ result: result });
   });

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import moment from 'moment-timezone';
 
 import { deleteNoticeRequest } from '../actions/notice';
 
@@ -34,8 +33,8 @@ class Notices extends React.Component {
         this.setState({
           title: notices[i].title,
           content: notices[i].content,
-          date: moment(notices[i].date).tz('Asia/Seoul').format().slice(0, 10),
-          id: moment(notices[i].date).tz('Asia/Seoul').format().slice(0, 19)
+          date: notices[i].date,
+          id: notices[i].date
         });
         break;
       }

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import moment from 'moment-timezone';
 
 import { getClassStudentRequest } from '../actions/classroom';
 import {
@@ -219,35 +218,30 @@ class KanbanBoard extends Component<*, State> {
       switch (e.status) {
         case "TODO":
           todo.push({
-            id: moment(e.created_date).tz('Asia/Seoul').format().slice(0, 19),
+            id: e.created_date,
             title: e.title,
-            date: moment(e.updated_date).tz('Asia/Seoul').format().slice(0, 10)
-            /* 
-            id: e.created_date.slice(0, 19),
-            title: e.title,
-            date: e.updated_date.slice(0, 10)
-             */
+            date: e.updated_date
           });
           break;
         case "DOING":
           doing.push({
-            id: moment(e.created_date).tz('Asia/Seoul').format().slice(0, 19),
+            id: e.created_date,
             title: e.title,
-            date: moment(e.updated_date).tz('Asia/Seoul').format().slice(0, 10)
+            date: e.updated_date
           });
           break;
         case "FEEDBACK":
           feedback.push({
-            id: moment(e.created_date).tz('Asia/Seoul').format().slice(0, 19),
+            id: e.created_date,
             title: e.title,
-            date: moment(e.updated_date).tz('Asia/Seoul').format().slice(0, 10)
+            date: e.updated_date
           });
           break;
         case "FINISH":
           finish.push({
-            id: moment(e.created_date).tz('Asia/Seoul').format().slice(0, 19),
+            id: e.created_date,
             title: e.title,
-            date: moment(e.updated_date).tz('Asia/Seoul').format().slice(0, 10)
+            date: e.updated_date
           });
           break;
         default: break;

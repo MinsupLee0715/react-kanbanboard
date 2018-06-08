@@ -29,7 +29,12 @@ router.get('/:kanbanID', (req, res) => {
 
   query = 'SELECT * FROM Comment WHERE created_date = ?'
   db.query(query, kanbanID, (err, result) => {
-    if (err) throw err;
+    if (err) {
+      return res.status(403).json({
+        error: "Check Data",
+        code: 3
+      });
+    } // if err
     console.log(kanbanID + "의 Comment 조회");
     return res.json({ result: result });
   });
@@ -50,7 +55,7 @@ router.post('/', (req, res) => {
 
   let data = {
     created_date: req.body.kanbanID,
-    date: new Date().toISOString().slice(0, 19),
+    date: new Date().toLocaleString(),
     content: req.body.content
   };
   let status = req.body.status;
@@ -67,20 +72,35 @@ router.post('/', (req, res) => {
   /* Comment(Feedback) 등록 */
   query = 'INSERT INTO Comment SET ?'
   db.query(query, data, (err) => {
-    if (err) throw err;
+    if (err) {
+      return res.status(403).json({
+        error: "Check Data",
+        code: 3
+      });
+    } // if err
     console.log('comment 등록 성공');
-    let date = new Date().toISOString().slice(0, 19);
+    let date = new Date().toLocaleString();
 
     /* 칸반 상태 변경 */
     query = "UPDATE Kanban SET status = ?, updated_date = ?, score = ? WHERE created_date = ?";
     db.query(query, [status, date, req.body.point, req.body.kanbanID], (err) => {
-      if (err) throw err;
+      if (err) {
+        return res.status(403).json({
+          error: "Check Data",
+          code: 3
+        });
+      } // if err
       console.log("칸반 상태 수정 완료");
 
       /* 메시지 읽음 표시 */
       query = 'UPDATE Message SET isCheck = true WHERE kanbanID = ?';
       db.query(query, req.body.kanbanID, (err) => {
-        if (err) throw err;
+        if (err) {
+          return res.status(403).json({
+            error: "Check Data",
+            code: 3
+          });
+        } // if err
         console.log("메시지 읽음 표시 OK");
 
         /* 칸반-프로젝트-수업-학생 조회 */
@@ -104,7 +124,12 @@ router.post('/', (req, res) => {
         WHERE Classroom.classID = Class_Student.classID`
 
         db.query(query, (err, result) => {
-          if (err) throw err;
+          if (err) {
+            return res.status(403).json({
+              error: "Check Data",
+              code: 3
+            });
+          } // if err
 
           /* 학생에게 메시지 전송 */
           query = 'INSERT INTO Message (receive_date, userID, type, classID, projectID, kanbanID, isCheck, classTitle, projectTitle) VALUES ';
@@ -116,7 +141,12 @@ router.post('/', (req, res) => {
             }
           }
           db.query(query, (err) => {
-            if (err) throw err;
+            if (err) {
+              return res.status(403).json({
+                error: "Check Data",
+                code: 3
+              });
+            } // if err
             console.log("학생 메시지 전송 OK");
             return res.json({ result: "success" });
           });
