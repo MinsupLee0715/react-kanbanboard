@@ -16,6 +16,7 @@ class Profile extends React.Component {
       message: []
     };
 
+    this.handleMessageClick = this.handleMessageClick.bind(this);
     this.messageType = this.messageType.bind(this);
     this.getMessageFunc = this.getMessageFunc.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
@@ -23,6 +24,10 @@ class Profile extends React.Component {
 
   componentDidMount() {
     this.getMessageFunc();
+  }
+
+  handleMessageClick(data) {
+    console.log(data);
   }
 
   messageType(type) {
@@ -47,16 +52,21 @@ class Profile extends React.Component {
           for (let i in getMessage) {
             if (!getMessage[i].isCheck) {
               let data = {
+                receive_date: getMessage[i].receive_date,
                 classTitle: getMessage[i].classTitle,
                 projectTitle: getMessage[i].projectTitle,
                 type: this.messageType(getMessage[i].type),
-                receive_date: getMessage[i].receive_date
+                classID: getMessage[i].classID,
+                projectID: getMessage[i].projectID,
+                kanbanID: getMessage[i].kanbanID
               }
               message.push(
                 <Menu.Item className="new">
-                  <h6>{ data.classTitle } / { data.projectTitle }</h6>
-                  <h6>{ data.type }</h6>
-                  <h6>{ data.receive_date }</h6>
+                  <a onClick={ () => this.handleMessageClick(data) }>
+                    <h6>{ data.classTitle } / { data.projectTitle }</h6>
+                    <h6>{ data.type }</h6>
+                    <h6>{ data.receive_date }</h6>
+                  </a>
                 </Menu.Item>
               );
               message.push(<Menu.Divider />);
@@ -65,21 +75,27 @@ class Profile extends React.Component {
           for (let i in getMessage) {
             if (getMessage[i].isCheck) {
               let data = {
+                receive_date: getMessage[i].receive_date,
                 classTitle: getMessage[i].classTitle,
                 projectTitle: getMessage[i].projectTitle,
                 type: this.messageType(getMessage[i].type),
-                receive_date: getMessage[i].receive_date
+                classID: getMessage[i].classID,
+                projectID: getMessage[i].projectID,
+                kanbanID: getMessage[i].kanbanID
               }
               message.push(
                 <Menu.Item className="old">
-                  <h6>{ data.classTitle } / { data.projectTitle }</h6>
-                  <h6>{ data.type }</h6>
-                  <h6>{ data.receive_date }</h6>
-                </Menu.Item>
+                  <a onClick={ () => this.handleMessageClick(data) }>
+                    <h6>{ data.classTitle } / { data.projectTitle }</h6>
+                    <h6>{ data.type }</h6>
+                    <h6>{ data.receive_date }</h6>
+                  </a>
+                </ Menu.Item>
               );
               message.push(<Menu.Divider />);
             }
           }
+          console.log('메시지를 불러옴');
           this.setState({ message });
         }
       });
@@ -113,7 +129,7 @@ class Profile extends React.Component {
         <h6>
           <Tag>{ this.props.currentUser.type }</Tag>
           <strong style={ { color: "#072561" } }>{ this.props.currentUser.name } 님  </strong>
-          <Dropdown overlay={ menu } trigger={ ['click'] }>
+          <Dropdown overlay={ menu } trigger={ ['click'] } onClick={ this.getMessageFunc }>
             <Badge count={ this.state.message.length } dot>
               <a style={ { color: "#072561" } }><Icon type="mail" /></a>
             </Badge>
