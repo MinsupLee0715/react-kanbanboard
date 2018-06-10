@@ -2,6 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import { selectClassRequest } from '../actions/classroom';
 import { putProjectRequest, getProjectRequest } from '../actions/project';
 
 import { Table, Divider, Col, message } from 'antd';
@@ -13,7 +14,10 @@ class Approve extends React.Component {
     super(props);
 
     this.state = {
-      approveList: []
+      approveList: [],
+      title: '',
+      divide: '',
+      classID: ''
     };
 
     this.handleApprove = this.handleApprove.bind(this);
@@ -22,8 +26,27 @@ class Approve extends React.Component {
     this.handleApproveDataBuild = this.handleApproveDataBuild.bind(this);
   }
 
+  componentDidMount() {
+    const pathname = this.props.history.location.pathname;
+    const pathSplit = pathname.split('/');
+    this.setState({ classID: pathSplit[2] }, () => {
+
+      if (!this.props.selectedClass.classID) {
+        console.log('selectedClass 없음');
+        for (let i in this.props.getClasses) {
+          if (this.props.getClasses[i].classID == this.state.classID) {
+            this.props.selectClassRequest(this.props.getClasses[i]);
+            break;
+          }
+        }
+        this.getProjectList();
+      }
+    });
+  }
+
+
   getProjectList() {
-    this.props.getProjectRequest(this.props.selectedClass.classID)
+    this.props.getProjectRequest(this.state.classID)
       .then(() => {
         if (this.props.getProject.status === "SUCCESS") {
           this.handleApproveDataBuild();
@@ -32,7 +55,7 @@ class Approve extends React.Component {
   }
 
   handleApprove(key) {
-    this.props.putProjectRequest(this.props.selectedClass.classID, key, 'start')
+    this.props.putProjectRequest(this.state.classID, key, 'start')
       .then(() => {
         if (this.props.putProject.status === "SUCCESS") {
           message.success('승인 완료');
@@ -42,7 +65,7 @@ class Approve extends React.Component {
   }
 
   handleDelete(key) {
-    this.props.putProjectRequest(this.props.selectedClass.classID, key, 'reject')
+    this.props.putProjectRequest(this.state.classID, key, 'reject')
       .then(() => {
         if (this.props.putProject.status === "SUCCESS") {
           message.success('삭제 완료');
@@ -83,11 +106,6 @@ class Approve extends React.Component {
 
     this.setState({ approveList: list });
   }
-
-  componentDidMount() {
-    this.handleApproveDataBuild();
-  }
-
 
   render() {
 
@@ -161,7 +179,8 @@ const mapStateToProps = (state) => {
   return {
     selectedClass: state.classroom.selectedClass.classInfo,
     getProject: state.project.get,
-    putProject: state.project.put
+    putProject: state.project.put,
+    getClasses: state.classroom.getClasses.classroom
   };
 };
 
@@ -172,6 +191,9 @@ const mapDispatchProps = (dispatch) => {
     },
     getProjectRequest: (classID) => {
       return dispatch(getProjectRequest(classID));
+    },
+    selectClassRequest: (classInfo) => {
+      return dispatch(selectClassRequest(classInfo));
     }
   };
 };

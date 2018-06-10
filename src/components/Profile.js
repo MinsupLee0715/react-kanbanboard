@@ -27,7 +27,27 @@ class Profile extends React.Component {
   }
 
   handleMessageClick(data) {
-    console.log(data);
+    switch (data.type) {
+      case "PA":
+        this.props.history.push(`/classroom/${ data.classID }/approve`);
+        break;
+      case "FB":
+        "피드백 요청이 있습니다.";
+        break;
+      case "PAS":
+        this.props.history.push(`/classroom/${ data.classID }/notice`);
+        break;
+      case "TODO":
+        "피드백이 완료되었습니다. >> 재진행";
+        break;
+      case "FINISH":
+        "피드백이 완료되었습니다 >> 완료";
+        break;
+      case "NTC":
+        this.props.history.push(`/classroom/${ data.classID }/notice`);
+        break;
+      default: break;
+    }
   }
 
   messageType(type) {
@@ -55,7 +75,8 @@ class Profile extends React.Component {
                 receive_date: getMessage[i].receive_date,
                 classTitle: getMessage[i].classTitle,
                 projectTitle: getMessage[i].projectTitle,
-                type: this.messageType(getMessage[i].type),
+                message: this.messageType(getMessage[i].type),
+                type: getMessage[i].type,
                 classID: getMessage[i].classID,
                 projectID: getMessage[i].projectID,
                 kanbanID: getMessage[i].kanbanID
@@ -64,7 +85,7 @@ class Profile extends React.Component {
                 <Menu.Item className="new">
                   <a onClick={ () => this.handleMessageClick(data) }>
                     <h6>{ data.classTitle } / { data.projectTitle }</h6>
-                    <h6>{ data.type }</h6>
+                    <h6>{ data.message }</h6>
                     <h6>{ data.receive_date }</h6>
                   </a>
                 </Menu.Item>
@@ -78,7 +99,8 @@ class Profile extends React.Component {
                 receive_date: getMessage[i].receive_date,
                 classTitle: getMessage[i].classTitle,
                 projectTitle: getMessage[i].projectTitle,
-                type: this.messageType(getMessage[i].type),
+                message: this.messageType(getMessage[i].type),
+                type: getMessage[i].type,
                 classID: getMessage[i].classID,
                 projectID: getMessage[i].projectID,
                 kanbanID: getMessage[i].kanbanID
@@ -87,7 +109,7 @@ class Profile extends React.Component {
                 <Menu.Item className="old">
                   <a onClick={ () => this.handleMessageClick(data) }>
                     <h6>{ data.classTitle } / { data.projectTitle }</h6>
-                    <h6>{ data.type }</h6>
+                    <h6>{ data.message }</h6>
                     <h6>{ data.receive_date }</h6>
                   </a>
                 </ Menu.Item>

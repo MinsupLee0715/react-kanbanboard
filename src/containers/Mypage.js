@@ -5,8 +5,10 @@ import { connect } from 'react-redux';
 import Searchbar from './../components/Searchbar';
 import Sidebar from '../components/Sidebar';
 
-import { getClassroomRequest } from '../actions/classroom';
-import { selectClassRequest } from '../actions/classroom';
+import {
+  getClassroomRequest,
+  selectClassRequest
+} from '../actions/classroom';
 
 import { Layout, Select, Button, Icon, Table, Card } from 'antd';
 const { Content } = Layout;

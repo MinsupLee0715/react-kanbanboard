@@ -11,12 +11,12 @@ import NoticeUpload from '../components/NoticeUpload';
 class Notice extends React.Component {
 
   componentDidMount() {
-    this.props.getProjectRequest(this.props.selectedClass.classID)
+    /* this.props.getProjectRequest(this.props.selectedClass.classID)
       .then(() => {
         if (this.props.getProject.status === "SUCCESS") {
           console.log('프로젝트를 불러왔습니다.');
         }
-      });
+      }); */
   }
 
   render() {

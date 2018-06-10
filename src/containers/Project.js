@@ -17,19 +17,24 @@ class Project extends React.Component {
 
     this.state = {
       loading: true,
-      component: null
+      component: null,
+      classID: ''
     }
 
     this.handleGetProject = this.handleGetProject.bind(this);
   }
 
   componentDidMount() {
-    this.handleGetProject();
+    const pathname = this.props.history.location.pathname;
+    const pathSplit = pathname.split('/');
+    this.setState({ classID: pathSplit[2] }, () => {
+      this.handleGetProject();
+    });
   }
 
   handleGetProject() {
     // 프로젝트 목록 불러오기
-    this.props.getProjectRequest(this.props.selectedClass.classID)
+    this.props.getProjectRequest(this.state.classID)
       .then(() => {
         this.setState({ loading: false });
 

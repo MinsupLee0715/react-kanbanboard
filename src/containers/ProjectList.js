@@ -30,7 +30,7 @@ class ProjectList extends React.Component {
   }
 
   componentDidMount() {
-    this.setProjectList();
+    this.getProjectList();
   }
 
   // props가 없을 시 서버로 부터 가져온다.

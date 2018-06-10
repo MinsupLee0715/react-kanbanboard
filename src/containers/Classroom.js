@@ -1,6 +1,5 @@
 import React from 'react';
-import { Switch, Route, withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { Switch, Route } from 'react-router-dom';
 
 import Notice from '../containers/Notice';
 import ProjectList from '../containers/ProjectList';
@@ -12,8 +11,8 @@ import NotFound from '../containers/NotFound';
 import Searchbar from './../components/Searchbar';
 import Sidebar from '../components/Sidebar';
 
-import { Layout, message } from 'antd';
-const { Content, Sider } = Layout;
+import { Layout } from 'antd';
+const { Content } = Layout;
 
 class Classroom extends React.Component {
 
@@ -55,11 +54,4 @@ class Classroom extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    selectedClass: state.classroom.selectedClass.classInfo,
-    getProject: state.project.get
-  };
-}
-
-export default withRouter(connect(mapStateToProps)(Classroom));
+export default Classroom;

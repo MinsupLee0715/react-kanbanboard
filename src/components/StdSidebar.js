@@ -9,6 +9,21 @@ const { Item } = Menu;
 
 class StdSidebar extends React.Component {
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      classID: ''
+    }
+  }
+
+  componentDidMount() {
+    const pathname = this.props.history.location.pathname;
+    const pathSplit = pathname.split('/');
+
+    this.setState({ classID: pathSplit[2] });
+  }
+
   render() {
 
     return (
@@ -26,19 +41,19 @@ class StdSidebar extends React.Component {
           </Link>
         </Menu.Item>
         <Menu.Item key="2">
-          <Link to={ `/classroom/${ this.props.selectedClass }/kanbanboard` }>
+          <Link to={ `/classroom/${ this.state.classID }/kanbanboard` }>
             <Icon type="layout" />
             <strong>칸반보드</strong>
           </Link>
         </Menu.Item>
         <Menu.Item key="3">
-          <Link to={ `/classroom/${ this.props.selectedClass }/notice` }>
+          <Link to={ `/classroom/${ this.state.classID }/notice` }>
             <Icon type="notification" />
             <strong>공지사항</strong>
           </Link>
         </Menu.Item>
         <Menu.Item key="4">
-          <Link to={ `/classroom/${ this.props.selectedClass }/status` }>
+          <Link to={ `/classroom/${ this.state.classID }/status` }>
             <Icon type="bar-chart" />
             <strong>프로젝트 통계</strong>
           </Link>

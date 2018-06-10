@@ -17,7 +17,7 @@ class NoticeList extends React.Component {
     };
   }
 
-  componentDidMount() {
+  componentDidMount() {    
     this.setState({ loading: true });
     this.props.getNoticeRequest(this.props.match.params.id)
       .then(() => {
