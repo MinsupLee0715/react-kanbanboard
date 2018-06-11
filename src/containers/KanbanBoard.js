@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import { getClassInfoRequest } from '../actions/classroom';
 import { getClassStudentRequest } from '../actions/classroom';
 import {
   getKanbanListRequest,
@@ -87,8 +88,13 @@ class KanbanBoard extends Component<*, State> {
     super(props);
 
     this.state = {
-      loading: false,
+
+      title: '',
+      divide: '',
+      classID: '',
       projectTitle: '',
+
+      loading: false,
 
       students: '',
 
@@ -118,6 +124,7 @@ class KanbanBoard extends Component<*, State> {
     this.handleKanbanClick = this.handleKanbanClick.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.setItems = this.setItems.bind(this);
+    this.getClassInfo = this.getClassInfo.bind(this);
     this.getKanbanList = this.getKanbanList.bind(this);
   }
 
@@ -132,8 +139,24 @@ class KanbanBoard extends Component<*, State> {
       }
     }
 
+    this.setState({ classID: pathSplit[2] }, () => {
+      this.getClassInfo();
+    });
+
     this.getKanbanList();
     this.getProjectStudent();
+  }
+
+  getClassInfo() {
+    this.props.getClassInfoRequest(this.state.classID)
+      .then(() => {
+        if (this.props.getClassInfo.status === "SUCCESS") {
+          this.setState({
+            title: this.props.getClassInfo.info.title,
+            divide: this.props.getClassInfo.info.divide
+          });
+        }
+      });
   }
 
   setInitialize() {
@@ -157,7 +180,7 @@ class KanbanBoard extends Component<*, State> {
       project = this.props.project.project[0].projectID;
     }
 
-    let classID = this.props.selectedClass.classID;
+    let classID = this.state.classID;
 
     this.props.getClassStudentRequest(classID)
       .then(() => {
@@ -379,7 +402,7 @@ class KanbanBoard extends Component<*, State> {
 
     // 1st Lane -> 2nd Lane
     if (result.source.droppableId === 'droppable-1' && result.destination.droppableId === 'droppable-2') {
-      this.props.putKanbanStatusRequest(this.props.selectedClass.classID, result.draggableId, 'DOING')
+      this.props.putKanbanStatusRequest(this.state.classID, result.draggableId, 'DOING')
         .then(() => {
           if (this.props.putStatus.status === 'SUCCESS') {
             message.success('상태를 변경하였습니다.');
@@ -399,7 +422,7 @@ class KanbanBoard extends Component<*, State> {
 
     // 2nd Lane -> 3rd Lane
     if (result.source.droppableId === 'droppable-2' && result.destination.droppableId === 'droppable-3') {
-      this.props.putKanbanStatusRequest(this.props.selectedClass.classID, result.draggableId, 'FEEDBACK')
+      this.props.putKanbanStatusRequest(this.state.classID, result.draggableId, 'FEEDBACK')
         .then(() => {
           if (this.props.putStatus.status === 'SUCCESS') {
             message.success('상태를 변경하였습니다.');
@@ -419,7 +442,7 @@ class KanbanBoard extends Component<*, State> {
 
     // 2nd Lane -> 1st Lane
     if (result.source.droppableId === 'droppable-2' && result.destination.droppableId === 'droppable-1') {
-      this.props.putKanbanStatusRequest(this.props.selectedClass.classID, result.draggableId, 'TODO')
+      this.props.putKanbanStatusRequest(this.state.classID, result.draggableId, 'TODO')
         .then(() => {
           if (this.props.putStatus.status === 'SUCCESS') {
             message.success('상태를 변경하였습니다.');
@@ -444,7 +467,7 @@ class KanbanBoard extends Component<*, State> {
     return (
       <div>
         <h3>
-          { this.props.selectedClass.title }&#40;{ this.props.selectedClass.divide }&#41; / { this.state.projectTitle }
+          { this.state.title }&#40;{ this.state.divide }&#41; / { this.state.projectTitle }
           <h5>MEMBER - { this.state.students }</h5>
         </h3>
         <br />
@@ -629,11 +652,11 @@ class KanbanBoard extends Component<*, State> {
 const mapStateToProps = (state) => {
   return {
     currentUser: state.auth.status.currentUser,
-    selectedClass: state.classroom.selectedClass.classInfo,
     project: state.project.get,
     kanban: state.kanban.getList,
     kanbanInfo: state.kanban.get,
     putStatus: state.kanban.putStatus,
+    getClassInfo: state.classroom.getClassInfo,
     getStudents: state.classroom.classStudent,
     getFeedback: state.feedback.get
   };
@@ -641,6 +664,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchProps = (dispatch) => {
   return {
+    getClassInfoRequest: (classID) => {
+      return dispatch(getClassInfoRequest(classID));
+    },
     getKanbanListRequest: (projectID) => {
       return dispatch(getKanbanListRequest(projectID));
     },

@@ -1,38 +1,63 @@
 import axios from 'axios';
 import * as types from './ActionTypes';
 
-/* getClassroom */
-export function getClassroom() {
-  return { type: types.GET_CLASSROOM };
+/* getClassList */
+export function getClassList() {
+  return { type: types.GET_CLASS_LIST };
 }
 
-export function getClassroomSuccess(classes) {
-  return { type: types.GET_CLASSROOM_SUCCESS, classes };
+export function getClassListSuccess(classes) {
+  return { type: types.GET_CLASS_LIST_SUCCESS, classes };
 }
 
-export function getClassroomFailure() {
-  return { type: types.GET_CLASSROOM_FAILURE };
+export function getClassListFailure() {
+  return { type: types.GET_CLASS_LIST_FAILURE };
 }
 
-export function getClassroomRequest() {
+export function getClassListRequest() {
   return (dispatch) => {
-    dispatch(getClassroom());
+    dispatch(getClassList());
 
     return axios
       .post('/api/classroom/myclassrooms')
       .then((res) => {
-        dispatch(getClassroomSuccess(res.data.result));
+        dispatch(getClassListSuccess(res.data.result));
       })
       .catch((err) => {
-        dispatch(getClassroomFailure());
+        dispatch(getClassListFailure());
+      });
+  };
+}
+
+/* getClassInfo */
+export function getClassInfo() {
+  return { type: types.GET_CLASS_INFO };
+}
+export function getClassInfoSuccess(classInfo) {
+  return { type: types.GET_CLASS_INFO_SUCCESS, classInfo };
+}
+export function getClassInfoFailure() {
+  return { type: types.GET_CLASS_INFO_FAILURE };
+}
+export function getClassInfoRequest(classID) {
+  return (dispatch) => {
+    dispatch(getClassInfo());
+
+    return axios
+      .get(`/api/classroom/getClassInfo/${ classID }`)
+      .then((res) => {
+        dispatch(getClassInfoSuccess(res.data.result[0]));
+      })
+      .catch((err) => {
+        dispatch(getClassInfoFailure());
       });
   };
 }
 
 /* select class */
-export function selectClass(classInfo) {
+/* export function selectClass(classInfo) {
   return { type: types.SELECT_CLASS, classInfo };
-}
+} */
 
 export function selectClassRequest(classInfo) {
   return (dispatch) => {

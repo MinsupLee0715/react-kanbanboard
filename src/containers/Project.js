@@ -72,7 +72,6 @@ class Project extends React.Component {
 const mapStateToProps = (state) => {
   return {
     currentUser: state.auth.status.currentUser,
-    selectedClass: state.classroom.selectedClass.classInfo,
     getProject: state.project.get
   };
 }

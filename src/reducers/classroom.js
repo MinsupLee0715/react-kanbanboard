@@ -6,8 +6,9 @@ const initialState = {
     status: "INIT",
     classroom: []
   },
-  selectedClass: {
-    classInfo: []
+  getClassInfo: {
+    status: "INIT",
+    info: {}
   },
   classStudent: {
     status: "INIT",
@@ -23,31 +24,44 @@ export default function classroom(state, action) {
   switch (action.type) {
 
     /* Get Classrooms */
-    case types.GET_CLASSROOM:
+    case types.GET_CLASS_LIST:
       return update(state, {
         getClasses: {
           status: { $set: "WAIT" }
         }
       });
-    case types.GET_CLASSROOM_SUCCESS:
+    case types.GET_CLASS_LIST_SUCCESS:
       return update(state, {
         getClasses: {
           status: { $set: "SUCCESS" },
           classroom: { $set: action.classes }
         }
       });
-    case types.GET_CLASSROOM_FAILURE:
+    case types.GET_CLASS_LIST_FAILURE:
       return update(state, {
         getClasses: {
           status: { $set: "FAILURE" }
         }
       });
 
-    /* Select Class */
-    case types.SELECT_CLASS:
+    /* Get Class Info */
+    case types.GET_CLASS_INFO:
       return update(state, {
-        selectedClass: {
-          classInfo: { $set: action.classInfo }
+        getClassInfo: {
+          status: { $set: "WAIT" }
+        }
+      });
+    case types.GET_CLASS_INFO_SUCCESS:
+      return update(state, {
+        getClassInfo: {
+          status: { $set: "SUCCESS" },
+          info: { $set: action.classInfo }
+        }
+      });
+    case types.GET_CLASS_INFO_FAILURE:
+      return update(state, {
+        getClassInfo: {
+          status: { $set: "FAILURE" }
         }
       });
 

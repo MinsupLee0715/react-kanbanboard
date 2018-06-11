@@ -11,12 +11,15 @@ export const AUTH_LOGOUT = "AUTH_LOGOUT";
 
 
 /* Classroom */
-export const GET_CLASSROOM = "GET_CLASSROOM";
-export const GET_CLASSROOM_SUCCESS = "GET_CLASSROOM_SUCCESS";
-export const GET_CLASSROOM_FAILURE = "GET_CLASSROOM_FAILURE";
+export const GET_CLASS_LIST = "GET_CLASS_LIST";
+export const GET_CLASS_LIST_SUCCESS = "GET_CLASS_LIST_SUCCESS";
+export const GET_CLASS_LIST_FAILURE = "GET_CLASS_LIST_FAILURE";
 
-/* Select Class */
-export const SELECT_CLASS = "SELECT_CLASS";
+/* Get Class Info */
+export const GET_CLASS_INFO = "GET_CLASS_INFO";
+export const GET_CLASS_INFO_SUCCESS = "GET_CLASS_INFO_SUCCESS";
+export const GET_CLASS_INFO_FAILURE = "GET_CLASS_INFO_FAILURE";
+//export const SELECT_CLASS = "SELECT_CLASS";
 
 /* Get Class.Student */
 export const GET_CLASS_STUDENT = "GET_CLASS_STUDENT";

@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { selectClassRequest } from '../actions/classroom';
+import { getClassInfoRequest } from '../actions/classroom';
 import { putProjectRequest, getProjectRequest } from '../actions/project';
 
 import { Table, Divider, Col, message } from 'antd';
@@ -20,9 +20,10 @@ class Approve extends React.Component {
       classID: ''
     };
 
+    this.getClassInfo = this.getClassInfo.bind(this);
+    this.getProjectList = this.getProjectList.bind(this);
     this.handleApprove = this.handleApprove.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
-    this.getProjectList = this.getProjectList.bind(this);
     this.handleApproveDataBuild = this.handleApproveDataBuild.bind(this);
   }
 
@@ -30,18 +31,21 @@ class Approve extends React.Component {
     const pathname = this.props.history.location.pathname;
     const pathSplit = pathname.split('/');
     this.setState({ classID: pathSplit[2] }, () => {
-
-      if (!this.props.selectedClass.classID) {
-        console.log('selectedClass 없음');
-        for (let i in this.props.getClasses) {
-          if (this.props.getClasses[i].classID == this.state.classID) {
-            this.props.selectClassRequest(this.props.getClasses[i]);
-            break;
-          }
-        }
-        this.getProjectList();
-      }
+      this.getClassInfo();
+      this.getProjectList();
     });
+  }
+
+  getClassInfo() {
+    this.props.getClassInfoRequest(this.state.classID)
+      .then(() => {
+        if (this.props.getClassInfo.status === "SUCCESS") {
+          this.setState({
+            title: this.props.getClassInfo.info.title,
+            divide: this.props.getClassInfo.info.divide
+          });
+        }
+      });
   }
 
 
@@ -122,7 +126,7 @@ class Approve extends React.Component {
 
     return (
       <div>
-        <h3>{ this.props.selectedClass.title }&#40;{ this.props.selectedClass.divide }&#41; / { "프로젝트 승인" }</h3>
+        <h3>{ this.state.title }&#40;{ this.state.divide }&#41; / { "프로젝트 승인" }</h3>
 
         <div style={ { height: '100%', padding: 24, margin: 24, border: "1px solid #ddd" } }>
 
@@ -177,7 +181,7 @@ class Approve extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    selectedClass: state.classroom.selectedClass.classInfo,
+    getClassInfo: state.classroom.getClassInfo,
     getProject: state.project.get,
     putProject: state.project.put,
     getClasses: state.classroom.getClasses.classroom
@@ -186,14 +190,14 @@ const mapStateToProps = (state) => {
 
 const mapDispatchProps = (dispatch) => {
   return {
+    getClassInfoRequest: (classID) => {
+      return dispatch(getClassInfoRequest(classID));
+    },
     putProjectRequest: (classID, projectID, status) => {
       return dispatch(putProjectRequest(classID, projectID, status));
     },
     getProjectRequest: (classID) => {
       return dispatch(getProjectRequest(classID));
-    },
-    selectClassRequest: (classInfo) => {
-      return dispatch(selectClassRequest(classInfo));
     }
   };
 };

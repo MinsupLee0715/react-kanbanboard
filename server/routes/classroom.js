@@ -61,7 +61,7 @@ router.post('/myclassrooms', (req, res) => {
         SELECT * FROM Class_Student WHERE studentID=?
       ) AS Class_Student ON Class_Student.classID = Classroom.classID
     ) AS Class ON Class.professorID = Professor.professorID`;
-    
+
     db.query(query, loginInfo.userid, (err, result) => {
       if (err) {
         return res.status(403).json({
@@ -74,7 +74,35 @@ router.post('/myclassrooms', (req, res) => {
     });
   }
 });
-   
+
+/* 수업 정보 조회 */
+router.get('/getClassInfo/:classID', (req, res) => {
+  const classID = req.params.classID;
+
+  /* 비로그인 사용자 차단 */
+  if (typeof req.session.loginInfo === "undefined") {
+    return res.status(401).json({
+      error: "User is undefined",
+      code: 1
+    });
+  }
+
+  let query = '';
+
+  query = 'SELECT * FROM Classroom WHERE classID = ?';
+  db.query(query, classID, (err, result) => {
+    if (err) {
+      return res.status(403).json({
+        error: "Check Data",
+        code: 3
+      });
+    } // if err
+
+    console.log(classID + ' 데이터 조회');
+    res.json({ result: result });
+  });
+})
+
 /* 수업 내 학생 조회 */
 router.get('/getClassStudent', (req, res) => {
   let classID = req.query.classID;
@@ -92,11 +120,11 @@ router.get('/getClassStudent', (req, res) => {
 
   db.query(query, classID, (err, result) => {
     if (err) {
-        return res.status(403).json({
-          error: "Check Data",
-          code: 3
-        });
-      } // if err
+      return res.status(403).json({
+        error: "Check Data",
+        code: 3
+      });
+    } // if err
     console.log(classID + " 수강 학생 조회 완료");
     res.json({ result: result });
   });

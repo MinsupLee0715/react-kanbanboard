@@ -18,10 +18,7 @@ class StdSidebar extends React.Component {
   }
 
   componentDidMount() {
-    const pathname = this.props.history.location.pathname;
-    const pathSplit = pathname.split('/');
-
-    this.setState({ classID: pathSplit[2] });
+    this.setState({ classID: this.props.data });
   }
 
   render() {
@@ -63,10 +60,4 @@ class StdSidebar extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    selectedClass: state.classroom.selectedClass.classInfo.classID
-  };
-}
-
-export default withRouter(connect(mapStateToProps)(StdSidebar));
+export default StdSidebar;

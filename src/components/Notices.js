@@ -15,7 +15,7 @@ class Notices extends React.Component {
       title: "",
       content: "",
       date: "",
-      id: "",
+      noticeID: "",
 
       loading: false,
       deleteModalVisible: false
@@ -23,6 +23,7 @@ class Notices extends React.Component {
 
     this.onDelete = this.onDelete.bind(this);
     this.showModal = this.showModal.bind(this);
+    this.handleModalCancel = this.handleModalCancel.bind(this);
     this.isProfessor = this.isProfessor.bind(this);
   }
 
@@ -34,7 +35,7 @@ class Notices extends React.Component {
           title: notices[i].title,
           content: notices[i].content,
           date: notices[i].date,
-          id: notices[i].date
+          noticeID: notices[i].date
         });
         break;
       }
@@ -44,21 +45,23 @@ class Notices extends React.Component {
   onDelete() {
     this.setState({ loading: true });
 
-    let classID = this.props.selectedClass.classID;
-
-    this.props.deleteNoticeRequest(this.state.id)
+    this.props.deleteNoticeRequest(this.state.noticeID)
       .then(() => {
         this.setState({ loading: false });
 
         if (this.props.delete.status === "SUCCESS") {
           message.success("삭제 완료.");
-          this.props.history.push(`/classroom/${ classID }/notice`);
+          this.props.history.push(`/classroom/${ this.props.match.params.id }/notice`);
         }
       });
   }
 
   showModal() {
     this.setState({ deleteModalVisible: true });
+  }
+
+  handleModalCancel() {
+    this.setState({ deleteModalVisible: false });
   }
 
   isProfessor() {
@@ -112,7 +115,6 @@ class Notices extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    selectedClass: state.classroom.selectedClass.classInfo,
     notices: state.notice.notice,
     currentUser: state.auth.status.currentUser,
     delete: state.notice.delete
@@ -121,8 +123,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    deleteNoticeRequest: (id) => {
-      return dispatch(deleteNoticeRequest(id));
+    deleteNoticeRequest: (noticeID) => {
+      return dispatch(deleteNoticeRequest(noticeID));
     }
   };
 };

@@ -6,8 +6,8 @@ import Searchbar from './../components/Searchbar';
 import Sidebar from '../components/Sidebar';
 
 import {
-  getClassroomRequest,
-  selectClassRequest
+  getClassListRequest,
+  getClassInfoRequest
 } from '../actions/classroom';
 
 import { Layout, Select, Button, Icon, Table, Card } from 'antd';
@@ -17,6 +17,7 @@ const Option = Select.Option;
 /* About Select */
 let menuData = [];
 let menuChlidren = [];
+
 /* About Class List */
 let classList = [];
 
@@ -39,7 +40,7 @@ class Mypage extends React.Component {
   componentDidMount() {
     this.setState({ loading: true });
 
-    this.props.getClassroomRequest()
+    this.props.getClassListRequest()
       .then(() => {
         this.setState({ loading: false });
 
@@ -115,13 +116,12 @@ class Mypage extends React.Component {
     const rowClick = (record) => {
       return {
         onClick: () => {
-          for (let i in this.props.getClasses) {
-            if (this.props.getClasses[i].classID == record.key) {
-              this.props.selectClassRequest(this.props.getClasses[i]);
-              this.props.history.push(`/classroom/${ record.key }`);
-              break;
-            }
-          }
+          this.props.getClassInfoRequest(record.key)
+            .then(() => {
+              if (this.props.getClassInfo.status === "SUCCESS") {
+                this.props.history.push(`/classroom/${ record.key }`);
+              }
+            });
         }
       };
     };
@@ -172,17 +172,18 @@ const mapStateToProps = (state) => {
   return {
     currentUser: state.auth.status.currentUser,
     getClasses: state.classroom.getClasses.classroom,
-    getStatus: state.classroom.getClasses.status
+    getStatus: state.classroom.getClasses.status,
+    getClassInfo: state.classroom.getClassInfo
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getClassroomRequest: () => {
-      return dispatch(getClassroomRequest());
+    getClassListRequest: () => {
+      return dispatch(getClassListRequest());
     },
-    selectClassRequest: (classInfo) => {
-      return dispatch(selectClassRequest(classInfo));
+    getClassInfoRequest: (classID) => {
+      return dispatch(getClassInfoRequest(classID));
     }
   };
 };

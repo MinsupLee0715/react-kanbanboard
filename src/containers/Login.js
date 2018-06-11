@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { loginRequest } from '../actions/auth';
-import { getClassroomRequest } from '../actions/classroom';
+import { getClassListRequest } from '../actions/classroom';
 
 import { Layout, Form, Input, Icon, Button, message } from 'antd';
 const { Content, Header } = Layout;
@@ -38,7 +38,7 @@ class Login extends React.Component {
     this.props.loginRequest(id, pw, type)
       .then(() => {
         if (this.props.status === "SUCCESS") {
-          this.props.getClassroomRequest()
+          this.props.getClassListRequest()
             .then(() => {
               if (this.props.getClasses.status === "SUCCESS") {
                 let loginData = {
@@ -68,7 +68,7 @@ class Login extends React.Component {
     this.props.loginRequest(id, pw, type)
       .then(() => {
         if (this.props.status === "SUCCESS") {
-          this.props.getClassroomRequest()
+          this.props.getClassListRequest()
             .then(() => {
               if (this.props.getClasses.status === "SUCCESS") {
                 let loginData = {
@@ -175,8 +175,8 @@ const mapDispatchToProps = (dispatch) => {
     loginRequest: (id, pw, type) => {
       return dispatch(loginRequest(id, pw, type));
     },
-    getClassroomRequest: () => {
-      return dispatch(getClassroomRequest());
+    getClassListRequest: () => {
+      return dispatch(getClassListRequest());
     }
   };
 };

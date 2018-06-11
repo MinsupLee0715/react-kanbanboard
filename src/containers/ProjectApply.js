@@ -2,6 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import { getClassInfoRequest } from '../actions/classroom';
 import { getClassStudentRequest } from '../actions/classroom';
 import { postProjectRequest } from '../actions/project';
 
@@ -17,7 +18,10 @@ class ProjectApply extends React.Component {
     this.state = {
       children: [],
       selected: [],
-      title: ''
+      projectTitle: '',
+      title: '',
+      divide: '',
+      classID: ''
     };
 
     this.handleProjectApply = this.handleProjectApply.bind(this);
@@ -26,36 +30,41 @@ class ProjectApply extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getClassStudentRequest(this.props.selectedClass.classID)
-      .then(() => {
-        if (this.props.classStudent.status === "SUCCESS") {
-          let student = this.props.classStudent.student;
-          let children = [];
-          student.forEach(e => {
-            if (e.projectID == null)
-              children.push(
-                <Option key={ e.studentID }>
-                  { e.name }/{ e.studentID }
-                </Option>
-              );
-          });
-          this.setState({ children: children });
-        }
-      });
+    const pathname = this.props.history.location.pathname;
+    const pathSplit = pathname.split('/');
+
+    this.setState({ classID: pathSplit[2] }, () => {
+      this.props.getClassStudentRequest(this.state.classID)
+        .then(() => {
+          if (this.props.classStudent.status === "SUCCESS") {
+            let student = this.props.classStudent.student;
+            let children = [];
+            student.forEach(e => {
+              if (e.projectID == null)
+                children.push(
+                  <Option key={ e.studentID }>
+                    { e.name }/{ e.studentID }
+                  </Option>
+                );
+            });
+            this.setState({ children: children });
+          }
+        });
+    });
   }
 
   handleProjectApply() {
-    this.props.postProjectRequest(this.props.selectedClass.classID, this.state.title, this.state.selected)
+    this.props.postProjectRequest(this.state.classID, this.state.projectTitle, this.state.selected)
       .then(() => {
         if (this.props.post.status === "SUCCESS") {
           message.success('프로젝트 신청 완료');
-          this.props.history.push(`/classroom/${ this.props.selectedClass.classID }`);
+          this.props.history.push(`/classroom/${ this.state.classID }`);
         }
       });
   }
 
   handleChange(value) {
-    this.setState({ selected: value })
+    this.setState({ selected: value });
   }
 
   titleChange(e) {
@@ -93,7 +102,7 @@ class ProjectApply extends React.Component {
 
     return (
       <div>
-        <h3>{ this.props.selectedClass.title }&#40;{ this.props.selectedClass.divide }&#41; / 프로젝트 신청</h3>
+        <h3>{ this.state.title }&#40;{ this.state.divide }&#41; / 프로젝트 신청</h3>
 
         <div style={ { height: '100%', padding: 24, margin: 24, border: "1px solid #ddd" } }>
 
@@ -104,7 +113,7 @@ class ProjectApply extends React.Component {
                 id='title'
                 placeholder="프로젝트 명"
                 onChange={ this.titleChange }
-                value={ this.state.title } />
+                value={ this.state.projectTitle } />
             </FormItem>
 
             <FormItem label="Members" { ...formItemLayout }>
@@ -133,7 +142,6 @@ class ProjectApply extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    selectedClass: state.classroom.selectedClass.classInfo,
     classStudent: state.classroom.classStudent,
     post: state.project.post
   };
@@ -141,11 +149,14 @@ const mapStateToProps = (state) => {
 
 const mapDispatchProps = (dispatch) => {
   return {
+    getClassInfoRequest: (classID) => {
+      return dispatch(getClassInfoRequest(classID));
+    },
     getClassStudentRequest: (classID) => {
       return dispatch(getClassStudentRequest(classID));
     },
-    postProjectRequest: (classID, title, student) => {
-      return dispatch(postProjectRequest(classID, title, student));
+    postProjectRequest: (classID, projectTitle, student) => {
+      return dispatch(postProjectRequest(classID, projectTitle, student));
     }
   };
 };

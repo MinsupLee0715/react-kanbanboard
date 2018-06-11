@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { getClassroomRequest } from '../actions/classroom';
+import { getClassInfoRequest } from '../actions/classroom';
 import { getProjectRequest } from '../actions/project';
 
 import { Row, Col, Card, Divider } from 'antd';
@@ -20,17 +20,35 @@ class ProjectList extends React.Component {
     };
 
     this.handleKanbanBoardLoad = this.handleKanbanBoardLoad.bind(this);
+    this.getClassInfo = this.getClassInfo.bind(this);
     this.getProjectList = this.getProjectList.bind(this);
     this.setProjectList = this.setProjectList.bind(this);
   }
 
   handleKanbanBoardLoad(projectID) {
-    let classID = this.props.selectedClass.classID;
+    let classID = this.props.getClassInfo.info.classID;
     this.props.history.push(`/classroom/${ classID }/kanbanboard/${ projectID }`);
   }
 
   componentDidMount() {
-    this.getProjectList();
+    const pathname = this.props.history.location.pathname;
+    const pathSplit = pathname.split('/');
+    this.setState({ classID: pathSplit[2] }, () => {
+      this.getClassInfo();
+      this.getProjectList();
+    });
+  }
+
+  getClassInfo() {
+    this.props.getClassInfoRequest(this.state.classID)
+      .then(() => {
+        if (this.props.getClassInfo.status === "SUCCESS") {
+          this.setState({
+            title: this.props.getClassInfo.info.title,
+            divide: this.props.getClassInfo.info.divide
+          });
+        }
+      });
   }
 
   // props가 없을 시 서버로 부터 가져온다.
@@ -53,10 +71,6 @@ class ProjectList extends React.Component {
   setProjectList() {
     /* 수업 내 프로젝트 리스트 */
     let projectAllList = this.props.projectList;
-    this.setState({
-      title: this.props.selectedClass.title,
-      divide: this.props.selectedClass.divide
-    });
 
     if (this.props.projectList.length > 0) { // props가 있을 시
       let projectList = [];
@@ -136,7 +150,7 @@ class ProjectList extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    selectedClass: state.classroom.selectedClass.classInfo,
+    getClassInfo: state.classroom.getClassInfo,
     projectList: state.project.get.project,
     getProject: state.project.get
   };
@@ -144,6 +158,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    getClassInfoRequest: (classID) => {
+      return dispatch(getClassInfoRequest(classID));
+    },
     getProjectRequest: (classID) => {
       return dispatch(getProjectRequest(classID));
     }

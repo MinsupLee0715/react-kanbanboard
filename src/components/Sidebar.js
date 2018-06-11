@@ -11,11 +11,34 @@ const { Sider } = Layout;
 
 class Sidebar extends React.Component {
 
+  constructor(props) {
+    super(props);
+
+    this.selectSidebar = this.selectSidebar.bind(this);
+  }
+
+  selectSidebar() {
+    let pathname = this.props.history.location.pathname;
+    let pathSplit = pathname.split('/');
+
+    if (pathSplit.length > 2) {
+      if (pathSplit[1] == 'classroom') {
+        if (this.props.currentUser.type == 'student') {
+          return <StdSidebar data={ pathSplit[2] } />;
+        } else if (this.props.currentUser.type == 'professor') {
+          return <ProfSidebar data={ pathSplit[2] } />;
+        }
+      }
+    }
+  }
+
+
   render() {
 
-    const sidebar = () => {
+    /* const sidebar = () => {
       let pathname = this.props.history.location.pathname;
       let pathSplit = pathname.split('/');
+      console.log(pathSplit[1] + "1111111111111111111");
 
       if (pathSplit[1] == 'classroom') {
         if (this.props.currentUser.type == 'student') {
@@ -24,7 +47,7 @@ class Sidebar extends React.Component {
           return <ProfSidebar />;
         }
       }
-    };
+    }; */
 
     return (
       <Sider
@@ -35,7 +58,7 @@ class Sidebar extends React.Component {
         style={ { overflow: 'hidden', height: '100%', position: 'fixed', left: 0 } }>
         <Link to="/mypage"><div className="logo" /></Link>
         <Profile />
-        { sidebar() }
+        { this.selectSidebar() }
       </Sider>
     );
   }

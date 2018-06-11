@@ -220,9 +220,6 @@ class KanbanInfo extends React.Component {
 
   // 업로드 관련 정의
   onFileUpload(file) {
-    let pathname = this.props.history.location.pathname;
-    let pathSplit = pathname.split('/');
-
     const url = '/api/classroom/kanban/upload';
     const formData = new FormData();
     formData.append('kanbanID', this.props.data.id);

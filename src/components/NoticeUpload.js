@@ -31,7 +31,10 @@ class NoticeUpload extends React.Component {
   }
 
   handlePost() {
-    let classID = this.props.selectedClass.classID;
+    const pathname = this.props.history.location.pathname;
+    const pathSplit = pathname.split('/');
+
+    let classID = pathSplit[2];
     let title = this.state.title;
     let content = this.state.content;
 
@@ -90,8 +93,7 @@ class NoticeUpload extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    status: state.notice.post.status,
-    selectedClass: state.classroom.selectedClass.classInfo
+    status: state.notice.post.status
   };
 };
 

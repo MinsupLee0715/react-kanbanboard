@@ -13,13 +13,18 @@ class NoticeList extends React.Component {
 
     this.state = {
       noticeList: [],
-      loading: false
+      loading: false,
+      classID: ''
     };
   }
 
-  componentDidMount() {    
-    this.setState({ loading: true });
-    this.props.getNoticeRequest(this.props.match.params.id)
+  componentDidMount() {
+    const pathname = this.props.history.location.pathname;
+    const pathSplit = pathname.split('/');
+
+    this.setState({ loading: true, classID: pathSplit[2] });
+
+    this.props.getNoticeRequest(pathSplit[2])
       .then(() => {
         this.setState({ loading: false });
 
@@ -38,7 +43,7 @@ class NoticeList extends React.Component {
             }
           }
 
-          this.setState({ noticeList: list });
+          this.setState({ noticeList: list.reverse() });
         }
       });
   }
@@ -60,7 +65,7 @@ class NoticeList extends React.Component {
     const rowClick = (record) => {
       return {
         onClick: () => {
-          this.props.history.push(`/classroom/${ this.props.classInfo.classID }/notice/${ record.key }`);
+          this.props.history.push(`/classroom/${ this.state.classID }/notice/${ record.key }`);
         }
       };
     };
@@ -70,7 +75,7 @@ class NoticeList extends React.Component {
       <div style={ { margin: "auto" } }>
         {
           this.props.currentUser.type == 'professor' ?
-            <Link to={ `/classroom/${ this.props.classInfo.classID }/notice/upload` }>
+            <Link to={ `/classroom/${ this.state.classID }/notice/upload` }>
               <Button style={ { margin: "0 0 10px" } }>Upload</Button>
             </Link>
             : false
@@ -92,7 +97,6 @@ class NoticeList extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    classInfo: state.classroom.selectedClass.classInfo,
     currentUser: state.auth.status.currentUser,
     getNotice: state.notice.get,
     notices: state.notice.notice
