@@ -30,6 +30,7 @@ router.get('/', (req, res) => {
       Projects.status AS status,
       Projects.studentID AS studentID,
       Projects.name AS name,
+      Projects.updated_date AS updated_date,
       professor.professorID AS professorID
       FROM
         (SELECT Professor.professorID AS professorID,
@@ -39,6 +40,7 @@ router.get('/', (req, res) => {
         (SELECT Project.projectID AS projectID,
          Project.title AS title,
          Project.status AS status,
+         Project.updated_date AS updated_date,
          Class_Student.classID AS classID,
          Class_Student.studentID AS studentID,
          Class_Student.name AS name 
@@ -157,8 +159,8 @@ router.post('/', (req, res) => {
     }
 
     // 프로젝트 추가: standy 상태
-    query = 'INSERT INTO Project (projectID, title, status, leader) VALUES (?, ?, "standby", ?)';
-    db.query(query, [projectID, title, loginInfo.userid], (err) => {
+    query = 'INSERT INTO Project (projectID, title, status, leader, updated_date) VALUES (?, ?, "standby", ?, ?)';
+    db.query(query, [projectID, title, loginInfo.userid, projectID], (err) => {
       if (err) {
         return res.status(403).json({
           error: "Check Data",

@@ -141,7 +141,7 @@ class Approve extends React.Component {
       <div>
         <h3>{ this.state.title }&#40;{ this.state.divide }&#41; / { "프로젝트 승인" }</h3>
 
-        <div style={ { height: '100%', padding: 24, margin: 24, border: "1px solid #ddd" } }>
+        <div style={ { height: '100%', padding: 16, /* border: "1px solid #ddd" */ } }>
 
           <Table
             dataSource={ this.state.approveList }

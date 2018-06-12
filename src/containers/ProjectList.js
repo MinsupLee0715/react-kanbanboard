@@ -2,10 +2,16 @@ import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import TimeAgo from 'react-timeago';
+import koreanStrings from 'react-timeago/lib/language-strings/ko';
+import buildFormatter from 'react-timeago/lib/formatters/buildFormatter'
+
 import { getClassInfoRequest } from '../actions/classroom';
 import { getProjectRequest } from '../actions/project';
 
 import { Row, Col, Card, Divider } from 'antd';
+
+const formatter = buildFormatter(koreanStrings);
 
 class ProjectList extends React.Component {
 
@@ -83,7 +89,8 @@ class ProjectList extends React.Component {
             projectList.push({
               projectID: projectAllList[i].projectID,
               title: projectAllList[i].title,
-              student: [`${ projectAllList[i].name }`]
+              student: [`${ projectAllList[i].name }`],
+              updated_date: projectAllList[i].updated_date
             });
           } else {
             projectList[index].student.push(`${ projectAllList[i].name }`);
@@ -110,13 +117,9 @@ class ProjectList extends React.Component {
               >
                 <p>{ memberList }</p>
                 <br />
-                <span>할일 { 3 }</span>
-                <Divider type="vertical" />
-                <span>진행중 { 3 }</span>
+                <span>생성일 : { projectList[i].projectID }</span>
                 <br />
-                <span>피드백 { 3 }</span>
-                <Divider type="vertical" />
-                <span>완료 { 3 }</span>
+                <span>최근 업데이트 : <TimeAgo date={ projectList[i].updated_date } formatter={ formatter } /></span>
               </Card>
             </a>
           </Col>
@@ -136,7 +139,7 @@ class ProjectList extends React.Component {
       <div>
         <h3>{ this.state.title }&#40;{ this.state.divide }&#41; / { "프로젝트 목록" }</h3>
 
-        <div style={ { height: '100%', padding: 24, textAlign: 'center' } }>
+        <div style={ { height: '100%', padding: 16, textAlign: 'center' } }>
 
           <Row gutter={ 16 }>
             { this.state.project }

@@ -58,12 +58,12 @@ class ProfSidebar extends React.Component {
             <strong>공지사항</strong>
           </Link>
         </Menu.Item>
-        <Menu.Item key="5">
+        {/* <Menu.Item key="5">
           <Link to={ `/classroom/${ this.state.classID }/status` }>
             <Icon type="bar-chart" />
             <strong>프로젝트 통계</strong>
           </Link>
-        </Menu.Item>
+        </Menu.Item> */}
       </Menu>
     );
   }

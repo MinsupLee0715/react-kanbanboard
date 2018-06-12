@@ -62,7 +62,7 @@ class Notice extends React.Component {
       <div>
         <h3>{ this.state.title }&#40;{ this.state.divide }&#41; / 공지사항</h3>
 
-        <div style={ { height: '100%', padding: 16, border: "1px solid #ddd" } }>
+        <div style={ { height: '100%', padding: 16, /* border: "1px solid #ddd" */ } }>
           <Switch>
             <Route exact path="/classroom/:id" component={ NoticeList } />
             <Route exact path="/classroom/:id/notice" component={ NoticeList } />

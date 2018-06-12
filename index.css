@@ -17,7 +17,7 @@ input, .ant-input {
 
 /* header */
 .searchInput>input.ant-input {
-  width: 360px;
+  width: 100%;
   outline: none;
   border: none;
 }
@@ -144,9 +144,29 @@ h1 {
   border-left: none;
   border-top: none;
   box-shadow: 0 2px 8px rgba(0,0,0,.09);
+  transition: all .2s cubic-bezier(.4,0,.2,1);
+}
+.project-card .ant-card-bordered:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12), 0 5px 5px -3px rgba(0,0,0,.2);
 }
 .project-card .ant-card-bordered>.ant-card-head {
-  background: rgba(207,216,220,.2);
+  /* background: rgba(58, 28, 0, .56); */
+  background: rgb(55, 79, 127);
+}
+
+.project-card .ant-card-head .ant-card-head-title {
+  color: white;
+}
+
+/* ant-table */
+.ant-table-row:hover {
+  transform: scale(1.01);
+}
+.ant-table-thead>tr>th {
+  /* background: rgba(58, 28, 0, .56); */
+  background: rgb(55, 79, 127);
+  color: white;
 }
 
 
@@ -171,6 +191,15 @@ pre {
 
 
 /* kanban */
+.kanban-card {
+  box-shadow: lightgrey 0px 1px 2px;
+}
+.kanban-card:hover {
+  transform: scale(1.03);
+  transition: transform .2s;
+  box-shadow: 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12), 0 5px 5px -3px rgba(0,0,0,.2);
+}
+
 .kanban-upload .kanban-input.ant-input,
 .feedback-upload .feedback-input.ant-input,
 #feedback_content.ant-input {

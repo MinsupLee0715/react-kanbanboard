@@ -139,7 +139,7 @@ class Mypage extends React.Component {
           <Content style={ { minHeight: 768, margin: '12px 16px 0', overflow: 'initial' } }>
             <h3>내 강의실</h3>
 
-            <Card>
+            <div style={ { padding: 16, border: 'none' } }>
 
               <Select
                 defaultValue={ this.state.period }
@@ -158,7 +158,7 @@ class Mypage extends React.Component {
                 loading={ this.state.loading }
               />
 
-            </Card>
+            </div>
 
           </Content>
 

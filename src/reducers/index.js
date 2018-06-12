@@ -5,6 +5,7 @@ import project from './project';
 import kanban from './kanban';
 import message from './message';
 import feedback from './feedback';
+import search from './search';
 
 import { combineReducers } from 'redux';
 
@@ -15,5 +16,6 @@ export default combineReducers({
   project,
   kanban,
   message,
-  feedback
+  feedback,
+  search
 });

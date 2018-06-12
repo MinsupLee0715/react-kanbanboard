@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import TimeAgo from 'react-timeago';
+import koreanStrings from 'react-timeago/lib/language-strings/ko';
+import buildFormatter from 'react-timeago/lib/formatters/buildFormatter'
+
 import { getClassInfoRequest } from '../actions/classroom';
 import { getClassStudentRequest } from '../actions/classroom';
 import {
@@ -26,6 +30,8 @@ import type {
     DraggableStateSnapshot,
     DropResult
 } from 'react-beautiful-dnd';
+
+const formatter = buildFormatter(koreanStrings);
 
 type Item = {|
   id: string,
@@ -69,7 +75,7 @@ const getItemStyle = (draggableStyle: ?DraggableStyle, isDragging: boolean): Obj
   ...draggableStyle,
 
   margin: draggableStyle && draggableStyle.margin ? draggableStyle.margin : `${ grid }px`,
-  boxShadow: 'lightgrey 0px 1px 2px'
+  //boxShadow: 'lightgrey 0px 1px 2px'
 });
 
 // List -> Swimlane
@@ -501,6 +507,7 @@ class KanbanBoard extends Component<*, State> {
                           { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
                             <div id={ item.id } onClick={ this.handleKanbanClick }>
                               <div
+                                className="kanban-card"
                                 ref={ provided.innerRef }
                                 style={ getItemStyle(
                                   provided.draggableStyle,
@@ -510,7 +517,7 @@ class KanbanBoard extends Component<*, State> {
                               >
                                 <h5>{ item.title }</h5>
                                 <br />
-                                <h6 style={ { textAlign: 'right' } }>{ item.date }</h6>
+                                <h6 style={ { textAlign: 'right' } }><TimeAgo date={ item.date } formatter={ formatter } /> 업데이트</h6>
                               </div>
                               { provided.placeholder }
                             </div>
@@ -538,6 +545,7 @@ class KanbanBoard extends Component<*, State> {
                           { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
                             <div id={ item.id } onClick={ this.handleKanbanClick }>
                               <div
+                                className="kanban-card"
                                 ref={ provided.innerRef }
                                 style={ getItemStyle(
                                   provided.draggableStyle,
@@ -547,7 +555,7 @@ class KanbanBoard extends Component<*, State> {
                               >
                                 <h5>{ item.title }</h5>
                                 <br />
-                                <h6 style={ { textAlign: 'right' } }>{ item.date }</h6>
+                                <h6 style={ { textAlign: 'right' } }><TimeAgo date={ item.date } formatter={ formatter } /> 업데이트</h6>
                               </div>
                               { provided.placeholder }
                             </div>
@@ -575,6 +583,7 @@ class KanbanBoard extends Component<*, State> {
                           { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
                             <div id={ item.id } onClick={ this.handleKanbanClick }>
                               <div
+                                className="kanban-card"
                                 ref={ provided.innerRef }
                                 style={ getItemStyle(
                                   provided.draggableStyle,
@@ -584,7 +593,7 @@ class KanbanBoard extends Component<*, State> {
                               >
                                 <h5>{ item.title }</h5>
                                 <br />
-                                <h6 style={ { textAlign: 'right' } }>{ item.date }</h6>
+                                <h6 style={ { textAlign: 'right' } }><TimeAgo date={ item.date } formatter={ formatter } /> 업데이트</h6>
                               </div>
                               { provided.placeholder }
                             </div>
@@ -612,6 +621,7 @@ class KanbanBoard extends Component<*, State> {
                           { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
                             <div id={ item.id } onClick={ this.handleKanbanClick }>
                               <div
+                                className="kanban-card"
                                 ref={ provided.innerRef }
                                 style={ getItemStyle(
                                   provided.draggableStyle,
@@ -621,7 +631,7 @@ class KanbanBoard extends Component<*, State> {
                               >
                                 <h5>{ item.title }</h5>
                                 <br />
-                                <h6 style={ { textAlign: 'right' } }>{ item.date }</h6>
+                                <h6 style={ { textAlign: 'right' } }><TimeAgo date={ item.date } formatter={ formatter } /> 업데이트</h6>
                               </div>
                               { provided.placeholder }
                             </div>

@@ -3,6 +3,7 @@ import db from '../models/mysqlDatabase';
 import notice from './notice';
 import project from './project';
 import kanban from './kanban';
+import search from './search';
 const router = express.Router();
 
 // /api/classroom/*
@@ -11,6 +12,7 @@ const router = express.Router();
 router.use('/notice', notice);
 router.use('/project', project);
 router.use('/kanban', kanban);
+router.use('/search', search);
 
 
 /* 수업 정보 가져오기 */
