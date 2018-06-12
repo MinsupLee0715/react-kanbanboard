@@ -3,15 +3,15 @@ import * as types from './ActionTypes';
 
 /* GET SearchProject */
 export function getSearchProject() {
-  return { type: types.GET_MESSAGE };
+  return { type: types.GET_SEARCH_PROJECT };
 }
 
 export function getSearchProjectSuccess(project) {
-  return { type: types.GET_MESSAGE_SUCCESS, project };
+  return { type: types.GET_SEARCH_PROJECT_SUCCESS, project };
 }
 
 export function getSearchProjectFailure() {
-  return { type: types.GET_MESSAGE_FAILURE };
+  return { type: types.GET_SEARCH_PROJECT_FAILURE };
 }
 
 export function getSearchProjectRequest(searchData) {
