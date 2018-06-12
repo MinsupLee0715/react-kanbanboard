@@ -36,6 +36,19 @@ class Approve extends React.Component {
     });
   }
 
+  componentDidUpdate(prevProps) {
+    const pathname = this.props.history.location.pathname;
+    const pathSplit = pathname.split('/');
+
+    if (this.state.classID != '' && pathSplit[2] !== this.state.classID) {
+      console.log('변함');
+      this.setState({ classID: pathSplit[2] }, () => {
+        this.getClassInfo();
+        this.getProjectList();
+      });
+    }
+  }
+
   getClassInfo() {
     this.props.getClassInfoRequest(this.state.classID)
       .then(() => {

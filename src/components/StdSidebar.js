@@ -17,9 +17,12 @@ class StdSidebar extends React.Component {
     }
   }
 
-  componentDidMount() {
-    this.setState({ classID: this.props.data });
+  componentDidUpdate(prevProps) {
+    if (this.props.getClassInfo.classID !== this.state.classID) {
+      this.setState({ classID: this.props.getClassInfo.classID });
+    }
   }
+
 
   render() {
 
@@ -60,4 +63,10 @@ class StdSidebar extends React.Component {
   }
 }
 
-export default StdSidebar;
+const mapStateToProps = (state) => {
+  return {
+    getClassInfo: state.classroom.getClassInfo.info
+  };
+}
+
+export default withRouter(connect(mapStateToProps)(StdSidebar));

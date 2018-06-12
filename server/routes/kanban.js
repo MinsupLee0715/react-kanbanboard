@@ -279,9 +279,9 @@ router.put('/status', (req, res) => {
 
     /* 칸반 상태가 피드백인 경우만 교수에게 메시지 전송 */
     if (data[1] == 'FEEDBACK') {
-      // 교수 id 검색
-      query = 'SELECT title, professorID FROM Classroom WHERE classID = ?';
-      db.query(query, classID, (err, result) => {
+      // projectID 검색
+      query = 'SELECT projectID FROM Kanban WHERE created_date = ?';
+      db.query(query, kanbanID, (err, result) => {
         if (err) {
           return res.status(403).json({
             error: "Check Data",
@@ -289,29 +289,43 @@ router.put('/status', (req, res) => {
           });
         } // if err
 
-        // message 추가
-        query = 'INSERT INTO Message SET ?';
-        data = {
-          receive_date: date,
-          userID: result[0].professorID,
-          type: 'FB',
-          classID: classID,
-          kanbanID: kanbanID,
-          isCheck: false,
-          classTitle: result[0].title
-        };
-        // FB = FeedBack
-        db.query(query, data, (err) => {
+        const projectID = result[0].projectID;
+
+        // 교수 id 검색
+        query = 'SELECT title, professorID FROM Classroom WHERE classID = ?';
+        db.query(query, classID, (err, result) => {
           if (err) {
             return res.status(403).json({
               error: "Check Data",
               code: 3
             });
           } // if err
-          console.log('insert into message');
-          return res.json({ result: 'success' });
-        }); // insert into Message
-      }); // select professorID
+
+          // message 추가
+          query = 'INSERT INTO Message SET ?';
+          data = {
+            receive_date: date,
+            userID: result[0].professorID,
+            type: 'FB',
+            classID: classID,
+            projectID: projectID,
+            kanbanID: kanbanID,
+            isCheck: false,
+            classTitle: result[0].title
+          };
+          // FB = FeedBack
+          db.query(query, data, (err) => {
+            if (err) {
+              return res.status(403).json({
+                error: "Check Data",
+                code: 3
+              });
+            } // if err
+            console.log('insert into message');
+            return res.json({ result: 'success' });
+          }); // insert into Message
+        }); // select professorID
+      });
     } else
       return res.json({ result: 'success' });
   }); // update kanban status

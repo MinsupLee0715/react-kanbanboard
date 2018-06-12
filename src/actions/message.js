@@ -28,3 +28,14 @@ export function getMessageRequest() {
       });
   };
 }
+
+/* PUT Read Message */
+export function putReadMessageRequest(messageID) {
+  return (dispatch) => {
+    return axios
+      .put('/api/classroom/read', { messageID })
+      .then((res) => {
+        console.log('메시지를 읽음');
+      });
+  };
+}

@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import { getClassInfoRequest } from '../actions/classroom';
 import { getNoticeRequest } from '../actions/notice';
 
 import { Table, Button } from 'antd';
@@ -16,15 +17,48 @@ class NoticeList extends React.Component {
       loading: false,
       classID: ''
     };
+
+    this.getClassInfo = this.getClassInfo.bind(this);
+    this.getNoticeList = this.getNoticeList.bind(this);
   }
 
   componentDidMount() {
     const pathname = this.props.history.location.pathname;
     const pathSplit = pathname.split('/');
 
-    this.setState({ loading: true, classID: pathSplit[2] });
+    this.setState({ loading: true, classID: pathSplit[2] }, () => {
+      this.getClassInfo();
+      this.getNoticeList();
+    });
+  }
 
-    this.props.getNoticeRequest(pathSplit[2])
+  componentDidUpdate(prevProps) {
+    const pathname = this.props.history.location.pathname;
+    const pathSplit = pathname.split('/');
+
+    if (this.state.classID != '' && pathSplit[2] !== this.state.classID) {
+      console.log('변함');
+      this.setState({ classID: pathSplit[2] }, () => {
+        this.getClassInfo();
+        this.getNoticeList();
+      });
+    }
+  }
+
+  getClassInfo() {
+    this.props.getClassInfoRequest(this.state.classID)
+      .then(() => {
+        if (this.props.getClassInfo.status === "SUCCESS") {
+          this.setState({
+            title: this.props.getClassInfo.info.title,
+            divide: this.props.getClassInfo.info.divide
+          });
+        }
+      });
+  }
+
+  getNoticeList() {
+    this.props.getNoticeRequest(this.state.classID)
       .then(() => {
         this.setState({ loading: false });
 
@@ -97,6 +131,7 @@ class NoticeList extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
+    getClassInfo: state.classroom.getClassInfo,
     currentUser: state.auth.status.currentUser,
     getNotice: state.notice.get,
     notices: state.notice.notice
@@ -105,6 +140,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    getClassInfoRequest: (classID) => {
+      return dispatch(getClassInfoRequest(classID));
+    },
     getNoticeRequest: (classID) => {
       return dispatch(getNoticeRequest(classID));
     }

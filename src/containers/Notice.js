@@ -18,6 +18,8 @@ class Notice extends React.Component {
       title: '',
       divide: '',
     }
+
+    this.getClassInfo = this.getClassInfo.bind(this);
   }
 
 
@@ -25,10 +27,27 @@ class Notice extends React.Component {
     const pathname = this.props.history.location.pathname;
     const pathSplit = pathname.split('/');
 
-    this.props.getClassInfoRequest(pathSplit[2])
+    this.setState({ classID: pathSplit[2] }, () => {
+      this.getClassInfo();
+    });
+  }
+
+  componentDidUpdate(prevProps) {
+    const pathname = this.props.history.location.pathname;
+    const pathSplit = pathname.split('/');
+
+    if (this.state.classID != '' && pathSplit[2] !== this.state.classID) {
+      console.log('변함');
+      this.setState({ classID: pathSplit[2] }, () => {
+        this.getClassInfo();
+      });
+    }
+  }
+
+  getClassInfo() {
+    this.props.getClassInfoRequest(this.state.classID)
       .then(() => {
         if (this.props.getClassInfo.status === "SUCCESS") {
-          console.log('수업 정보 불러옴');
           this.setState({
             title: this.props.getClassInfo.info.title,
             divide: this.props.getClassInfo.info.divide

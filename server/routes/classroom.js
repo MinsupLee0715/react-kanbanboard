@@ -130,4 +130,21 @@ router.get('/getClassStudent', (req, res) => {
   });
 });
 
+router.put('/read', (req, res) => {
+  const messageID = req.body.messageID;
+  let query = '';
+
+  query = 'UPDATE Message SET isCheck = true WHERE receive_date = ?';
+  db.query(query, messageID, (err) => {
+    if (err) {
+      return res.status(403).json({
+        error: "Check Data",
+        code: 3
+      });
+    } // if err
+    console.log('메시지 읽음');
+    res.json({ result: 'success' });
+  });
+});
+
 export default router;

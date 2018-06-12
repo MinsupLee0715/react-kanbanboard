@@ -14,6 +14,10 @@ class Sidebar extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      classID: ''
+    };
+
     this.selectSidebar = this.selectSidebar.bind(this);
   }
 
@@ -24,9 +28,9 @@ class Sidebar extends React.Component {
     if (pathSplit.length > 2) {
       if (pathSplit[1] == 'classroom') {
         if (this.props.currentUser.type == 'student') {
-          return <StdSidebar data={ pathSplit[2] } />;
+          return <StdSidebar />;
         } else if (this.props.currentUser.type == 'professor') {
-          return <ProfSidebar data={ pathSplit[2] } />;
+          return <ProfSidebar />;
         }
       }
     }
@@ -34,21 +38,6 @@ class Sidebar extends React.Component {
 
 
   render() {
-
-    /* const sidebar = () => {
-      let pathname = this.props.history.location.pathname;
-      let pathSplit = pathname.split('/');
-      console.log(pathSplit[1] + "1111111111111111111");
-
-      if (pathSplit[1] == 'classroom') {
-        if (this.props.currentUser.type == 'student') {
-          return <StdSidebar />;
-        } else if (this.props.currentUser.type == 'professor') {
-          return <ProfSidebar />;
-        }
-      }
-    }; */
-
     return (
       <Sider
         breakpoint="sm"
@@ -66,7 +55,8 @@ class Sidebar extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    currentUser: state.auth.status.currentUser
+    currentUser: state.auth.status.currentUser,
+    getClassInfo: state.classroom.getClassInfo.info
   };
 }
 

@@ -132,19 +132,22 @@ class KanbanBoard extends Component<*, State> {
     let pathname = this.props.history.location.pathname;
     let pathSplit = pathname.split('/');
 
-    for (let i in this.props.project.project) {
-      if (this.props.project.project[i].projectID == pathSplit[4]) {
-        this.setState({ projectTitle: this.props.project.project[i].title });
-        break;
+    if (this.props.currentUser.type === 'professor') {
+      for (let i in this.props.project.project) {
+        if (this.props.project.project[i].projectID == pathSplit[4]) {
+          this.setState({ projectTitle: this.props.project.project[i].title });
+          break;
+        }
       }
+    } else if (this.props.currentUser.type === 'student') {
+      this.setState({ projectTitle: this.props.project.project[0].title });
     }
 
     this.setState({ classID: pathSplit[2] }, () => {
       this.getClassInfo();
+      this.getKanbanList();
+      this.getProjectStudent();
     });
-
-    this.getKanbanList();
-    this.getProjectStudent();
   }
 
   getClassInfo() {
@@ -170,14 +173,14 @@ class KanbanBoard extends Component<*, State> {
 
   // 서버로부터 학생 정보를 가져온다.
   getProjectStudent() {
-    let project;
+    let projectID;
     let pathname = this.props.history.location.pathname;
     let pathSplit = pathname.split('/');
 
     if (this.props.currentUser.type === 'professor') {
-      project = pathSplit[4];
+      projectID = pathSplit[4];
     } else if (this.props.currentUser.type === 'student') {
-      project = this.props.project.project[0].projectID;
+      projectID = this.props.project.project[0].projectID;
     }
 
     let classID = this.state.classID;
@@ -190,7 +193,7 @@ class KanbanBoard extends Component<*, State> {
           let students = '';
 
           for (let i in studentList) {
-            if (studentList[i].projectID == project) {
+            if (studentList[i].projectID == projectID) {
               if (students == '')
                 students = studentList[i].name;
               else
