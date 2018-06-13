@@ -75,6 +75,7 @@ router.post('/', (req, res) => {
     AND Class_Student.classID = ?`;
     db.query(query, noticeData.classID, (err, result) => {
       if (err) {
+        console.log('222222222222222222');
         return res.status(403).json({
           error: "Check Data",
           code: 3
@@ -99,6 +100,7 @@ router.post('/', (req, res) => {
 
       db.query(query, (err) => {
         if (err) {
+          console.log('111111111111111');
           return res.status(403).json({
             error: "Check Data",
             code: 3

@@ -62,7 +62,7 @@ class Searchbar extends React.Component {
         <Input
           id="inputdata"
           className="searchInput"
-          placeholder="수업명/프로젝트명/참여학생으로 검색..."
+          placeholder="수업명/프로젝트명/학번/이름으로 검색..."
           prefix={ <Icon type="search" style={ { color: 'rgba(0,0,0,.25)' } } /> }
           suffix={ suffix }
           value={ inputdata }

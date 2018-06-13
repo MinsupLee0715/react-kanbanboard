@@ -30,6 +30,11 @@ class ProjectApply extends React.Component {
   }
 
   componentDidMount() {
+    this.setState({
+      title: this.props.getClassInfo.info.title,
+      divide: this.props.getClassInfo.info.divide
+    })
+
     const pathname = this.props.history.location.pathname;
     const pathSplit = pathname.split('/');
 
@@ -110,7 +115,7 @@ class ProjectApply extends React.Component {
 
             <FormItem label="Title" { ...formItemLayout }>
               <Input
-                id='title'
+                id='projectTitle'
                 placeholder="프로젝트 명"
                 onChange={ this.titleChange }
                 value={ this.state.projectTitle } />
@@ -142,6 +147,7 @@ class ProjectApply extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
+    getClassInfo: state.classroom.getClassInfo,
     classStudent: state.classroom.classStudent,
     post: state.project.post
   };

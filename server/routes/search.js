@@ -26,7 +26,7 @@ router.get('/:keyword', (req, res) => {
     });
   }
 
-  if (keyword == ' ')
+  if (keyword == '&ALL')
     keyword = '';
 
   let query = '';

@@ -284,6 +284,7 @@ class KanbanInfo extends React.Component {
 
               <hr />
               <h6><strong>피드백</strong></h6>
+              <br />
               { this.isFeedback() }
             </Col>
 
