@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { Table } from 'antd';
+import { Table, Divider } from 'antd';
 
 class Search extends React.Component {
 
@@ -13,34 +13,45 @@ class Search extends React.Component {
       project: []
     };
 
-    this.getNoticeList = this.getNoticeList.bind(this);
+    this.getProjectList = this.getProjectList.bind(this);
   }
 
   componentDidMount() {
-    this.getNoticeList();
+    this.getProjectList();
   }
 
 
   componentDidUpdate(prevProps) {
     //console.log(prevProps.project, this.props.project);
     if (prevProps.project !== this.props.project) {
-      this.getNoticeList();
+      this.getProjectList();
     }
   }
 
-  getNoticeList() {
+  getProjectList() {
     let list = [];
     let project = this.props.project;
+    let count = 1;
 
+    /* 프로젝트 리스트 생성 */
     for (let i in project) {
-      list.push({
-        key: project[i].projectID,
-        number: parseInt(i) + parseInt(1),
-        classID: project[i].classID,
-        classTitle: project[i].classTitle + " (" + project[i].divide + ")",
-        projectTitle: project[i].projectTitle,
-        leader: project[i].leader
-      });
+      let index = list.map(x => x.key).indexOf(project[i].projectID);
+
+      if (index < 0) {
+        list.push({
+          key: project[i].projectID,
+          number: count++,
+          classID: project[i].classID,
+          classTitle: project[i].classTitle + " (" + project[i].divide + ")",
+          projectTitle: project[i].projectTitle,
+          leader: project[i].name,
+          member: [project[i].name],
+          status: project[i].status
+        });
+      } else {
+        list[index].member.push(<Divider type="vertical" />);
+        list[index].member.push(`${ project[i].name }`);
+      }
     }
 
     this.setState({ project: list });
@@ -61,6 +72,12 @@ class Search extends React.Component {
     }, {
       title: '팀장',
       dataIndex: 'leader'
+    }, {
+      title: '팀원',
+      dataIndex: 'member'
+    }, {
+      title: '상태',
+      dataIndex: 'status'
     }];
 
     const rowClick = (record) => {
@@ -73,16 +90,18 @@ class Search extends React.Component {
 
 
     return (
-      <div style={ { maxWidth: 1024, margin: "auto" } }>
+      <div style={ { margin: "auto" } }>
         <h3>프로젝트 검색</h3>
         <br />
-        <Table
-          columns={ columns }
-          dataSource={ this.state.project }
-          size="middle"
-          pagination={ { position: 'none' } }
-          onRow={ rowClick }
-        />
+        <div>
+          <Table
+            columns={ columns }
+            dataSource={ this.state.project }
+            size="middle"
+            pagination={ { position: 'none' } }
+            onRow={ rowClick }
+          />
+        </div>
       </div>
     );
   }
