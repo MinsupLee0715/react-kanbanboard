@@ -7,25 +7,29 @@ A database schema is essential to use this project.
 
 !!!Warning!!! This repository does not have the schema.
 ---
-### Install
+## Development Environment
  - Node.js
  - MySQL
----
-### Intall
+ - Windows
+ - Ubuntu
+ - AWS Cloud9
+ - AWS EC2
+
+## Intall
 - npm install
----
-### Build
+
+## Build
 - npm run build - Front-end Build
 - npm run serverBuild - Node.js server build
----
-### Start
+
+## Start
 - npm run server - localhost:4000
----
-### Development Mode
+
+## Development Mode
 You should use two terminals.
 - npm run dev - Watch Front-end
 - npm run server - Watch Back-end
----
-### Sample Images
+
+## Sample Images
 #### 1. Main_Login_Page
 ![1_main](./sample/1_main.png)
