@@ -25,3 +25,7 @@ A database schema is essential to use this project.
 You should use two terminals.
 - npm run dev - Watch Front-end
 - npm run server - Watch Back-end
+---
+### Sample Images
+#### 1. Main_Login_Page
+![1_main](./sample/1_main.png)
