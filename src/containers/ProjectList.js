@@ -137,6 +137,7 @@ class ProjectList extends React.Component {
   render() {
     return (
       <div>
+      <br />
         <h3>{ this.state.title }&#40;{ this.state.divide }&#41; / { "프로젝트 목록" }</h3>
 
         <div style={ { height: '100%', padding: 16, textAlign: 'center' } }>

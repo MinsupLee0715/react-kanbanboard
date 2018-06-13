@@ -100,6 +100,7 @@ router.get('/:keyword', (req, res) => {
         Class_Student_Classroom.name,
         Class_Student_Classroom.title AS classTitle,
         Class_Student_Classroom.divide,
+        Class_Student_Classroom.period,
         Project.title AS projectTitle,
         Project.status,
         Project.leader,
@@ -111,7 +112,8 @@ router.get('/:keyword', (req, res) => {
           Class_Student.projectID,
           Class_Student.name,
           Classroom.title,
-          Classroom.divide
+          Classroom.divide,
+          Classroom.period
         FROM
           (SELECT
             Class_Student.classID,

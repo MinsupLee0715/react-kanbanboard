@@ -46,6 +46,7 @@ class Search extends React.Component {
           projectTitle: project[i].projectTitle,
           leader: project[i].name,
           member: [project[i].name],
+          period: project[i].period,
           status: project[i].status
         });
       } else {
@@ -76,6 +77,9 @@ class Search extends React.Component {
       title: '팀원',
       dataIndex: 'member'
     }, {
+      title: '학기',
+      dataIndex: 'period'
+    }, {
       title: '상태',
       dataIndex: 'status'
     }];
@@ -91,6 +95,7 @@ class Search extends React.Component {
 
     return (
       <div style={ { margin: "auto" } }>
+        <br />
         <h3>프로젝트 검색</h3>
         <br />
         <div>

@@ -60,6 +60,7 @@ class Notice extends React.Component {
 
     return (
       <div>
+      <br />
         <h3>{ this.state.title }&#40;{ this.state.divide }&#41; / 공지사항</h3>
 
         <div style={ { height: '100%', padding: 16, /* border: "1px solid #ddd" */ } }>

@@ -475,6 +475,7 @@ class KanbanBoard extends Component<*, State> {
   render() {
     return (
       <div>
+      <br />
         <h3>
           { this.state.title }&#40;{ this.state.divide }&#41; / { this.state.projectTitle }
           <h5>MEMBER - { this.state.students }</h5>

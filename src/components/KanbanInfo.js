@@ -22,6 +22,7 @@ class KanbanInfo extends React.Component {
     this.state = {
       spin_loading: false,
       isChange: false,
+      uploading: false,
 
       title_value: '',
       content_value: '',
@@ -69,7 +70,8 @@ class KanbanInfo extends React.Component {
       return (
         <form method="get" action={ `/api/classroom/kanban/download/${ kanbanID }` }>
           <label htmlFor="dwfile" className="btn btn-outline-secondary btn-sm"
-            style={ { maxWidth: "200px", overflow: "hidden" } }>
+            style={ { maxWidth: "200px", overflow: "hidden" } }
+            title={ this.props.data.filename }>
             <Icon type="download" /> { this.props.data.filename }</label>
           <input type="submit" id="dwfile" name="dwfile" style={ { display: 'none' } } />
         </form>
@@ -160,15 +162,14 @@ class KanbanInfo extends React.Component {
 
   // 데이터 업로드 실행
   onUpdate() {
-    this.setState({ loading: true, spin_loading: false });
+    this.setState({ uploading: true });
 
-    //let kanbanID = this.props.data.id;
     let kanbanID = this.props.data.id;
     let title = this.state.title_value == '' ? this.props.data.title : this.state.title_value;
     let content = this.state.content_value == '' ? this.props.data.content : this.state.content_value;
     this.props.putKanbanInfoRequest(kanbanID, title, content, null)
       .then(() => {
-        this.setState({ spin_loading: false, loading: false });
+        this.setState({ uploading: false });
         if (this.props.put.status === "SUCCESS") {
           message.success("수정되었습니다.");
           this.handleCancel();
@@ -260,9 +261,11 @@ class KanbanInfo extends React.Component {
           visible={ this.props.data.status }
           width="800px"
           onCancel={ this.handleCancel }
-          footer={ this.props.currentUser.type == "student"
-            ? [deleteButton, this.confirmUpdate()]
-            : [feedbackButton] }
+          footer={ this.props.data.kstatus != "FINISH"
+            ? (this.props.currentUser.type == "student"
+              ? [deleteButton, this.confirmUpdate()]
+              : [feedbackButton])
+            : null }
         >
           { this.props.currentUser.type == "student" ? this.isUpdating() : null } {/* 수정 중 표시 */ }
           <Row gutter={ 16 }>
@@ -293,23 +296,29 @@ class KanbanInfo extends React.Component {
               <h5><strong>상태<Divider type="vertical" />{ this.props.data.kstatus }</strong></h5>
               { this.props.currentUser.type == "student" ?
                 <div>
-                  <form onSubmit={ this.onFormSubmit } >
-                    <label htmlFor="filename" className="btn btn-outline-secondary btn-sm">
-                      <Icon type="upload" /> Click to Upload</label>
-                    <input type='file' id='filename' name='filename'
-                      onChange={ this.onFileChange }
-                      style={ { display: 'none' } } />
-                    <br />
-                    { this.state.uploadFile ?
-                      <React.Fragment>
-                        { this.state.uploadFile.name }
-                        <br />
-                        <label htmlFor="upload" className="btn btn-outline-secondary btn-sm">Upload</label>
-                        <input type='submit' id='upload' value='Upload' style={ { display: 'none' } } />
-                      </React.Fragment>
-                      : "파일을 선택해주세요." }
-                  </form>
-                </div> : null }
+                  { this.props.data.kstatus != "FINISH" ?
+                    <form onSubmit={ this.onFormSubmit } >
+                      <br />
+                      <label htmlFor="filename" className="btn btn-outline-secondary btn-sm">
+                        <Icon type="upload" /> Click to Upload</label>
+                      <input type='file' id='filename' name='filename'
+                        onChange={ this.onFileChange }
+                        style={ { display: 'none' } } />
+                      <br />
+                      { this.state.uploadFile ?
+                        <React.Fragment>
+                          { this.state.uploadFile.name }
+                          <br />
+                          <label htmlFor="upload" className="btn btn-outline-secondary btn-sm">Upload</label>
+                          <input type='submit' id='upload' value='Upload' style={ { display: 'none' } } />
+                        </React.Fragment>
+                        : "파일을 선택해주세요." }
+                      <br />
+                    </form>
+                    : null }
+                </div>
+                : null
+              }
               <br />
               { this.isDownload() }
               <br /><br /><br /><br />
@@ -347,7 +356,6 @@ class KanbanInfo extends React.Component {
           onCancel={ this.handleModalCancel }
           handleCancel={ this.handleCancel }
         />
-
       </React.Fragment>
     );
   }

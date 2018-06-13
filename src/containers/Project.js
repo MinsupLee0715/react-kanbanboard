@@ -52,6 +52,7 @@ class Project extends React.Component {
               this.setState({
                 component:
                   <div style={ { textAlign: 'center' } }>
+                  <br />
                     <h3>승인 대기 중</h3>
                     <div class="card text-center" style={ { maxWidth: 500, margin: 'auto' } }>
                       <div class="card-header">

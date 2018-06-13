@@ -130,6 +130,7 @@ class MyClassroom extends React.Component {
 
     return (
       <React.Fragment>
+      <br />
         <h3>내 강의실</h3>
 
         <div style={ { padding: 16, border: 'none' } }>
