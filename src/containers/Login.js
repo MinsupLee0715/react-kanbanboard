@@ -98,61 +98,85 @@ class Login extends React.Component {
         <Layout>
           <Content style={ { margin: '200px 16px 0', overflow: 'initial' } }>
 
-            <div className="login-form"
-              style={ { height: "100%", width: '100%', margin: 'auto', /* background: "rgba(80,80,80,0.9)", color: "#fff" */ } }>
-              <div className="login-logo" style={ { height: 90, width: '100%', textAlign: 'center' } }>
-                <p style={ { fontSize: 30, padding: "30px 0", color: 'white' } }>MEMBER LOGIN</p>
+            <div class="row">
+              <div class="col-sm">
+                <div style={ { 
+                  color: "white",
+                  textAlign: "right", 
+                  fontSize: 33, 
+                  float: "right", 
+                  fontWeight: "bold", 
+                  paddingTop: 40, 
+                  paddingRight: 100 , 
+                  fontFamily: "Montserrat, sans-serif"
+                } }>
+                  <span>KANBAN BOARD SYSTEM</span><br />
+                  <span>for Project Management</span><br />
+                  <span>and Team Collaboration</span><br />
+                  <span>with React 16</span><br /><br />
+                  <span>웹기반 칸반보드 시스템</span>
+                </div>
               </div>
 
-              <div className="login-body" style={ { height: 256, width: '100%', padding: 24, margin: 'auto' } }>
+              <div class="col-sm">
 
-                <Form className="login-form" style={ { margin: 'auto' } }>
+                <div className="login-form"
+                  style={ { height: "100%", width: '100%',/*  margin: 'auto' */ } }>
+                  <div className="login-logo" style={ { height: 90, width: '100%', textAlign: 'center' } }>
+                    <p style={ { fontSize: 30, padding: "30px 0", color: 'white' } }>MEMBER LOGIN</p>
+                  </div>
 
-                  <FormItem style={ { marginBottom: 12 } }>
-                    <Input
-                      className="loginInput"
-                      id="userid"
-                      size="large"
-                      prefix={ <Icon type="user" style={ { color: 'rgba(0,0,0,.25)' } } /> }
-                      placeholder="User ID"
-                      onChange={ this.handleChange }
-                      value={ this.state.userid }
-                      autoFocus />
-                  </FormItem>
+                  <div className="login-body" style={ { height: 300, width: '100%', padding: 24, margin: 'auto' } }>
 
-                  <FormItem style={ { marginBottom: 12 } } >
-                    <Input
-                      className="loginInput"
-                      id="password"
-                      size="large"
-                      prefix={ <Icon type="lock" style={ { color: 'rgba(0,0,0,.25)' } } /> }
-                      type="Password"
-                      placeholder="Password"
-                      onChange={ this.handleChange }
-                      value={ this.state.password } />
-                  </FormItem>
+                    <Form className="login-form" style={ { margin: 'auto' } }>
 
-                  <Button type="primary"
-                    className="login-form-button student-btn"
-                    size="large"
-                    style={ { marginBottom: 15 } }
-                    onClick={ this.handleStdLogin }
-                  >
-                    학생 로그인 <Icon type="right" />
-                  </Button>
+                      <FormItem style={ { marginBottom: 24 } }>
+                        <Input
+                          className="loginInput"
+                          id="userid"
+                          size="large"
+                          prefix={ <Icon type="user" style={ { color: 'rgba(0,0,0,.25)' } } /> }
+                          placeholder="User ID"
+                          onChange={ this.handleChange }
+                          value={ this.state.userid }
+                          autoFocus />
+                      </FormItem>
 
-                  <Button type="primary"
-                    className="login-form-button professor-btn"
-                    size="large"
-                    onClick={ this.handleProfLogin }
-                  >
-                    교수 로그인 <Icon type="right" />
-                  </Button>
+                      <FormItem style={ { marginBottom: 24 } } >
+                        <Input
+                          className="loginInput"
+                          id="password"
+                          size="large"
+                          prefix={ <Icon type="lock" style={ { color: 'rgba(0,0,0,.25)' } } /> }
+                          type="Password"
+                          placeholder="Password"
+                          onChange={ this.handleChange }
+                          value={ this.state.password } />
+                      </FormItem>
 
-                </Form>
+                      <Button type="primary"
+                        className="login-form-button student-btn"
+                        size="large"
+                        style={ { marginBottom: 24 } }
+                        onClick={ this.handleStdLogin }
+                      >
+                        학생 로그인 <Icon type="right" />
+                      </Button>
 
+                      <Button type="primary"
+                        className="login-form-button professor-btn"
+                        size="large"
+                        onClick={ this.handleProfLogin }
+                      >
+                        교수 로그인 <Icon type="right" />
+                      </Button>
+
+                    </Form>
+
+                  </div>
+
+                </div>
               </div>
-
             </div>
 
           </Content>

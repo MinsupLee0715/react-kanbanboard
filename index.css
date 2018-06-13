@@ -95,7 +95,7 @@ h1 {
 }
 .login-form {
   max-width: 450px;
-  background: rgba(0,0,0,.15);
+  background: rgba(0,0,0,.45);
 }
 .login-form-button {
   width: 100%;
