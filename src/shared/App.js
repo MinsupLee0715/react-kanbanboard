@@ -9,7 +9,9 @@ import Main from '../containers/Main';
 import Login from '../containers/Login';
 import Mypage from '../containers/Mypage';
 import Classroom from '../containers/Classroom';
+import Search from '../containers/Search';
 import NotFound from '../containers/NotFound';
+
 /* component */
 import Footer from '../components/Footer';
 
@@ -47,8 +49,9 @@ class App extends React.Component {
           <Switch>
             <Route exact path="/" component={ Mypage } />
             <Route path="/login" component={ Login } />
-            <Route exact path="/mypage" component={ Mypage } />
+            <Route path="/mypage" component={ Mypage } />
             <Route path="/classroom/*" component={ Classroom } />
+            <Route path="/search" component={ Search } />
             <Route path="*" component={ NotFound } />
           </Switch>
         </Content>

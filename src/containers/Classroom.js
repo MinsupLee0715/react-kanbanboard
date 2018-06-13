@@ -1,14 +1,16 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import Notice from '../containers/Notice';
-import ProjectList from '../containers/ProjectList';
-import Approve from '../containers/Approve';
-import Status from '../containers/Status';
-import Project from '../containers/Project';
-import NotFound from '../containers/NotFound';
+/* Container */
+import Notice from './Notice';
+import ProjectList from './ProjectList';
+import Approve from './Approve';
+import Status from './Status';
+import Project from './Project';
+import NotFound from './NotFound';
 
-import Searchbar from './../components/Searchbar';
+/* Component */
+import Searchbar from '../components/Searchbar';
 import Sidebar from '../components/Sidebar';
 
 import { Layout } from 'antd';
@@ -42,7 +44,7 @@ class Classroom extends React.Component {
               <Route path="/classroom/:id/notice" component={ Notice } />
               <Route path="/classroom/:id/projectList" component={ ProjectList } />
               <Route path="/classroom/:id/approve" component={ Approve } />
-              <Route path="/classroom/:id/status" component={ Status } />
+              {/* <Route path="/classroom/:id/status" component={ Status } /> */ }
               <Route path="/classroom/:id/kanbanboard" component={ Project } />
               <Route path="*" component={ NotFound } />
             </Switch>

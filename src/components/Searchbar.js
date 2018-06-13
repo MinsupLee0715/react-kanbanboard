@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { getSearchProjectRequest } from '../actions/search';
 
-import { Menu, Layout, Input, Icon } from 'antd';
+import { Menu, Layout, Input, Icon, message } from 'antd';
 const { Header } = Layout;
 
 class Searchbar extends React.Component {
@@ -41,9 +41,10 @@ class Searchbar extends React.Component {
     this.props.getSearchProjectRequest(this.state.inputdata)
       .then(() => {
         if (this.props.status === "SUCCESS") {
-          console.log(this.props.project);
+          message.success('검색이 완료되었습니다.');
+          this.props.history.push('/mypage/search');
         } else
-          console.log('err');
+          message.error('검색 중 문제가 발생하였습니다.');
       });
   }
 

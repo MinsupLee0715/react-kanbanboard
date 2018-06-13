@@ -29,13 +29,13 @@ class Profile extends React.Component {
 
   handleMessageClick(data) {
     switch (data.type) {
-      case "PA":
+      case "PA": // 프로젝트 승인 요청
         this.props.history.push(`/classroom/${ data.classID }/approve`);
         break;
-      case "FB":
+      case "FB": // 피드백 요청
         this.props.history.push(`/classroom/${ data.classID }/kanbanboard/${ data.projectID }`);
         break;
-      case "PAS":
+      case "PAS": // 프로젝트 승인 완료
         if (data.isCheck)
           this.props.history.push(`/classroom/${ data.classID }/notice`);
         else
@@ -44,25 +44,25 @@ class Profile extends React.Component {
               this.props.history.push(`/classroom/${ data.classID }/notice`);
             });
         break;
-      case "TODO":
+      case "TODO": // 칸반 재수행
         if (data.isCheck)
-          this.props.history.push(`/classroom/${ data.classID }/notice`);
+          this.props.history.push(`/classroom/${ data.classID }/kanbanboard`);
         else
           this.props.putReadMessageRequest(data.receive_date)
             .then(() => {
               this.props.history.push(`/classroom/${ data.classID }/kanbanboard`);
             });
         break;
-      case "FINISH":
+      case "FINISH": // 칸반 완료
         if (data.isCheck)
-          this.props.history.push(`/classroom/${ data.classID }/notice`);
+          this.props.history.push(`/classroom/${ data.classID }/kanbanboard`);
         else
           this.props.putReadMessageRequest(data.receive_date)
             .then(() => {
               this.props.history.push(`/classroom/${ data.classID }/kanbanboard`);
             });
         break;
-      case "NTC":
+      case "NTC": // 공지사항 알림
         if (data.isCheck)
           this.props.history.push(`/classroom/${ data.classID }/notice`);
         else
