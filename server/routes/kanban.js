@@ -57,7 +57,7 @@ router.get('/', (req, res) => { // ../kanban?projectID=''
       AND Kanban.projectID = ?
       AND Class_Student.studentID = '${ loginInfo.userid }'`;
   } else {
-    query = `SELECT * FROM KANBAN WHERE Kanban.projectID = ?`;
+    query = `SELECT * FROM Kanban WHERE Kanban.projectID = ?`;
   }
 
   // db select
