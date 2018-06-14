@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -113,7 +113,7 @@ class Login extends React.Component {
                   <span>KANBAN BOARD SYSTEM</span><br />
                   <span>for Project Management</span><br />
                   <span>and Team Collaboration</span><br />
-                  <span>with React 16</span><br /><br />
+                  <span>with React JS</span><br /><br />
                   <span>웹기반 칸반보드 시스템</span>
                 </div>
               </div>
@@ -123,7 +123,7 @@ class Login extends React.Component {
                 <div className="login-form"
                   style={ { height: "100%", width: '100%',/*  margin: 'auto' */ } }>
                   <div className="login-logo" style={ { height: 90, width: '100%', textAlign: 'center' } }>
-                    <p style={ { fontSize: 30, padding: "30px 0", color: 'white' } }>MEMBER LOGIN</p>
+                    <p style={ { fontSize: 33, padding: "30px 0", color: 'white' } }>MEMBER LOGIN</p>
                   </div>
 
                   <div className="login-body" style={ { height: 300, width: '100%', padding: 24, margin: 'auto' } }>
