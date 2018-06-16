@@ -15,8 +15,8 @@ class Login extends React.Component {
     super(props);
 
     this.state = {
-      userid: "",
-      password: ""
+      userid: "1",
+      password: "1234"
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -93,7 +93,7 @@ class Login extends React.Component {
 
   render() {
     return (
-      <Layout className='main-layout'>
+      <Layout className='main-layout' style={ { height: 1010 } }>
 
         <Layout>
           <Content style={ { margin: '200px 16px 0', overflow: 'initial' } }>

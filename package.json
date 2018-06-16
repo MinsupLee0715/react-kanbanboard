@@ -6,7 +6,7 @@
   "scripts": {
     "build": "atool-build",
     "serverBuild": "babel server --out-dir build --presets=es2015",
-    "start": "dora --plugins webpack",
+    "start": "node ./build/main.js",
     "dev": "atool-build -w",
     "server": "nodemon --exec babel-node --presets=es2015 ./server/main.js --watch ./dist --watch ./server"
   },
