@@ -8,6 +8,9 @@ const mysqlConn = mysql.createConnection({
   database: "kanban" // database name
 });
 
-mysqlConn.connect((err) => { if (err) throw err; });
+mysqlConn.connect((err) => {
+  if (err) throw err;
+  console.log('connect mysql');
+});
 
 module.exports = mysqlConn;
