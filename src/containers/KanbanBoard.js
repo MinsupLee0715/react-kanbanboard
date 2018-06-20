@@ -350,6 +350,8 @@ class KanbanBoard extends Component<*, State> {
         id: '',
         title: '',
         content: '',
+        importance: '',
+        end_date: '',
         feedback: null,
         status: false
       },
