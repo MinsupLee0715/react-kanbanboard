@@ -4,9 +4,10 @@ import { connect } from 'react-redux';
 
 import { postKanbanRequest } from '../actions/kanban';
 
-import { Modal, Button, message, Divider, Input, Icon } from 'antd';
+import { Modal, Button, message, Divider, Input, Icon, Select, DatePicker } from 'antd';
 const { TextArea } = Input;
 const confirm = Modal.confirm;
+const Option = Select.Option;
 
 class KanbanAdd extends React.Component {
 
@@ -16,15 +17,27 @@ class KanbanAdd extends React.Component {
     this.state = {
       title: '',
       content: '',
+      importance: '',
+      end_date: '',
       modalVisible: false,
       loading: false
     };
 
+    this.selectChange = this.selectChange.bind(this);
+    this.dateChange = this.dateChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleAdd = this.handleAdd.bind(this);
     this.showConfirm = this.showConfirm.bind(this);
     this.showCancel = this.showCancel.bind(this);
     this.handleModalCancel = this.handleModalCancel.bind(this);
+  }
+
+  selectChange(value) {
+    this.setState({ importance: value });
+  }
+
+  dateChange(date, dateString) {
+    this.setState({ end_date: date });
   }
 
   // 데이터 입력
@@ -36,7 +49,7 @@ class KanbanAdd extends React.Component {
 
   // 첫번째 modal에서 upload 시
   showConfirm() {
-    if (this.state.title == '' || this.state.content == '')
+    if (this.state.title == '' || this.state.content == '' || this.state.importance == '' || this.state.end_date == '')
       message.error('제목과 내용을 입력하십시오.');
     else
       this.setState({ modalVisible: true });
@@ -45,7 +58,9 @@ class KanbanAdd extends React.Component {
   showCancel() {
     this.setState({
       title: '',
-      content: ''
+      content: '',
+      importance: '',
+      end_date: ''
     });
     this.props.handleCancel();
     this.props.getKanbanList();
@@ -58,8 +73,10 @@ class KanbanAdd extends React.Component {
     let projectID = this.props.project[0].projectID;
     let title = this.state.title;
     let content = this.state.content;
+    let importance = this.state.importance;
+    let end_date = this.state.end_date;
 
-    this.props.postKanbanRequest(projectID, title, content)
+    this.props.postKanbanRequest(projectID, title, content, importance, end_date)
       .then(() => {
         this.setState({
           modalVisible: false,
@@ -111,6 +128,15 @@ class KanbanAdd extends React.Component {
               onChange={ this.handleChange }
             />
           </div>
+          <Divider style={ { margin: "12px 0" } } />
+          <Select className="" placeholder="중요도" onChange={ this.selectChange } style={ { width: 200 } }>
+            <Option value="1">Very Low</Option>
+            <Option value="2">Low</Option>
+            <Option value="3">Normal</Option>
+            <Option value="4">High</Option>
+            <Option value="5">Very High</Option>
+          </Select>
+          <DatePicker onChange={ this.dateChange } style={ { width: 200 } } />
 
         </Modal>
 
@@ -137,8 +163,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchProps = (dispatch) => {
   return {
-    postKanbanRequest: (projectID, title, content) => {
-      return dispatch(postKanbanRequest(projectID, title, content));
+    postKanbanRequest: (projectID, title, content, importance, end_date) => {
+      return dispatch(postKanbanRequest(projectID, title, content, importance, end_date));
     }
   };
 };

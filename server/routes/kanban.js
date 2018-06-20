@@ -50,7 +50,7 @@ router.get('/', (req, res) => { // ../kanban?projectID=''
   // 비로그인 일 시
   if (typeof loginInfo.type === 'student') {
     query = `SELECT Student.studentID, Student.name,
-      Kanban.created_date, Kanban.title, Kanban.updated_date, Kanban.status, Kanban.projectID
+      Kanban.created_date, Kanban.title, Kanban.updated_date, Kanban.status, Kanban.projectID, Kanban.instance, Kanban.end_date
       FROM Class_Student, Kanban, Student
       WHERE Class_Student.projectID = Kanban.projectID
       AND Class_Student.studentID = Student.studentID
@@ -124,6 +124,8 @@ router.post('/', (req, res) => {
   let projectID = req.body.projectID;
   let title = req.body.title;
   let content = req.body.content;
+  let importance = req.body.importance;
+  let end_date = req.body.end_date;
 
   // 비로그인 일 시
   if (typeof loginInfo.userid === 'undefined') {
@@ -134,7 +136,7 @@ router.post('/', (req, res) => {
   }
 
   // 데이터가 없을 시
-  if (!projectID || !title || !content) {
+  if (!projectID || !title || !content || !importance || !end_date) {
     return res.status(400).json({
       error: "Empty Data",
       code: 2
@@ -165,6 +167,8 @@ router.post('/', (req, res) => {
         updated_date: new Date().toLocaleString(),
         title: title,
         content: content,
+        importance: importance,
+        end_date: new Date(end_date),
         status: 'TODO',
         projectID: projectID
       };

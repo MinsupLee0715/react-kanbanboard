@@ -76,6 +76,8 @@ const getItemStyle = (draggableStyle: ?DraggableStyle, isDragging: boolean): Obj
 
   margin: draggableStyle && draggableStyle.margin ? draggableStyle.margin : `${ grid }px`,
   //boxShadow: 'lightgrey 0px 1px 2px'
+
+  border: '2px solid lightgrey'
 });
 
 // List -> Swimlane
@@ -114,6 +116,8 @@ class KanbanBoard extends Component<*, State> {
         title: '',
         content: '',
         updated_date: '',
+        end_date: '',
+        importance: '',
         filename: '',
         score: 0,
         kstatus: '',
@@ -132,6 +136,7 @@ class KanbanBoard extends Component<*, State> {
     this.setItems = this.setItems.bind(this);
     this.getClassInfo = this.getClassInfo.bind(this);
     this.getKanbanList = this.getKanbanList.bind(this);
+    this.importance = this.importance.bind(this);
   }
 
   componentDidMount() {
@@ -252,28 +257,36 @@ class KanbanBoard extends Component<*, State> {
           todo.push({
             id: e.created_date,
             title: e.title,
-            date: e.updated_date
+            date: e.updated_date,
+            importance: e.importance,
+            end_date: e.end_date
           });
           break;
         case "DOING":
           doing.push({
             id: e.created_date,
             title: e.title,
-            date: e.updated_date
+            date: e.updated_date,
+            importance: e.importance,
+            end_date: e.end_date
           });
           break;
         case "FEEDBACK":
           feedback.push({
             id: e.created_date,
             title: e.title,
-            date: e.updated_date
+            date: e.updated_date,
+            importance: e.importance,
+            end_date: e.end_date
           });
           break;
         case "FINISH":
           finish.push({
             id: e.created_date,
             title: e.title,
-            date: e.updated_date
+            date: e.updated_date,
+            importance: e.importance,
+            end_date: e.end_date
           });
           break;
         default: break;
@@ -312,6 +325,8 @@ class KanbanBoard extends Component<*, State> {
                       title: this.props.kanbanInfo.kanban[0].title,
                       content: this.props.kanbanInfo.kanban[0].content,
                       updated_date: this.props.kanbanInfo.kanban[0].updated_date,
+                      end_date: this.props.kanbanInfo.kanban[0].end_date,
+                      importance: this.props.kanbanInfo.kanban[0].importance,
                       filename: this.props.kanbanInfo.kanban[0].filename,
                       score: this.props.kanbanInfo.kanban[0].score,
                       kstatus: this.props.kanbanInfo.kanban[0].status,
@@ -471,11 +486,29 @@ class KanbanBoard extends Component<*, State> {
 
   }
 
+  importance(index) {
+    switch (index) {
+      case 1:
+        return <span class="badge badge-success" style={ { float: 'right' } }>VERY LOW</span>
+      case 2:
+        return <span class="badge badge-primary" style={ { float: 'right' } }>LOW</span>
+      case 3:
+        return <span class="badge badge-secondary" style={ { float: 'right' } }>NORMAL</span>
+      case 4:
+        return <span class="badge badge-warning" style={ { float: 'right' } }>HIGH</span>
+      case 5:
+        return <span class="badge badge-danger" style={ { float: 'right' } }>VERY HIGH</span>
+      default:
+        return <span class="badge badge-light">UNKNOWN</span>
+    }
+  }
+
 
   render() {
+
     return (
       <div>
-      <br />
+        <br />
         <h3>
           { this.state.title }&#40;{ this.state.divide }&#41; / { this.state.projectTitle }
           <h5>MEMBER - { this.state.students }</h5>
@@ -517,8 +550,9 @@ class KanbanBoard extends Component<*, State> {
                                 { ...provided.dragHandleProps }
                               >
                                 <h5>{ item.title }</h5>
+                                { this.importance(item.importance) }
                                 <br />
-                                <h6 style={ { textAlign: 'right' } }><TimeAgo date={ item.date } formatter={ formatter } /> 업데이트</h6>
+                                <h6 style={ { textAlign: 'right' } }>D-day <TimeAgo date={ item.end_date } formatter={ formatter } /></h6>
                               </div>
                               { provided.placeholder }
                             </div>
@@ -555,8 +589,9 @@ class KanbanBoard extends Component<*, State> {
                                 { ...provided.dragHandleProps }
                               >
                                 <h5>{ item.title }</h5>
+                                { this.importance(item.importance) }
                                 <br />
-                                <h6 style={ { textAlign: 'right' } }><TimeAgo date={ item.date } formatter={ formatter } /> 업데이트</h6>
+                                <h6 style={ { textAlign: 'right' } }>D-day <TimeAgo date={ item.end_date } formatter={ formatter } /></h6>
                               </div>
                               { provided.placeholder }
                             </div>
@@ -580,7 +615,7 @@ class KanbanBoard extends Component<*, State> {
                         <h5>피드백 { this.state.feedback.length }</h5>
                       </div>
                       { this.state.feedback.map(item => (
-                        <Draggable key={ item.id } draggableId={ item.id } isDragDisabled='flase'>
+                        <Draggable key={ item.id } draggableId={ item.id } isDragDisabled='false'>
                           { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
                             <div id={ item.id } onClick={ this.handleKanbanClick }>
                               <div
@@ -593,8 +628,9 @@ class KanbanBoard extends Component<*, State> {
                                 { ...provided.dragHandleProps }
                               >
                                 <h5>{ item.title }</h5>
+                                { this.importance(item.importance) }
                                 <br />
-                                <h6 style={ { textAlign: 'right' } }><TimeAgo date={ item.date } formatter={ formatter } /> 업데이트</h6>
+                                <h6 style={ { textAlign: 'right' } }>D-day <TimeAgo date={ item.end_date } formatter={ formatter } /></h6>
                               </div>
                               { provided.placeholder }
                             </div>
@@ -606,7 +642,7 @@ class KanbanBoard extends Component<*, State> {
                 </Droppable>
               </Col>
               <Col className='swimlane' style={ { padding: '0 8px' } }>
-                <Droppable droppableId='droppable-4' isDropDisabled='flase'>
+                <Droppable droppableId='droppable-4' isDropDisabled='false'>
                   { (dropProvided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
                     <div
                       ref={ dropProvided.innerRef }
@@ -618,7 +654,7 @@ class KanbanBoard extends Component<*, State> {
                         <h5>완료 { this.state.finish.length }</h5>
                       </div>
                       { this.state.finish.map(item => (
-                        <Draggable key={ item.id } draggableId={ item.id } isDragDisabled='flase'>
+                        <Draggable key={ item.id } draggableId={ item.id } isDragDisabled='false'>
                           { (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
                             <div id={ item.id } onClick={ this.handleKanbanClick }>
                               <div
@@ -632,7 +668,7 @@ class KanbanBoard extends Component<*, State> {
                               >
                                 <h5>{ item.title }</h5>
                                 <br />
-                                <h6 style={ { textAlign: 'right' } }><TimeAgo date={ item.date } formatter={ formatter } /> 업데이트</h6>
+                                <h6 style={ { textAlign: 'right' } }><TimeAgo date={ item.date } formatter={ formatter } /> 제출 됨</h6>
                               </div>
                               { provided.placeholder }
                             </div>

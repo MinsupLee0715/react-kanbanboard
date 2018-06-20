@@ -57,6 +57,8 @@ class KanbanInfo extends React.Component {
     this.onFileChange = this.onFileChange.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.onFileUpload = this.onFileUpload.bind(this);
+
+    this.importance = this.importance.bind(this);
   }
 
   componentDidMount() {
@@ -233,6 +235,23 @@ class KanbanInfo extends React.Component {
     return post(url, formData, config);
   }
 
+  importance(index) {
+    switch (index) {
+      case 1:
+        return <h5><span class="badge badge-success">우선순위 - VERY LOW</span></h5>
+      case 2:
+        return <h5><span class="badge badge-primary">우선순위 - LOW</span></h5>
+      case 3:
+        return <h5><span class="badge badge-secondary">우선순위 - NORMAL</span></h5>
+      case 4:
+        return <h5><span class="badge badge-warning">우선순위 - HIGH</span></h5>
+      case 5:
+        return <h5><span class="badge badge-danger">우선순위 - VERY HIGH</span></h5>
+      default:
+        return <h5><span class="badge badge-light">UNKNOWN</span></h5>
+    }
+  }
+
 
   render() {
 
@@ -323,8 +342,10 @@ class KanbanInfo extends React.Component {
               { this.isDownload() }
               <br /><br /><br /><br />
               { showScore }
+              { this.importance(this.props.data.importance) } <br />
               <p>생성일 { this.props.data.id }</p>
               <p>업데이트 날짜 { this.props.data.updated_date }</p>
+              <p>마감 날짜 { this.props.data.end_date }</p>
             </Col>
           </Row>
         </Modal>

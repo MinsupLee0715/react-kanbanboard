@@ -73,12 +73,12 @@ export function postKanbanFailure() {
   return { type: types.POST_KANBAN_FAILURE };
 }
 
-export function postKanbanRequest(projectID, title, content) {
+export function postKanbanRequest(projectID, title, content, importance, end_date) {
   return (dispatch) => {
     dispatch(postKanban());
 
     return axios
-      .post('/api/classroom/kanban', { projectID, title, content })
+      .post('/api/classroom/kanban', { projectID, title, content, importance, end_date })
       .then((res) => {
         dispatch(postKanbanSuccess());
       })
