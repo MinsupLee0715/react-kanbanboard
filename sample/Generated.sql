@@ -110,6 +110,8 @@ CREATE TABLE `Kanban`
   `title` Varchar(100) NOT NULL,
   `content` Varchar(500) NOT NULL,
   `updated_date` Varchar(30),
+  `end_date` Varchar(30),
+  `importance` Int,
   `status` Varchar(20) NOT NULL,
   `filename` Varchar(100),
   `score` Int,
