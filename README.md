@@ -68,3 +68,6 @@ You should use two terminals.
 
 #### 6. Message_Page
 ![6_message](./sample/6_message.png)
+
+#### 7. Database_Structure
+![7_MySQL5_7](./sample/7_MySQL5_7.png)
