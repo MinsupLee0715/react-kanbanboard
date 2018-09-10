@@ -13,7 +13,7 @@ class StdSidebar extends React.Component {
     super(props);
 
     this.state = {
-      classID: ''
+      classID: '1'
     }
   }
 

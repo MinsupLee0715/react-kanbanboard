@@ -32,6 +32,8 @@ class Sidebar extends React.Component {
         } else if (this.props.currentUser.type == 'professor') {
           return <ProfSidebar />;
         }
+
+        return <StdSidebar />; // 이 줄 삭제 필요
       }
     }
   }

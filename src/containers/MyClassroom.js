@@ -20,7 +20,29 @@ let menuData = [];
 let menuChlidren = [];
 
 /* About Class List */
-let classList = [];
+let classList = [
+  {
+    key: "1",
+    number: "1",
+    title: "TEST CLASS 1",
+    divide: "101",
+    professor: "David"
+  },
+  {
+    key: "2",
+    number: "2",
+    title: "TEST CLASS 2",
+    divide: "102",
+    professor: "Choi"
+  },
+  {
+    key: "3",
+    number: "3",
+    title: "TEST CLASS 3",
+    divide: "103",
+    professor: "Kim"
+  }
+];
 
 
 class MyClassroom extends React.Component {
@@ -30,7 +52,7 @@ class MyClassroom extends React.Component {
 
     this.state = {
       period: "학기 선택",
-      classData: [],
+      classData: classList,
       loading: false
     };
 
@@ -71,7 +93,6 @@ class MyClassroom extends React.Component {
   handleChange(value) {
     this.setState({ loading: true });
     this.setState({ period: value }, () => {
-      classList = [];
       for (let i in this.props.getClasses) {
         if (this.props.getClasses[i].period == this.state.period)
           classList.push({
@@ -117,13 +138,14 @@ class MyClassroom extends React.Component {
     const rowClick = (record) => {
       return {
         onClick: () => {
-          this.props.getClassInfoRequest(record.key)
-            .then(() => {
-              if (this.props.getClassInfo.status === "SUCCESS") {
-                this.props.history.push(`/classroom/${ record.key }`);
-              }
-            });
-        }
+          // this.props.getClassInfoRequest(record.key)
+          //   .then(() => {
+          //     if (this.props.getClassInfo.status === "SUCCESS") {
+          //       this.props.history.push(`/classroom/${ record.key }`);
+          //     }
+          //   });
+          this.props.history.push(`/classroom/${ record.key }`); // 이 줄 삭제 필요
+          }
       };
     };
 
