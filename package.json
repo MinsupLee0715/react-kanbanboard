@@ -5,10 +5,8 @@
   },
   "scripts": {
     "build": "atool-build",
-    "serverBuild": "babel server --out-dir build --presets=es2015",
-    "start": "node ./build/main.js",
-    "dev": "atool-build -w",
-    "server": "nodemon --exec babel-node --presets=es2015 ./server/main.js --watch ./dist --watch ./server"
+    "development": "atool-build -w",
+    "start": "nodemon --exec babel-node --presets=es2015 ./server/main.js --watch ./dist --watch ./server"
   },
   "dependencies": {
     "antd": "^3.0.0",

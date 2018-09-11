@@ -20,6 +20,7 @@ let menuData = [];
 let menuChlidren = [];
 
 /* About Class List */
+//let classList = []; // 아래 classList 삭제 필요
 let classList = [
   {
     key: "1",

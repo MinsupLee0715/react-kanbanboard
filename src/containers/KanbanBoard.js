@@ -240,7 +240,7 @@ class KanbanBoard extends Component<*, State> {
           this.setState({ loading: false });
           // if (this.props.kanban.status === "SUCCESS") { // 주석 해제 필요함
             message.success('칸반을 불러왔습니다.');
-            // this.setItems(this.props.kanban.kanbanList);
+            // this.setItems(this.props.kanban.kanbanList); // 아래 샘플 데이터 삭제 필요
             this.setItems(
               [
                 {
@@ -335,6 +335,28 @@ class KanbanBoard extends Component<*, State> {
 
   // 칸반 클릭 시, 칸반 불러오기
   handleKanbanClick(e) {
+
+    // START - TEST DATA - 삭제 필요
+    this.setState({
+      kanbanInfo: {
+        id: "2018-09-10",
+        title: "TEST KANBAN - TITLE",
+        content: "TEST KANBAN - CONTENT",
+        updated_date: "2018-09-10",
+        end_date: "2018-09-10",
+        importance: 2,
+        filename: "",
+        score: "",
+        kstatus: "",
+        feedback: null,
+        status: true
+      }
+    });
+
+    return;
+    // END - TEST DATA - 여기까지 삭제
+
+
     let kanbanID = e.currentTarget.id;
     if (kanbanID) {
       this.setState({ loading: true });
@@ -729,19 +751,6 @@ class KanbanBoard extends Component<*, State> {
   }
 
 }
-
-// KanbanBoard.defaultProps = {
-//   kanban: {
-//     kanbanlist: [{
-//       id: "2018-09-10",
-//       title: "todo 1",
-//       date: "2018-09-10",
-//       importance: 3,
-//       end_date: "",
-//       status: "TODO"
-//     }]
-//   }
-// };
 
 const mapStateToProps = (state) => {
   return {
