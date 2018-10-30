@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'path';
-import bodyParser from 'body-parser';
 import session from 'express-session';
+import cors from 'cors';
 
 const app = express();
 const port = 4000;
@@ -14,7 +14,8 @@ app.use(session({
 }));
 
 /* middleware */
-app.use(bodyParser.json());
+app.use(express.json());
+app.use(cors());
 
 /* static files */
 app.use('/', express.static(__dirname + './../dist'));
