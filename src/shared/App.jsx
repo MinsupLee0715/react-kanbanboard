@@ -25,20 +25,19 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-
-    // this.props.getStatusRequest()
-    //   .then(() => {
-    //     if (!this.props.status.valid) {
-    //       let loginData = {
-    //         isLogin: false,
-    //         userid: ''
-    //       };
-    //       document.cookie = "key=" + btoa(JSON.stringify(loginData));
-    //     }
-    //     if (!this.props.status.isLogin) {
-    //       this.props.history.push('/login');
-    //     }
-    //   });
+    this.props.getStatusRequest()
+      .then(() => {
+        if (!this.props.status.valid) {
+          let loginData = {
+            isLogin: false,
+            userid: ''
+          };
+          document.cookie = "key=" + btoa(JSON.stringify(loginData));
+        }
+        if (!this.props.status.isLogin) {
+          this.props.history.push('/login');
+        }
+      });
   }
 
   render() {

@@ -30,32 +30,25 @@ A database is essential to use this project.
 1. ./sample/Generated.sql
 2. ./sample/userSample.sql
 3. ./sample/classroomSample.sql
-example user : professor(id: 1111, pw:1234), student(id: 1, pw: 1234)
+
+
+## Not Used Database
+현재는 초기에 데이터베이스 환경설정 없이 테스트 할 수 있도록 개발되어 있습니다.
+<code>/server/models</code> 를 불러오면 데이터베이스를 세팅해야하고
+<code>/server/sampleModels</code> 를 불러오면 임시 데이터 리스트를 이용하여 사용할 수 있습니다.
+
 
 ## Intall
-- npm install
+<code>yarn</code> - yarn install
+
 
 ## Build
-- npm run build - Client Build
-- <strike>npm run serverBuild - Node.js server build</strike>
+<code>yarn build</code> - Client Build
+
 
 ## Start
-- <strike>npm run server - localhost:4000</strike>
-- npm run start - localhost:4000
+<code>yarn start</code> - localhost:4000
 
-## Development Mode
-You should use two terminals.
-- npm run development - Watch Client
-- <strike>npm run server - Watch Back-end</strike>
-
-## DB 없이 테스트를 위해 주석처리 된 부분들
-
-- server/main.js - Line 22, 23
-- shared/App.js - Line 29~41
-- container/MyClassroom.js - Line 23~46 / 142~147 (onClick function)
-- component/Sidebar.js - Line 36 삭제 필요
-- container/Project.js - Line 76, 77
-- container/KanbanBoard.js - Line 221 삭제 필요 / 235 부분 삭제 / 238, 243, 271, 272 주석 해제 및 샘플 데이터 삭제 필요 / 339-357 샘플 데이터 삭제 필요
 
 ## Sample Images
 #### 0. Sample_Scenario

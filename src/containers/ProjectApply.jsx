@@ -48,7 +48,7 @@ class ProjectApply extends React.Component {
               if (e.projectID == null)
                 children.push(
                   <Option key={ e.studentID }>
-                    { e.name }/{ e.studentID }
+                    { e.name }({ e.studentID })
                   </Option>
                 );
             });

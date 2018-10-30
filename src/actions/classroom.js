@@ -46,7 +46,7 @@ export function getClassInfoRequest(classID) {
     return axios
       .get(`/api/classroom/getClassInfo/${ classID }`)
       .then((res) => {
-        dispatch(getClassInfoSuccess(res.data.result[0]));
+        dispatch(getClassInfoSuccess(res.data.result));
       })
       .catch((err) => {
         dispatch(getClassInfoFailure());

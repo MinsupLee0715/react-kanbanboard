@@ -45,7 +45,8 @@ class Project extends React.Component {
         this.setState({ loading: false });
 
         if (this.props.getProject.status === "SUCCESS") {
-          if (this.props.currentUser.type == 'student') { // 학생일 시
+          // 학생일 시
+          if (this.props.currentUser.type == 'student') {
             if (this.props.getProject.project.length == 0)
               this.setState({ component: <ProjectApply /> });
             else if (this.props.getProject.project[0].status == 'standby') {
@@ -72,9 +73,8 @@ class Project extends React.Component {
 
           } else if (this.props.currentUser.type == 'professor') { // 교수일 시
             this.setState({ component: <KanbanBoard /> });
-          } else // 너는 누구냐
+          } else
             this.setState({ component: <NotFound /> }); // 이 줄 주석 해제 필요
-            // this.setState({ component: <KanbanBoard /> }); // 이 줄 삭제 필요
         }
       });
   }

@@ -19,7 +19,8 @@ app.use(bodyParser.json());
 /* static files */
 app.use('/', express.static(__dirname + './../dist'));
 
-import api from './routes';
+// import api from './routes';
+import api from './sampleRoutes';
 app.use('/api', api);
 
 app.get('*', (req, res) => {

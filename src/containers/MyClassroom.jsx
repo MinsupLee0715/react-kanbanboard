@@ -2,10 +2,6 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-
-import Searchbar from '../components/Searchbar';
-import Sidebar from '../components/Sidebar';
-
 import {
   getClassListRequest,
   getClassInfoRequest
@@ -20,30 +16,7 @@ let menuData = [];
 let menuChlidren = [];
 
 /* About Class List */
-let classList = []; // 아래 classList 삭제 필요
-// let classList = [
-//   {
-//     key: "1",
-//     number: "1",
-//     title: "TEST CLASS 1",
-//     divide: "101",
-//     professor: "David"
-//   },
-//   {
-//     key: "2",
-//     number: "2",
-//     title: "TEST CLASS 2",
-//     divide: "102",
-//     professor: "Choi"
-//   },
-//   {
-//     key: "3",
-//     number: "3",
-//     title: "TEST CLASS 3",
-//     divide: "103",
-//     professor: "Kim"
-//   }
-// ];
+let classList = [];
 
 
 class MyClassroom extends React.Component {
@@ -92,6 +65,7 @@ class MyClassroom extends React.Component {
   }
 
   handleChange(value) {
+    classList = [];
     this.setState({ loading: true });
     this.setState({ period: value }, () => {
       for (let i in this.props.getClasses) {
@@ -145,7 +119,6 @@ class MyClassroom extends React.Component {
                 this.props.history.push(`/classroom/${ record.key }`);
               }
             });
-          // this.props.history.push(`/classroom/${ record.key }`); // 이 줄 삭제 필요
           }
       };
     };

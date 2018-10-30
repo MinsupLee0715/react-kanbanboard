@@ -3,7 +3,6 @@ import { Switch, Route, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { getClassInfoRequest } from '../actions/classroom';
-import { getProjectRequest } from '../actions/project';
 
 import NoticeList from '../components/NoticeList';
 import Notices from '../components/Notices';
@@ -17,6 +16,7 @@ class Notice extends React.Component {
     this.state = {
       title: '',
       divide: '',
+      classID: ''
     }
 
     this.getClassInfo = this.getClassInfo.bind(this);
@@ -89,9 +89,6 @@ const mapDispatchToProps = (dispatch) => {
     getClassInfoRequest: (classID) => {
       return dispatch(getClassInfoRequest(classID));
     },
-    getProjectRequest: (classID) => {
-      return dispatch(getProjectRequest(classID));
-    }
   };
 };
 
