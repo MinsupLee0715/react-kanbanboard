@@ -73,8 +73,8 @@ class Project extends React.Component {
           } else if (this.props.currentUser.type == 'professor') { // 교수일 시
             this.setState({ component: <KanbanBoard /> });
           } else // 너는 누구냐
-            // this.setState({ component: <NotFound /> }); // 이 줄 주석 해제 필요
-            this.setState({ component: <KanbanBoard /> }); // 이 줄 삭제 필요
+            this.setState({ component: <NotFound /> }); // 이 줄 주석 해제 필요
+            // this.setState({ component: <KanbanBoard /> }); // 이 줄 삭제 필요
         }
       });
   }

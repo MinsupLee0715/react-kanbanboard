@@ -33,7 +33,7 @@ class Sidebar extends React.Component {
           return <ProfSidebar />;
         }
 
-        return <StdSidebar />; // 이 줄 삭제 필요
+        // return <StdSidebar />; // 이 줄 삭제 필요
       }
     }
   }

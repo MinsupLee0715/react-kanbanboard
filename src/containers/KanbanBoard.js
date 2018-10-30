@@ -218,7 +218,7 @@ class KanbanBoard extends Component<*, State> {
 
   // 서버로부터 칸반 정보를 가져온다.
   getKanbanList() {
-    this.setItems(this.props.kanban.kanbanList); // 이 줄 삭제 필요
+    // this.setItems(this.props.kanban.kanbanList); // 이 줄 삭제 필요
 
     let project;
     let pathname = this.props.history.location.pathname;
@@ -232,44 +232,44 @@ class KanbanBoard extends Component<*, State> {
 
     this.setInitialize();
 
-    if (project || true) { // true 삭제 필요
+    if (project) { // true 삭제 필요
       // 칸반 리스트 가져오기
       this.setState({ loading: true });
-      // this.props.getKanbanListRequest(project) // 주석 해제 필요함
-      //   .then(() => { // 주석 해제 필요함
+      this.props.getKanbanListRequest(project) // 주석 해제 필요함
+        .then(() => { // 주석 해제 필요함
           this.setState({ loading: false });
-          // if (this.props.kanban.status === "SUCCESS") { // 주석 해제 필요함
+          if (this.props.kanban.status === "SUCCESS") { // 주석 해제 필요함
             message.success('칸반을 불러왔습니다.');
-            // this.setItems(this.props.kanban.kanbanList); // 아래 샘플 데이터 삭제 필요
-            this.setItems(
-              [
-                {
-                  created_date: "2018-09-10-1",
-                  title: "TODO 1",
-                  updated_date: "2018-09-10-1",
-                  importance: 2,
-                  end_date: "",
-                  status: "TODO"
-                },
-                {
-                  created_date: "2018-09-10-2",
-                  title: "TODO 2",
-                  updated_date: "2018-09-10-2",
-                  importance: 3,
-                  end_date: "",
-                  status: "TODO"
-                }, {
-                  created_date: "2018-09-10-3",
-                  title: "DOING 1",
-                  updated_date: "2018-09-10-3",
-                  importance: 5,
-                  end_date: "",
-                  status: "DOING"
-                }
-              ]
-            );
-          // }
-        // });
+            this.setItems(this.props.kanban.kanbanList); // 아래 샘플 데이터 삭제 필요
+            // this.setItems(
+            //   [
+            //     {
+            //       created_date: "2018-09-10-1",
+            //       title: "TODO 1",
+            //       updated_date: "2018-09-10-1",
+            //       importance: 2,
+            //       end_date: "",
+            //       status: "TODO"
+            //     },
+            //     {
+            //       created_date: "2018-09-10-2",
+            //       title: "TODO 2",
+            //       updated_date: "2018-09-10-2",
+            //       importance: 3,
+            //       end_date: "",
+            //       status: "TODO"
+            //     }, {
+            //       created_date: "2018-09-10-3",
+            //       title: "DOING 1",
+            //       updated_date: "2018-09-10-3",
+            //       importance: 5,
+            //       end_date: "",
+            //       status: "DOING"
+            //     }
+            //   ]
+            // );
+          }
+        });
     }
   }
 
@@ -337,23 +337,23 @@ class KanbanBoard extends Component<*, State> {
   handleKanbanClick(e) {
 
     // START - TEST DATA - 삭제 필요
-    this.setState({
-      kanbanInfo: {
-        id: "2018-09-10",
-        title: "TEST KANBAN - TITLE",
-        content: "TEST KANBAN - CONTENT",
-        updated_date: "2018-09-10",
-        end_date: "2018-09-10",
-        importance: 2,
-        filename: "",
-        score: "",
-        kstatus: "",
-        feedback: null,
-        status: true
-      }
-    });
+    // this.setState({
+    //   kanbanInfo: {
+    //     id: "2018-09-10",
+    //     title: "TEST KANBAN - TITLE",
+    //     content: "TEST KANBAN - CONTENT",
+    //     updated_date: "2018-09-10",
+    //     end_date: "2018-09-10",
+    //     importance: 2,
+    //     filename: "",
+    //     score: "",
+    //     kstatus: "",
+    //     feedback: null,
+    //     status: true
+    //   }
+    // });
 
-    return;
+    // return;
     // END - TEST DATA - 여기까지 삭제
 
 

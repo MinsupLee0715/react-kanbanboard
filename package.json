@@ -1,4 +1,10 @@
 {
+  "name": "react-kanbanboard",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/peace-jung/react-kanbanboard",
+  "author": "Peace Jung <hopuo132@gmail.com>",
+  "license": "MIT",
   "private": true,
   "entry": {
     "index": "./index.js"
