@@ -1,6 +1,8 @@
 import express from 'express';
 // import db from '../models/mysqlDatabase';
 
+import kanban from '../sampleModels/kanban';
+
 import multer from 'multer';
 const router = express.Router();
 
@@ -45,9 +47,18 @@ router.get('/', (req, res) => { // ../kanban?projectID=''
     });
   }
 
+
+  return res.send({
+    result: kanban.getList(projectID)
+  });
+
+
+  ////////////////////////////////////////////////////
+
+  
   let query = '';
 
-  // 비로그인 일 시
+  // 학생 일 시
   if (typeof loginInfo.type === 'student') {
     query = `SELECT Student.studentID, Student.name,
       Kanban.created_date, Kanban.title, Kanban.updated_date, Kanban.status, Kanban.projectID, Kanban.instance, Kanban.end_date
@@ -99,6 +110,16 @@ router.get('/kanbanInfo/:id', (req, res) => { // ../kanban/kanbanid
     });
   }
 
+  
+  return res.send({
+    result: kanban.get(kanbanID)
+  });
+
+
+  ////////////////////////////////////////////////////
+
+
+
   let query = '';
   // qeury
   query = `SELECT * FROM Kanban where created_date = ?`;
@@ -142,6 +163,15 @@ router.post('/', (req, res) => {
       code: 2
     });
   }
+
+  return res.send({
+    result: kanban.post(projectID, title, content, importance, end_date)
+  });
+
+
+  ////////////////////////////////////////////////////
+
+  
 
   let query = '';
 
@@ -227,6 +257,14 @@ router.put('/', (req, res) => {
     });
   }
 
+  return res.send({
+    result: kanban.update(kanbanID, title, content, updated_date)
+  });
+
+
+  ////////////////////////////////////////////////////
+
+  
   let query = '';
   query = 'UPDATE Kanban SET title = ?, content = ?, updated_date = ? WHERE created_date = ?';
   let data = [title, content, updated_date, kanbanID];
@@ -275,6 +313,15 @@ router.put('/status', (req, res) => {
       code: 3
     });
   }
+
+
+  return res.send({
+    result: kanban.updateStatus(kanbanID, status)
+  });
+
+
+  ////////////////////////////////////////////////////
+
 
   // input data & query
   let date = new Date().toLocaleString();
@@ -381,6 +428,10 @@ router.delete('/:id', (req, res) => {
       code: 2
     });
   }
+
+  return res.send({ result: kanban.destroy(kanbanID) });
+
+  ////////////////////////////////////////////////////
 
   let query = '';
   query = `SELECT * FROM Class_Student, Project, Kanban

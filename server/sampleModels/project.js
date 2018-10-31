@@ -4,7 +4,28 @@ import classroom from './classroom';
 let project = new Array();
 
 // classID, date, title, content
-project = [];
+project = [
+  {
+    classID: "c1811db",
+    projectID: "2018-10-30T02:13:50.824Z",
+    title: "칸반보드",
+    status: "start",
+    updated_date: "2018-10-31T02:13:50.824Z",
+    studentID: ["1", "2", "3"],
+    name: ["정화평", "서현규", "안병언"],
+    leader: "정화평",
+  },
+];
+// proj = {
+//   classID: String,
+//   projectID: String,
+//   title: String,
+//   status: "String",
+//   updated_date: Date,
+//   studentID: String,
+//   name: String,
+//   leader: String,
+// };
 
 
 const get = (classID, userID) => {

@@ -2,6 +2,8 @@ import express from 'express';
 // import db from '../models/mysqlDatabase';
 const router = express.Router();
 
+import kanban from '../sampleModels/kanban';
+
 // /api/classroom/kanban/feedback/*
 
 // get feedback
@@ -24,6 +26,16 @@ router.get('/:kanbanID', (req, res) => {
       code: 2
     });
   };
+
+
+  return res.send({
+    result: kanban.getFeedback(kanbanID)
+  });
+
+
+  ////////////////////////////////////////////////////
+
+
 
   let query = '';
 
